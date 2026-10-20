@@ -3,16 +3,19 @@ import {defineField, defineType} from 'sanity'
 
 export const categoryType = defineType({
   name: 'category',
-  title: 'Category',
+  title: 'Categoría',
   type: 'document',
   icon: TagIcon,
   fields: [
     defineField({
       name: 'title',
+      title: 'Nombre',
       type: 'string',
+      validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'slug',
+      title: 'URL',
       type: 'slug',
       options: {
         source: 'title',
@@ -20,6 +23,7 @@ export const categoryType = defineType({
     }),
     defineField({
       name: 'description',
+      title: 'Descripción',
       type: 'text',
     }),
   ],

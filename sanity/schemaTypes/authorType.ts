@@ -3,16 +3,19 @@ import {defineArrayMember, defineField, defineType} from 'sanity'
 
 export const authorType = defineType({
   name: 'author',
-  title: 'Author',
+  title: 'Autor',
   type: 'document',
   icon: UserIcon,
   fields: [
     defineField({
       name: 'name',
+      title: 'Nombre',
       type: 'string',
+      validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'slug',
+      title: 'URL',
       type: 'slug',
       options: {
         source: 'name',
@@ -20,6 +23,7 @@ export const authorType = defineType({
     }),
     defineField({
       name: 'image',
+      title: 'Foto',
       type: 'image',
       options: {
         hotspot: true,
@@ -27,6 +31,7 @@ export const authorType = defineType({
     }),
     defineField({
       name: 'bio',
+      title: 'Biografía',
       type: 'array',
       of: [
         defineArrayMember({
