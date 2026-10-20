@@ -58,7 +58,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             ← Volver al blog
           </a>
           <div className="article-meta">
-            <span className="article-category">{mappedPost.category}</span>
+            <span className="article-category">{mappedPost.categories.join(' · ')}</span>
             <span className="article-date">{mappedPost.date}</span>
             <span className="article-read">{mappedPost.read}</span>
           </div>

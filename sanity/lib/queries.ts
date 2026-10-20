@@ -7,7 +7,7 @@ export const POSTS_QUERY = defineQuery(`*[_type == "post" && defined(slug.curren
   excerpt,
   publishedAt,
   mainImage,
-  "category": categories[0]->title,
+  "categories": categories[]->title,
   "author": author->{
     name,
     slug,
@@ -27,7 +27,7 @@ export const POST_QUERY = defineQuery(`*[_type == "post" && (slug.current == $sl
   excerpt,
   publishedAt,
   mainImage,
-  "category": categories[0]->title,
+  "categories": categories[]->title,
   "author": author->{
     name,
     slug,

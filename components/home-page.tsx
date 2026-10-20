@@ -65,7 +65,7 @@ export function HomePage({ posts, categories }: HomePageProps) {
     () =>
       posts.filter(
         (post) =>
-          (category === 'Todos' || post.category === category) &&
+          (category === 'Todos' || post.categories.includes(category)) &&
           `${post.title} ${post.excerpt}`.toLowerCase().includes(query.toLowerCase()),
       ),
     [category, posts, query],
@@ -137,7 +137,7 @@ export function HomePage({ posts, categories }: HomePageProps) {
         ) : (
           <div className="post-grid">
             {filteredPosts.map((post) => {
-              const Icon = categoryIcon(post.category)
+              const Icon = categoryIcon(post.categories[0])
               return (
                 <a
                   className="post-card"
@@ -155,7 +155,7 @@ export function HomePage({ posts, categories }: HomePageProps) {
                     )}
                   </div>
                   <div className="post-meta">
-                    <span>{post.category}</span>
+                    <span>{post.categories.join(' · ')}</span>
                     <span>{[post.date, post.read].filter(Boolean).join(' · ')}</span>
                   </div>
                   <h3>{post.title}</h3>

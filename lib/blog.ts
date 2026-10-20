@@ -12,7 +12,7 @@ export type SanityPost = {
   excerpt?: string | null
   publishedAt?: string | null
   mainImage?: SanityImage
-  category?: string | null
+  categories?: string[] | null
   author?: {
     name?: string | null
     slug?: { current?: string } | null
@@ -28,7 +28,7 @@ export type BlogPost = {
   slug: string
   title: string
   excerpt: string
-  category: string
+  categories: string[]
   date: string
   read: string
   accent: BlogAccent
@@ -80,17 +80,18 @@ function formatDate(value: string | null | undefined) {
 
 export function mapPosts(posts: SanityPost[] | null | undefined): BlogPost[] {
   return (posts ?? []).map((post, index) => {
-    const category = post.category ?? 'Perspectivas'
+    const categories = post.categories ?? ['Perspectivas']
     const image = post.mainImage
     const author = post.author
     const slug = post.slug?.current
+    const category = categories[0]
 
     return {
       _id: post._id,
       slug: slug || post._id,
       title: post.title ?? 'Sin título',
       excerpt: post.excerpt ?? '',
-      category,
+      categories,
       date: formatDate(post.publishedAt),
       read: readingTime(post.body),
       accent: ACCENT_BY_CATEGORY[category] ?? ACCENTS[index % ACCENTS.length],
