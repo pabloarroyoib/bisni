@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import {
   ArrowUpRight,
   BarChart3,
@@ -12,16 +13,16 @@ import {
   LockKeyhole,
   Mail,
   MapPin,
-  Menu,
   Network,
   Search,
   ShieldCheck,
   Sparkles,
-  X,
   Zap,
 } from 'lucide-react'
 import { ContactForm } from '@/components/contact-form'
+import { SiteHeader } from '@/components/site-header'
 import type { BlogPost } from '@/lib/blog'
+import type { ReactNode } from 'react'
 
 const services = [
   { icon: LockKeyhole, number: '01', title: 'Ciberseguridad & Protección de Datos', text: 'Auditorías, gestión de vulnerabilidades y seguridad ofensiva para proteger lo que más importa.' },
@@ -49,10 +50,15 @@ function categoryIcon(category: string) {
 type HomePageProps = {
   posts: BlogPost[]
   categories: string[]
+  /** Textura "Relieve" de página completa, ya renderizada en el servidor. */
+  background: ReactNode
+  /** Textura "Relieve" de la sección de contacto (variante oscura). */
+  contactBackground: ReactNode
+  /** Pie compartido, ya renderizado en el servidor. */
+  footer: ReactNode
 }
 
-export function HomePage({ posts, categories }: HomePageProps) {
-  const [mobileOpen, setMobileOpen] = useState(false)
+export function HomePage({ posts, categories, background, contactBackground, footer }: HomePageProps) {
   const [industry, setIndustry] = useState('Tecnología')
   const [size, setSize] = useState('51–200')
   const [compliance, setCompliance] = useState('Medio')
@@ -82,31 +88,34 @@ export function HomePage({ posts, categories }: HomePageProps) {
 
   return (
     <main className="site-shell">
-      <header className="navbar">
-        <a className="brand" href="#inicio" aria-label="bisni inicio"><span className="brand-mark">b</span>bisni<span className="brand-dot">.</span></a>
-        <nav className={`nav-links ${mobileOpen ? 'is-open' : ''}`}>
-          {['Servicios', 'Herramientas', 'Matriz', 'Blog', 'Contacto'].map((item) => <a key={item} href={`#${item.toLowerCase()}`} onClick={() => setMobileOpen(false)}>{item}</a>)}
-        </nav>
-        <a className="nav-cta" href="#contacto">Solicitar diagnóstico <ArrowUpRight aria-hidden="true" /></a>
-        <button className="mobile-menu" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Abrir menú">{mobileOpen ? <X /> : <Menu />}</button>
-      </header>
+      <SiteHeader />
+
+      {background}
+      <span id="contenido" tabIndex={-1} />
 
       <section className="hero" id="inicio">
-        <div className="hero-grid" aria-hidden="true" />
-        <div className="hero-orb hero-orb-one" aria-hidden="true" /><div className="hero-orb hero-orb-two" aria-hidden="true" />
-        <div className="hero-content">
-          <div className="eyebrow"><span className="eyebrow-line" /> Gestión de riesgo, hecha clara</div>
-          <h1>Protegemos lo que<br /><em>hace avanzar</em> tu negocio.</h1>
-          <p className="hero-copy">Estrategia, datos y tecnología para anticipar riesgos, proteger tus activos y convertir la incertidumbre en una ventaja competitiva.</p>
-          <div className="hero-actions"><a className="button button-primary" href="#servicios">Ver soluciones <ArrowUpRight aria-hidden="true" /></a><a className="button button-ghost" href="#herramientas">Probar matriz interactiva <ChevronRight aria-hidden="true" /></a></div>
-          <div className="hero-proof"><div className="avatar-stack"><span>LM</span><span>AG</span><span>JR</span></div><p><strong>+120 empresas</strong><br />ya confían en bisni</p></div>
+        <div className="hero-inner">
+          <div className="hero-content">
+            <h1>Protegemos lo que hace avanzar tu negocio.</h1>
+            <p className="hero-copy">Estrategia, datos y tecnología para anticipar riesgos, proteger tus activos y convertir la incertidumbre en una ventaja competitiva.</p>
+            <div className="hero-actions"><a className="button button-primary" href="#servicios">Ver soluciones <ArrowUpRight aria-hidden="true" /></a><a className="button button-ghost" href="#herramientas">Probar matriz interactiva <ChevronRight aria-hidden="true" /></a></div>
+            <div className="hero-proof"><div className="avatar-stack"><span>LM</span><span>AG</span><span>JR</span></div><p><strong>+120 empresas</strong><br />ya confían en bisni</p></div>
+          </div>
+          <aside className="hero-panel" aria-label="Ejemplo de panorama de riesgo">
+            <div className="hero-panel-head"><span>Panorama de riesgo</span><small>Datos ilustrativos</small></div>
+            <ul className="hero-panel-rows">
+              <li><span className="hero-panel-label">Ciberseguridad</span><span className="meter meter-watch"><i /></span><b>Medio</b></li>
+              <li><span className="hero-panel-label">Cumplimiento ISO 31000</span><span className="meter meter-ok"><i /></span><b>Alto</b></li>
+              <li><span className="hero-panel-label">Continuidad operativa</span><span className="meter meter-low"><i /></span><b>Bajo</b></li>
+            </ul>
+            <div className="hero-panel-foot"><span>Índice de exposición</span><strong>7.2<small>/10</small></strong></div>
+          </aside>
         </div>
-        <div className="scroll-note"><span>01</span><i /> Desplaza para explorar</div>
       </section>
 
       <section className="services section" id="servicios"><div className="section-heading"><div><p className="section-kicker">Lo que hacemos</p><h2>El riesgo no se elimina.<br /><em>Se gestiona mejor.</em></h2></div><p className="section-intro">Una visión 360° para que puedas tomar decisiones con confianza, incluso cuando el entorno cambia.</p></div><div className="service-grid">{services.map(({ icon: Icon, number, title, text }) => <article className="service-card" key={title}><div className="card-top"><span className="service-icon"><Icon aria-hidden="true" /></span><span className="service-number">{number}</span></div><h3>{title}</h3><p>{text}</p><a href="#contacto">Saber más <ArrowUpRight aria-hidden="true" /></a></article>)}</div></section>
 
-      <section className="tools-section section" id="herramientas"><div className="section-heading tools-heading"><div><p className="section-kicker">Herramientas interactivas</p><h2>Un primer paso<br /><em>hacia la claridad.</em></h2></div><p className="section-intro">Evalúa tu nivel de exposición en minutos y descubre dónde centrar tu atención.</p></div><div className="tools-grid"><div className="calculator panel"><div className="panel-heading"><span className="panel-icon"><Zap aria-hidden="true" /></span><div><h3>Calculadora de riesgo</h3><p>Diagnóstico preliminar</p></div><span className="step-count">01 / 02</span></div><div className="form-grid"><label>Industria<select value={industry} onChange={(e) => setIndustry(e.target.value)}><option>Tecnología</option><option>Finanzas</option><option>Salud</option><option>Manufactura</option></select><ChevronDown /></label><label>Tamaño de empresa<select value={size} onChange={(e) => setSize(e.target.value)}><option>1–50</option><option>51–200</option><option>+200</option></select><ChevronDown /></label><label>Nivel de cumplimiento<select value={compliance} onChange={(e) => setCompliance(e.target.value)}><option>Bajo</option><option>Medio</option><option>Alto</option></select><ChevronDown /></label></div><button className="button button-dark" onClick={calculateScore}>Calcular mi puntuación <ArrowUpRight aria-hidden="true" /></button><div className="score-result">{score === null ? <><span className="result-placeholder">—</span><div><strong>Completa el diagnóstico</strong><p>Tu puntuación aparecerá aquí</p></div></> : <><span className="score-number">{score}</span><div><strong>{score >= 7 ? 'Riesgo medio-alto' : 'Riesgo moderado'}</strong><p>{score >= 7 ? 'Recomendamos revisar tus controles críticos.' : 'Una base sólida, con margen de mejora.'}</p></div></>}<span className="score-ring" /></div></div><div className="matrix panel" id="matriz"><div className="panel-heading"><span className="panel-icon"><Network aria-hidden="true" /></span><div><h3>Matriz de riesgo</h3><p>ISO 31000 · 5 × 5</p></div><span className="step-count">INTERACTIVA</span></div><div className="matrix-layout"><div className="y-axis"><span>Impacto</span>{impact.map((item) => <small key={item}>{item}</small>)}</div><div className="matrix-main"><div className="cells">{impact.map((_, y) => probability.map((_, x) => <button aria-label={`Probabilidad ${probability[x]}, impacto ${impact[y]}`} className={`risk-cell ${riskColor((x + 1) * (5 - y))} ${selectedCell.x === x && selectedCell.y === y ? 'selected' : ''}`} key={`${x}-${y}`} onClick={() => setSelectedCell({ x, y })} />))}</div><div className="x-axis">{probability.map((item) => <small key={item}>{item}</small>)}</div><div className="matrix-caption">Probabilidad</div></div></div><div className="risk-detail"><span className={`risk-dot ${riskColor(selectedRisk)}`} /><p><strong>Probabilidad {probability[selectedCell.x]} e impacto {impact[selectedCell.y]}</strong><br /><span>Nivel <b>{selectedLevel}</b> · Selecciona otra celda para explorar</span></p></div></div></div></section>
+      <section className="tools-section section" id="herramientas"><div className="section-heading tools-heading"><div><p className="section-kicker">Herramientas interactivas</p><h2>Un primer paso<br /><em>hacia la claridad.</em></h2></div><p className="section-intro">Evalúa tu nivel de exposición en minutos y descubre dónde centrar tu atención.</p></div><div className="tools-grid"><div className="calculator panel"><div className="panel-heading"><span className="panel-icon"><Zap aria-hidden="true" /></span><div><h3>Calculadora de riesgo</h3><p>Diagnóstico preliminar</p></div><span className="step-count">01 / 02</span></div><div className="form-grid"><label>Industria<select value={industry} onChange={(e) => setIndustry(e.target.value)}><option>Tecnología</option><option>Finanzas</option><option>Salud</option><option>Manufactura</option></select><ChevronDown aria-hidden="true" /></label><label>Tamaño de empresa<select value={size} onChange={(e) => setSize(e.target.value)}><option>1–50</option><option>51–200</option><option>+200</option></select><ChevronDown aria-hidden="true" /></label><label>Nivel de cumplimiento<select value={compliance} onChange={(e) => setCompliance(e.target.value)}><option>Bajo</option><option>Medio</option><option>Alto</option></select><ChevronDown aria-hidden="true" /></label></div><button className="button button-dark" onClick={calculateScore}>Calcular mi puntuación <ArrowUpRight aria-hidden="true" /></button><div className="score-result">{score === null ? <><span className="result-placeholder">—</span><div><strong>Completa el diagnóstico</strong><p>Tu puntuación aparecerá aquí</p></div></> : <><span className="score-number">{score}</span><div><strong>{score >= 7 ? 'Riesgo medio-alto' : 'Riesgo moderado'}</strong><p>{score >= 7 ? 'Recomendamos revisar tus controles críticos.' : 'Una base sólida, con margen de mejora.'}</p></div></>}</div></div><div className="matrix panel" id="matriz"><div className="panel-heading"><span className="panel-icon"><Network aria-hidden="true" /></span><div><h3>Matriz de riesgo</h3><p>ISO 31000 · 5 × 5</p></div><span className="step-count">INTERACTIVA</span></div><div className="matrix-layout"><span className="axis-caption-y">Impacto</span><div className="y-axis">{impact.map((item) => <small key={item}>{item}</small>)}</div><div className="matrix-main"><div className="cells">{impact.map((_, y) => probability.map((_, x) => <button aria-label={`Probabilidad ${probability[x]}, impacto ${impact[y]}`} className={`risk-cell ${riskColor((x + 1) * (5 - y))} ${selectedCell.x === x && selectedCell.y === y ? 'selected' : ''}`} key={`${x}-${y}`} onClick={() => setSelectedCell({ x, y })} />))}</div><div className="x-axis">{probability.map((item) => <small key={item}>{item}</small>)}</div><div className="matrix-caption">Probabilidad</div></div></div><div className="risk-detail"><span className={`risk-dot ${riskColor(selectedRisk)}`} /><p><strong>Probabilidad {probability[selectedCell.x]} e impacto {impact[selectedCell.y]}</strong><br /><span>Nivel <b>{selectedLevel}</b> · Selecciona otra celda para explorar</span></p></div></div></div></section>
 
       <section className="blog section" id="blog">
         <div className="section-heading">
@@ -118,11 +127,23 @@ export function HomePage({ posts, categories }: HomePageProps) {
         <div className="blog-controls">
           <label className="search-box">
             <Search aria-hidden="true" />
-            <input placeholder="Buscar artículos..." value={query} onChange={(e) => setQuery(e.target.value)} />
+            <span className="sr-only">Buscar artículos</span>
+            <input
+              type="search"
+              placeholder="Buscar artículos..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
           </label>
           <div className="category-filters">
             {categories.map((item) => (
-              <button className={category === item ? 'active' : ''} key={item} onClick={() => setCategory(item)}>
+              <button
+                className={category === item ? 'active' : ''}
+                key={item}
+                type="button"
+                aria-pressed={category === item}
+                onClick={() => setCategory(item)}
+              >
                 {item}
               </button>
             ))}
@@ -139,7 +160,7 @@ export function HomePage({ posts, categories }: HomePageProps) {
             {filteredPosts.map((post) => {
               const Icon = categoryIcon(post.categories[0])
               return (
-                <a
+                <Link
                   className="post-card"
                   key={post._id}
                   href={`/blog/${post.slug}`}
@@ -154,10 +175,7 @@ export function HomePage({ posts, categories }: HomePageProps) {
                         sizes="(max-width: 650px) 50vw, (max-width: 900px) 50vw, 25vw"
                       />
                     ) : (
-                      <>
-                        <span className="post-art-mark"><Icon /></span>
-                        <span className="post-art-grid" />
-                      </>
+                      <span className="post-art-mark"><Icon aria-hidden="true" /></span>
                     )}
                   </div>
                   <div className="post-meta">
@@ -166,17 +184,17 @@ export function HomePage({ posts, categories }: HomePageProps) {
                   </div>
                   <h3>{post.title}</h3>
                   {post.excerpt ? <p>{post.excerpt}</p> : null}
-                  <button>Leer artículo <ArrowUpRight aria-hidden="true" /></button>
-                </a>
+                  <span className="post-card-cta">Leer artículo <ArrowUpRight aria-hidden="true" /></span>
+                </Link>
               )
             })}
           </div>
         )}
       </section>
 
-      <section className="contact section" id="contacto"><div className="contact-copy"><p className="section-kicker">Hablemos</p><h2>El próximo movimiento<br /><em>empieza aquí.</em></h2><p>Cuéntanos qué te preocupa. Te ayudaremos a ponerle nombre, contexto y un plan.</p><div className="contact-details"><div><MapPin /><span>Calle Serrano 55<br />28006 Madrid</span></div><div><Mail /><span>hola@bisni.es</span></div><div><Globe2 /><span>+34 910 123 456</span></div></div></div><ContactForm /></section>
+      <section className="contact section" id="contacto">{contactBackground}<div className="contact-copy"><p className="section-kicker">Hablemos</p><h2>El próximo movimiento<br /><em>empieza aquí.</em></h2><p>Cuéntanos qué te preocupa. Te ayudaremos a ponerle nombre, contexto y un plan.</p><div className="contact-details"><div><MapPin aria-hidden="true" /><span>Calle Serrano 55<br />28006 Madrid</span></div><div><Mail aria-hidden="true" /><span>hola@bisni.es</span></div><div><Globe2 aria-hidden="true" /><span>+34 910 123 456</span></div></div></div><ContactForm /></section>
 
-      <footer className="footer"><div className="footer-main"><div><a className="brand footer-brand" href="#inicio"><span className="brand-mark">b</span>bisni<span className="brand-dot">.</span></a><p>Riesgo claro.<br />Decisiones sólidas.</p></div><div className="footer-links"><div><strong>Explora</strong><a href="#servicios">Servicios</a><a href="#herramientas">Herramientas</a><a href="#blog">Perspectivas</a></div><div><strong>Empresa</strong><a href="#contacto">Contacto</a><a href="#contacto">Sobre bisni</a><a href="#contacto">Trabaja con nosotros</a></div><div><strong>Legal</strong><a href="#contacto">Aviso legal</a><a href="#contacto">Privacidad</a><a href="#contacto">Cookies</a></div></div></div><div className="footer-bottom"><span>© 2026 bisni. Protegiendo tu futuro corporativo.</span><span className="socials"><a href="#contacto" aria-label="LinkedIn"><Globe2 /></a><a href="#contacto" aria-label="Email"><Mail /></a></span><span>Hecho con intención <span className="brand-dot">●</span></span></div></footer>
+      {footer}
     </main>
   )
 }

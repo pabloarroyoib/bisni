@@ -17,5 +17,8 @@ node_modules
 .next/
 .DS_Store
 coverage/
+
+# Artefactos de playwright-cli (snapshots, consola, screenshots)
+.playwright-cli/
 # TypeScript incremental cache
 *.tsbuildinfo

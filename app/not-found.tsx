@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { SiteFooter } from '@/components/site-footer'
+import { SiteHeader } from '@/components/site-header'
 
 export const metadata: Metadata = {
   title: 'Página no encontrada',
@@ -9,6 +11,10 @@ export const metadata: Metadata = {
 export default function NotFound() {
   return (
     <main className="site-shell">
+      <SiteHeader />
+
+      <span id="contenido" tabIndex={-1} />
+
       <article className="article-page">
         <div className="article-header">
           <p className="section-kicker">Error 404</p>
@@ -26,6 +32,8 @@ export default function NotFound() {
           </div>
         </div>
       </article>
+
+      <SiteFooter />
     </main>
   )
 }

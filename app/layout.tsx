@@ -1,8 +1,15 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
+import { Archivo } from 'next/font/google'
 import { SanityLive } from '@/sanity/lib/live'
 import { siteDescription, siteName, siteUrl } from '@/lib/site'
 import './globals.css'
+
+const archivo = Archivo({
+  subsets: ['latin'],
+  variable: '--font-archivo',
+  display: 'swap',
+})
 
 const defaultTitle = 'bisni — Riesgo claro. Decisiones sólidas.'
 
@@ -68,8 +75,11 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="es">
+    <html lang="es" className={archivo.variable}>
       <body className="antialiased">
+        <a className="skip-link" href="#contenido">
+          Saltar al contenido
+        </a>
         {children}
         <SanityLive />
         {process.env.NODE_ENV === 'production' && <Analytics />}

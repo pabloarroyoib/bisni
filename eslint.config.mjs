@@ -17,6 +17,8 @@ const eslintConfig = defineConfig([
     'build/**',
     'coverage/**',
     'next-env.d.ts',
+    // Artefactos de skills de IA (npx skills add -a opencode): no son código de la app.
+    '.agents/**',
   ]),
 ])
 

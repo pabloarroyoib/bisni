@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -6,11 +7,21 @@ import { POST_QUERY } from '@/sanity/lib/queries'
 import { sanityFetch } from '@/sanity/lib/live'
 import type { Metadata } from 'next'
 import { PostBody } from '@/components/post-body'
+import { SiteFooter } from '@/components/site-footer'
+import { SiteHeader } from '@/components/site-header'
+
+/**
+ * `cache()` deduplica la petición entre `generateMetadata` y el render: sin él
+ * se hacían dos fetches del mismo post por visita.
+ */
+const getPost = cache(async (slug: string) => {
+  const { data } = await sanityFetch({ query: POST_QUERY, params: { slug } })
+  return data as SanityPost | null
+})
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
-  const { data } = await sanityFetch({ query: POST_QUERY, params: { slug } })
-  const post = data as SanityPost | null
+  const post = await getPost(slug)
 
   if (!post) {
     return {
@@ -37,8 +48,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const { data } = await sanityFetch({ query: POST_QUERY, params: { slug } })
-  const mappedPost = mapPost(data as SanityPost | null)
+  const mappedPost = mapPost(await getPost(slug))
 
   if (!mappedPost) {
     notFound()
@@ -46,18 +56,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
   return (
     <main className="site-shell">
-      <header className="navbar">
-        <Link className="brand" href="/" aria-label="bisni inicio">
-          <span className="brand-mark">b</span>bisni<span className="brand-dot">.</span>
-        </Link>
-        <nav className="nav-links">
-          <Link href="/">Inicio</Link>
-          <Link href="/#servicios">Servicios</Link>
-          <Link href="/#blog">Blog</Link>
-          <Link href="/#contacto">Contacto</Link>
-        </nav>
-        <Link className="nav-cta" href="/#contacto">Solicitar diagnóstico</Link>
-      </header>
+      <SiteHeader />
+
+      <span id="contenido" tabIndex={-1} />
 
       <article className="article-page">
         <div className="article-header">
@@ -116,36 +117,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         </div>
       </article>
 
-      <footer className="footer">
-        <div className="footer-main">
-          <div>
-            <Link className="brand footer-brand" href="/">
-              <span className="brand-mark">b</span>bisni<span className="brand-dot">.</span>
-            </Link>
-            <p>Riesgo claro.<br />Decisiones sólidas.</p>
-          </div>
-          <div className="footer-links">
-            <div>
-              <strong>Explora</strong>
-              <Link href="/#servicios">Servicios</Link>
-              <Link href="/#blog">Perspectivas</Link>
-            </div>
-            <div>
-              <strong>Empresa</strong>
-              <Link href="/#contacto">Contacto</Link>
-              <Link href="/#contacto">Sobre bisni</Link>
-            </div>
-            <div>
-              <strong>Legal</strong>
-              <Link href="/#contacto">Aviso legal</Link>
-              <Link href="/#contacto">Privacidad</Link>
-            </div>
-          </div>
-        </div>
-        <div className="footer-bottom">
-          <span>© 2026 bisni. Protegiendo tu futuro corporativo.</span>
-        </div>
-      </footer>
+      <SiteFooter />
     </main>
   )
 }

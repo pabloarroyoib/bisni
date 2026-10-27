@@ -52,6 +52,9 @@ app/
 
 components/
   home-page.tsx               Client Component con toda la landing (~13,5 KB)
+  site-header.tsx             Cabecera compartida (Client: menú móvil con aria-expanded)
+  site-footer.tsx             Pie compartido (Server Component)
+  contour-field.tsx           Textura "Relieve" (Server Component, SVG determinista)
   contact-form.tsx            Formulario con estados de envío/error/éxito
   post-body.tsx               PortableText (Server Component): imágenes, video (YouTube/Vimeo/Drive/directo), enlaces
   ui/button.tsx               Botón shadcn/base-ui con cva (sin usar)
@@ -107,6 +110,22 @@ opencode.jsonc                Agente `gga-reviewer` de solo lectura para el hook
 - **blockContent**: rich text con h1–h4, cita, listas, negrita/cursiva, enlaces; imágenes con `alt` (con warning); objeto `video` con URL de YouTube (incluye Shorts y `youtu.be`), Vimeo (canales y enlaces no listados con hash), Google Drive o URL directa de archivo (MP4/WebM…).
 - **Render de video** (`components/post-body.tsx`): resuelve la URL con `URL` (no regex sueltas), restringe `video.url` a `http(s)` en el esquema y solo cae a `<video>` si la URL termina en extensión de video; el resto se ignora. Los encabezados se mapean h1→`h2` … h4→`h5` (h4/h5 estilizados en `globals.css`).
 - **Excepción `next/image`**: las imágenes dentro de Portable Text usan `<img>` con `eslint-disable` (no exponen dimensiones conocidas); es una desviación aceptada y documentada aquí.
+
+## Diseño
+
+- **Tokens**: definidos en el bloque `@theme` de `app/globals.css` (Tailwind v4, CSS-first): `--color-ink`, `--color-signal`, `--color-paper`, `--color-line`, `--color-muted`, `--color-surface-dark/deep`, `--color-signal-light`, `--color-on-dark*`. Las variables históricas (`--teal`, `--ink`, `--navy`…) apuntan a esos tokens, así que cambiar un token repinta todo el sitio.
+- **Tipografía**: una sola familia, **Archivo**, vía `next/font/google` (`--font-archivo` en `app/layout.tsx`). Títulos en peso 600 y tracking `-.02em`.
+- **"Relieve"**: la textura de fondo. Curvas de nivel que evocan un mapa de relieve del riesgo. `components/contour-field.tsx` (Server Component, generación determinista para no romper la hidratación) + `.contour-field-page` / `.contour-field-panel` en `globals.css`.
+  - `page`: una sola capa detrás de **toda** la página. Exige un `viewBox` alto (`1200×3200`); con uno apaisado, `preserveAspectRatio="slice"` lo escala ~8× en una página de ~4850px y las curvas quedan gigantes.
+  - `panel`: se usa dentro de una sección concreta (contacto, fondo oscuro).
+  - La deriva va en **unidades del `viewBox`** (`translate3d(-62px,28px,0)`), nunca en `%`: el porcentaje resuelve contra el bbox de cada grupo y la velocidad se vuelve impredecible. Duraciones 32s/48s ≈ 6 px/s renderizados.
+  - El SVG lleva `inset:-10%` de sobremedida para que la deriva no descubra los bordes.
+  - **Piso de perceptibilidad**: `#0e7f8c` al 7,5% sobre blanco da ~1,06:1 de contraste — invisible. Necesita ~0,5 de opacidad para llegar a ~2:1.
+  - Las secciones claras (`hero`, `services`, `blog`) no llevan fondo propio para que la textura las atraviese; `tools-section` conserva su ritmo con `rgba(243,246,246,.72)`.
+- **Columna de lectura** (`.article-header`, `.article-hero-image`, `.article-content`, `.article-footer`): `width: min(800px, 100% - 12vw)`. No volver a `max-width: 800px` + `padding: 0 9vw`: el padding se resta del ancho máximo y el texto queda en ~541px, desalineado con la imagen.
+- **Texto largo sin espacios**: `.article-body` y `.article-header` usan `overflow-wrap: anywhere` para que URLs o hashes no desborden la columna.
+- **Navbar sticky**: requiere que `.site-shell` use `overflow: clip` (no `hidden`), porque un ancestro con `overflow: hidden` crea un contenedor de scroll y rompe el `sticky`.
+- **Accesibilidad**: foco visible global, variante de foco claro sobre superficies oscuras, skip link a `#contenido`, `scroll-margin-top: 96px` (navbar sticky), y `prefers-reduced-motion` que congela animaciones y transiciones.
 
 ## Observaciones y deuda técnica
 
