@@ -23,12 +23,54 @@
 #   PROVIDER="minimax"
 #   PROVIDER="minimax:MiniMax-M3"
 #
-# Modelos ya conectados en este equipo (`opencode models`):
-#   Gratis:       opencode:opencode/deepseek-v4.1-flash-free   (sin coste, en uso)
+# Modelos ya conectados en este equipo (`opencode models` / `opencode auth list`):
+#   Google:       opencode:google/gemini-3.5-flash             (verificado)
 #   DeepSeek:     opencode:deepseek/deepseek-flash             (requiere saldo en la cuenta DeepSeek)
 #   DeepSeek Pro: opencode:deepseek/deepseek-v4-pro            (requiere saldo)
-#   Google:       opencode:google/gemini-3.5-flash             (verificado)
-PROVIDER="opencode:google/gemini-3.5-flash"
+#   opencode free: opencode/*-free                             (limite de uso gratuito agotado)
+#
+# OpenRouter (proveedor `openrouter`, autenticado y verificado):
+#   Todos estos modelos se usan tal cual, con el prefijo `opencode:openrouter/...`
+#   Anthropic:
+#     opencode:openrouter/anthropic/claude-haiku-5.5      ($0.1/$0.5)   verificado
+#     opencode:openrouter/anthropic/claude-sonnet-5.5     ($2/$10)
+#     opencode:openrouter/anthropic/claude-opus-5.5       ($4/$20)
+#     opencode:openrouter/anthropic/claude-opus-5         ($5/$25)
+#     opencode:openrouter/anthropic/claude-sonnet-5       ($2/$10)
+#     opencode:openrouter/anthropic/claude-sonnet-4.6     ($3/$15)
+#     opencode:openrouter/anthropic/claude-haiku-4.5      ($1/$5)
+#     opencode:openrouter/~anthropic/claude-sonnet-latest ($2/$10)
+#     opencode:openrouter/~anthropic/claude-opus-latest   ($4/$20)
+#     opencode:openrouter/~anthropic/claude-haiku-latest  ($0.1/$0.5)
+#   OpenAI:
+#     opencode:openrouter/openai/gpt-6.1-terra            ($1/$5)
+#     opencode:openrouter/openai/gpt-6.1-terra-pro        ($1/$5)
+#     opencode:openrouter/openai/gpt-6.1-sol              ($2/$10)
+#     opencode:openrouter/openai/gpt-6.1-sol-pro          ($2/$10)
+#     opencode:openrouter/openai/gpt-6-luna               ($0.1/$0.5)   verificado
+#     opencode:openrouter/openai/gpt-6-luna-pro           ($0.1/$0.5)
+#     opencode:openrouter/openai/gpt-6-astra              ($10/$50)
+#     opencode:openrouter/openai/gpt-5.6-terra            ($2/$12)
+#     opencode:openrouter/openai/gpt-5.6-luna             ($0.2/$1.2)
+#     opencode:openrouter/openai/gpt-5.6-sol              ($4/$20)
+#     opencode:openrouter/openai/gpt-5.5                  ($5/$30)
+#     opencode:openrouter/openai/gpt-5.1                  ($1.25/$10)
+#     opencode:openrouter/~openai/gpt-terra-latest        ($1/$5)
+#     opencode:openrouter/~openai/gpt-sol-latest          ($2/$10)
+#     opencode:openrouter/~openai/gpt-luna-latest         ($0.1/$0.5)
+#     opencode:openrouter/openai/gpt-oss-120b             ($0.15/$0.6)
+#   DeepSeek (OpenRouter):
+#     opencode:openrouter/deepseek/deepseek-v4.1-flash-1017 ($0.3/$1.2)  en uso
+#     opencode:openrouter/deepseek/deepseek-v4.1-flash      ($0.14/$0.42)
+#     opencode:openrouter/deepseek/deepseek-v4-pro          ($0.96/$1.91)
+#     opencode:openrouter/deepseek/deepseek-v4-pro-0813     ($1.32/$3.96)
+#     opencode:openrouter/~deepseek/deepseek-pro-latest     ($0.23/$8)
+#     opencode:openrouter/deepseek/deepseek-v3.2            ($0.28/$0.42)
+#   Gratuitos (OpenRouter):
+#     opencode:openrouter/recursive/flint-v1.0:free         verificado
+#     opencode:openrouter/xingchen-agi/xing4.0-29b-a4b:free verificado
+#     opencode:openrouter/nvidia/nemotron-3.5-super-vl:free
+PROVIDER="opencode:openrouter/deepseek/deepseek-v4.1-flash-1017"
 
 # File patterns to include in review (comma-separated)
 # Default: * (all files)
