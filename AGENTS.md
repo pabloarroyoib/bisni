@@ -115,7 +115,7 @@ opencode.jsonc                Agente `gga-reviewer` de solo lectura para el hook
 - `@sanity/icons` v5: importar iconos desde subpaths (`@sanity/icons/Video`), no desde la raíz; los exports raíz son stubs `never` y rompen dev/build.
 - Build en Windows: usar `npm run build` (pasa por `scripts/next.mjs`); no ejecutar `npx next build` con un casing de ruta distinto al del disco.
 - El blog no usa `generateStaticParams`; si se quiere ISR/estático, añadirlo.
-- GGA revisa los archivos TS/JS en staging contra `AGENTS.md` en cada commit (`.gga` + `.git/hooks/pre-commit`). Usa el agente de solo lectura `gga-reviewer` (`opencode.jsonc`, sin edición/shell/red) y el modelo `opencode/deepseek-v4.1-flash-free` (gratis); alternativas ya conectadas: `deepseek/deepseek-flash` y `deepseek/deepseek-v4-pro` (requieren saldo en DeepSeek) y `google/gemini-3.5-flash` (verificado). `git commit --no-verify` lo omite. En Windows requiere `gga` en el `PATH` (`%USERPROFILE%\bin`) y `opencode` disponible en Git Bash. No corre en CI (no hay credenciales del proveedor en Actions).
+- GGA revisa los archivos TS/JS en staging contra `AGENTS.md` en cada commit (`.gga` + `.git/hooks/pre-commit`). Usa el agente de solo lectura `gga-reviewer` (`opencode.jsonc`, sin edición/shell/red) y el modelo `opencode/google/gemini-3.5-flash` (verificado; el commit `e902b0a` pasó con él). Los modelos `opencode/*-free` se agotaron ("Free usage limit reached") y `deepseek/deepseek-flash` / `deepseek/deepseek-v4-pro` siguen bloqueados por falta de saldo en DeepSeek. `git commit --no-verify` lo omite. En Windows requiere `gga` en el `PATH` (`%USERPROFILE%\bin`) y `opencode` disponible en Git Bash. No corre en CI (no hay credenciales del proveedor en Actions).
 
 ## Comandos
 

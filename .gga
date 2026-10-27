@@ -28,7 +28,7 @@
 #   DeepSeek:     opencode:deepseek/deepseek-flash             (requiere saldo en la cuenta DeepSeek)
 #   DeepSeek Pro: opencode:deepseek/deepseek-v4-pro            (requiere saldo)
 #   Google:       opencode:google/gemini-3.5-flash             (verificado)
-PROVIDER="opencode:opencode/deepseek-v4.1-flash-free"
+PROVIDER="opencode:google/gemini-3.5-flash"
 
 # File patterns to include in review (comma-separated)
 # Default: * (all files)
