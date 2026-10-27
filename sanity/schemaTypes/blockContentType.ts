@@ -56,6 +56,7 @@ export const blockContentType = defineType({
           name: 'alt',
           type: 'string',
           title: 'Texto alternativo',
+          validation: (rule) => rule.warning('El texto alternativo ayuda a la accesibilidad y al SEO.'),
         },
       ],
     }),
@@ -69,8 +70,12 @@ export const blockContentType = defineType({
           name: 'url',
           type: 'url',
           title: 'URL del video',
-          description: 'URL de YouTube o Vimeo',
-          validation: (rule) => rule.required(),
+          description:
+            'YouTube (incluye Shorts y enlaces cortos), Vimeo, Google Drive o URL directa de un archivo (MP4, WebM…)',
+          validation: (rule) =>
+            rule.required().uri({
+              scheme: ['http', 'https'],
+            }),
         },
       ],
       preview: {

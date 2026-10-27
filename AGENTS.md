@@ -53,7 +53,7 @@ app/
 components/
   home-page.tsx               Client Component con toda la landing (~13,5 KB)
   contact-form.tsx            Formulario con estados de envío/error/éxito
-  post-body.tsx               PortableText: imágenes, video YouTube/Vimeo/MP4, enlaces
+  post-body.tsx               PortableText (Server Component): imágenes, video (YouTube/Vimeo/Drive/directo), enlaces
   ui/button.tsx               Botón shadcn/base-ui con cva (sin usar)
 
 lib/
@@ -104,7 +104,9 @@ opencode.jsonc                Agente `gga-reviewer` de solo lectura para el hook
 - **post**: `title`, `slug`, `excerpt` (máx. 280), `author` (referencia), `mainImage` (con `alt`), `categories[]` (referencias), `publishedAt`, `body`.
 - **author**: `name`, `slug`, `image`, `bio` (Portable Text).
 - **category**: `title`, `slug`, `description`.
-- **blockContent**: rich text con h1–h4, cita, listas, negrita/cursiva, enlaces; imágenes con `alt`; objeto `video` con URL de YouTube, Vimeo o video directo (cambio reciente sin commitear).
+- **blockContent**: rich text con h1–h4, cita, listas, negrita/cursiva, enlaces; imágenes con `alt` (con warning); objeto `video` con URL de YouTube (incluye Shorts y `youtu.be`), Vimeo (canales y enlaces no listados con hash), Google Drive o URL directa de archivo (MP4/WebM…).
+- **Render de video** (`components/post-body.tsx`): resuelve la URL con `URL` (no regex sueltas), restringe `video.url` a `http(s)` en el esquema y solo cae a `<video>` si la URL termina en extensión de video; el resto se ignora. Los encabezados se mapean h1→`h2` … h4→`h5` (h4/h5 estilizados en `globals.css`).
+- **Excepción `next/image`**: las imágenes dentro de Portable Text usan `<img>` con `eslint-disable` (no exponen dimensiones conocidas); es una desviación aceptada y documentada aquí.
 
 ## Observaciones y deuda técnica
 
@@ -115,7 +117,7 @@ opencode.jsonc                Agente `gga-reviewer` de solo lectura para el hook
 - `@sanity/icons` v5: importar iconos desde subpaths (`@sanity/icons/Video`), no desde la raíz; los exports raíz son stubs `never` y rompen dev/build.
 - Build en Windows: usar `npm run build` (pasa por `scripts/next.mjs`); no ejecutar `npx next build` con un casing de ruta distinto al del disco.
 - El blog no usa `generateStaticParams`; si se quiere ISR/estático, añadirlo.
-- GGA revisa los archivos TS/JS en staging contra `AGENTS.md` en cada commit (`.gga` + `.git/hooks/pre-commit`). Usa el agente de solo lectura `gga-reviewer` (`opencode.jsonc`, sin edición/shell/red). Proveedor por defecto: `opencode:openrouter/deepseek/deepseek-v4.1-flash-1017` (OpenRouter, verificado). Cualquier modelo de Anthropic, OpenAI o DeepSeek de OpenRouter se usa tal cual anteponiendo `opencode:openrouter/...` (lista completa comentada en `.gga`); también hay gratuitos de OpenRouter (`recursive/flint-v1.0:free`, `xingchen-agi/xing4.0-29b-a4b:free`). Los `opencode/*-free` agotaron su límite ("Free usage limit reached") y `deepseek/*` directo sigue bloqueado por falta de saldo. `git commit --no-verify` lo omite. En Windows requiere `gga` en el `PATH` (`%USERPROFILE%\bin`) y `opencode` disponible en Git Bash. No corre en CI (no hay credenciales del proveedor en Actions).
+- GGA revisa los archivos TS/JS en staging contra `AGENTS.md` en cada commit (`.gga` + `.git/hooks/pre-commit`). Usa el agente de solo lectura `gga-reviewer` (`opencode.jsonc`, sin edición/shell/red). Proveedor por defecto: `opencode:openrouter/deepseek/deepseek-v4.1-flash-1017` (OpenRouter, verificado). Cualquier modelo de Anthropic, OpenAI o DeepSeek de OpenRouter se usa tal cual anteponiendo `opencode:openrouter/...` (lista completa comentada en `.gga`); también hay gratuitos de OpenRouter (`recursive/flint-v1.0:free`, `xingchen-agi/xing4.0-29b-a4b:free`). Los `opencode/*-free` agotaron su límite ("Free usage limit reached") y `deepseek/*` directo sigue bloqueado por falta de saldo. El agente `gga-reviewer` usa un `system` que obliga a empezar por `STATUS: PASSED|FAILED`, porque GGA solo lee esa marca en las primeras 30 líneas. No añadir `steps: 1` al agente: rompe los modelos de Anthropic vía OpenRouter ("Provider returned error"). Anthropic, OpenAI y DeepSeek de OpenRouter están verificados con este agente. `git commit --no-verify` lo omite. En Windows requiere `gga` en el `PATH` (`%USERPROFILE%\bin`) y `opencode` disponible en Git Bash. No corre en CI (no hay credenciales del proveedor en Actions).
 
 ## Comandos
 

@@ -4,6 +4,7 @@
     "gga-reviewer": {
       "description": "Revisor de solo lectura para el hook de Gentleman Guardian Angel (GGA)",
       "mode": "all",
+      "system": "Eres un revisor de código. Empieza SIEMPRE tu respuesta con una única línea exactamente 'STATUS: PASSED' o 'STATUS: FAILED' y, a continuación, los hallazgos. No escribas nada antes de esa línea ni uses herramientas.",
       "permissions": [
         { "action": "edit", "resource": "*", "effect": "deny" },
         { "action": "shell", "resource": "*", "effect": "deny" },

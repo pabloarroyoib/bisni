@@ -103,9 +103,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         )}
 
         <div className="article-content">
-          <div className="article-body">
-            <PostBody value={mappedPost.body} />
-          </div>
+          <PostBody value={mappedPost.body} />
         </div>
 
         <div className="article-footer">
