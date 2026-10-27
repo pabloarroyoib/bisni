@@ -7,7 +7,7 @@ type SanityImage = {
 
 export type SanityPost = {
   _id: string
-  slug?: { current?: string } | null
+  slug?: string | null
   title?: string | null
   excerpt?: string | null
   publishedAt?: string | null
@@ -19,6 +19,10 @@ export type SanityPost = {
     image?: SanityImage
   } | null
   body?: unknown
+}
+
+export type SanityCategory = {
+  title?: string | null
 }
 
 export type BlogAccent = 'cyan' | 'navy' | 'lime' | 'orange'
@@ -83,7 +87,7 @@ export function mapPosts(posts: SanityPost[] | null | undefined): BlogPost[] {
     const categories = post.categories ?? ['Perspectivas']
     const image = post.mainImage
     const author = post.author
-    const slug = post.slug?.current
+    const slug = post.slug
     const category = categories[0]
 
     return {
@@ -112,3 +116,15 @@ export function mapPost(post: SanityPost | null | undefined): BlogPost | null {
   if (!post) return null
   return mapPosts([post])[0]
 }
+
+/** Construye la lista de filtros del blog ("Todos" + categorías sin duplicados). */
+export function toCategoryNames(
+  categories: SanityCategory[] | null | undefined,
+): string[] {
+  const names = (categories ?? [])
+    .map((category) => category.title)
+    .filter((title): title is string => Boolean(title))
+
+  return ['Todos', ...new Set(names)]
+}
+

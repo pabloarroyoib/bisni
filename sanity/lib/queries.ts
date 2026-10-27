@@ -35,3 +35,9 @@ export const POST_QUERY = defineQuery(`*[_type == "post" && (slug.current == $sl
   },
   body
 }`)
+
+export const SITEMAP_QUERY = defineQuery(`*[_type == "post" && defined(slug.current)] | order(coalesce(publishedAt, _createdAt) desc) {
+  "slug": slug.current,
+  "lastModified": coalesce(_updatedAt, publishedAt, _createdAt)
+}`)
+

@@ -1,12 +1,40 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { SanityLive } from '@/sanity/lib/live'
+import { siteDescription, siteName, siteUrl } from '@/lib/site'
 import './globals.css'
 
+const defaultTitle = 'bisni — Riesgo claro. Decisiones sólidas.'
+
 export const metadata: Metadata = {
-  title: 'bisni — Riesgo claro. Decisiones sólidas.',
-  description: 'Consultoría B2B de gestión de riesgos corporativos, ciberseguridad y cumplimiento ISO 31000.',
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: defaultTitle,
+    template: '%s | bisni',
+  },
+  description: siteDescription,
+  applicationName: siteName,
   generator: 'v0.app',
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'es_ES',
+    url: siteUrl,
+    siteName,
+    title: defaultTitle,
+    description: siteDescription,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: defaultTitle,
+    description: siteDescription,
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
   icons: {
     icon: [
       {

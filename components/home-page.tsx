@@ -1,10 +1,10 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import Image from 'next/image'
 import {
   ArrowUpRight,
   BarChart3,
-  Check,
   ChevronDown,
   ChevronRight,
   FileCheck2,
@@ -20,7 +20,7 @@ import {
   X,
   Zap,
 } from 'lucide-react'
-import { PostBody } from '@/components/post-body'
+import { ContactForm } from '@/components/contact-form'
 import type { BlogPost } from '@/lib/blog'
 
 const services = [
@@ -146,7 +146,13 @@ export function HomePage({ posts, categories }: HomePageProps) {
                 >
                   <div className={`post-art ${post.imageUrl ? 'has-image' : post.accent}`}>
                     {post.imageUrl ? (
-                      <img className="post-cover" src={post.imageUrl} alt={post.imageAlt} />
+                      <Image
+                        className="post-cover"
+                        src={post.imageUrl}
+                        alt={post.imageAlt}
+                        fill
+                        sizes="(max-width: 650px) 50vw, (max-width: 900px) 50vw, 25vw"
+                      />
                     ) : (
                       <>
                         <span className="post-art-mark"><Icon /></span>
@@ -168,7 +174,7 @@ export function HomePage({ posts, categories }: HomePageProps) {
         )}
       </section>
 
-      <section className="contact section" id="contacto"><div className="contact-copy"><p className="section-kicker">Hablemos</p><h2>El próximo movimiento<br /><em>empieza aquí.</em></h2><p>Cuéntanos qué te preocupa. Te ayudaremos a ponerle nombre, contexto y un plan.</p><div className="contact-details"><div><MapPin /><span>Calle Serrano 55<br />28006 Madrid</span></div><div><Mail /><span>hola@bisni.es</span></div><div><Globe2 /><span>+34 910 123 456</span></div></div></div><form className="contact-form" onSubmit={(e) => e.preventDefault()}><div className="form-row"><label>Tu nombre<input required placeholder="Nombre y apellidos" /></label><label>Empresa<input required placeholder="Nombre de empresa" /></label></div><label>Email corporativo<input required type="email" placeholder="tu@empresa.com" /></label><label>¿En qué podemos ayudarte?<textarea required placeholder="Cuéntanos brevemente tu reto..." rows={4} /></label><button className="button button-primary" type="submit">Enviar consulta <ArrowUpRight aria-hidden="true" /></button><p className="privacy-note"><Check aria-hidden="true" /> Respetamos tu privacidad. Nunca compartiremos tus datos.</p></form></section>
+      <section className="contact section" id="contacto"><div className="contact-copy"><p className="section-kicker">Hablemos</p><h2>El próximo movimiento<br /><em>empieza aquí.</em></h2><p>Cuéntanos qué te preocupa. Te ayudaremos a ponerle nombre, contexto y un plan.</p><div className="contact-details"><div><MapPin /><span>Calle Serrano 55<br />28006 Madrid</span></div><div><Mail /><span>hola@bisni.es</span></div><div><Globe2 /><span>+34 910 123 456</span></div></div></div><ContactForm /></section>
 
       <footer className="footer"><div className="footer-main"><div><a className="brand footer-brand" href="#inicio"><span className="brand-mark">b</span>bisni<span className="brand-dot">.</span></a><p>Riesgo claro.<br />Decisiones sólidas.</p></div><div className="footer-links"><div><strong>Explora</strong><a href="#servicios">Servicios</a><a href="#herramientas">Herramientas</a><a href="#blog">Perspectivas</a></div><div><strong>Empresa</strong><a href="#contacto">Contacto</a><a href="#contacto">Sobre bisni</a><a href="#contacto">Trabaja con nosotros</a></div><div><strong>Legal</strong><a href="#contacto">Aviso legal</a><a href="#contacto">Privacidad</a><a href="#contacto">Cookies</a></div></div></div><div className="footer-bottom"><span>© 2026 bisni. Protegiendo tu futuro corporativo.</span><span className="socials"><a href="#contacto" aria-label="LinkedIn"><Globe2 /></a><a href="#contacto" aria-label="Email"><Mail /></a></span><span>Hecho con intención <span className="brand-dot">●</span></span></div></footer>
     </main>

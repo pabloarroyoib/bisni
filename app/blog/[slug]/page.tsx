@@ -1,13 +1,16 @@
 import { notFound } from 'next/navigation'
-import { mapPosts, type SanityPost } from '@/lib/blog'
+import Image from 'next/image'
+import Link from 'next/link'
+import { mapPost, type SanityPost } from '@/lib/blog'
 import { POST_QUERY } from '@/sanity/lib/queries'
-import { client } from '@/sanity/lib/client'
+import { sanityFetch } from '@/sanity/lib/live'
 import type { Metadata } from 'next'
 import { PostBody } from '@/components/post-body'
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
-  const post = await client.fetch(POST_QUERY, { slug })
+  const { data } = await sanityFetch({ query: POST_QUERY, params: { slug } })
+  const post = data as SanityPost | null
 
   if (!post) {
     return {
@@ -15,23 +18,27 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     }
   }
 
-  const typedPost = post as SanityPost
-
   return {
-    title: `${typedPost.title} | bisni`,
-    description: typedPost.excerpt || 'Artículo de bisni sobre gestión de riesgos',
+    title: post.title ?? 'Artículo',
+    description: post.excerpt || 'Artículo de bisni sobre gestión de riesgos',
+    alternates: {
+      canonical: `/blog/${post.slug ?? slug}`,
+    },
+    openGraph: post.excerpt
+      ? {
+          type: 'article',
+          title: post.title ?? undefined,
+          description: post.excerpt,
+          publishedTime: post.publishedAt ?? undefined,
+        }
+      : undefined,
   }
 }
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const post = await client.fetch(POST_QUERY, { slug })
-
-  if (!post) {
-    notFound()
-  }
-
-  const mappedPost = mapPosts([post as SanityPost])[0]
+  const { data } = await sanityFetch({ query: POST_QUERY, params: { slug } })
+  const mappedPost = mapPost(data as SanityPost | null)
 
   if (!mappedPost) {
     notFound()
@@ -40,23 +47,23 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   return (
     <main className="site-shell">
       <header className="navbar">
-        <a className="brand" href="/" aria-label="bisni inicio">
+        <Link className="brand" href="/" aria-label="bisni inicio">
           <span className="brand-mark">b</span>bisni<span className="brand-dot">.</span>
-        </a>
+        </Link>
         <nav className="nav-links">
-          <a href="/">Inicio</a>
-          <a href="/#servicios">Servicios</a>
-          <a href="/#blog">Blog</a>
-          <a href="/#contacto">Contacto</a>
+          <Link href="/">Inicio</Link>
+          <Link href="/#servicios">Servicios</Link>
+          <Link href="/#blog">Blog</Link>
+          <Link href="/#contacto">Contacto</Link>
         </nav>
-        <a className="nav-cta" href="/#contacto">Solicitar diagnóstico</a>
+        <Link className="nav-cta" href="/#contacto">Solicitar diagnóstico</Link>
       </header>
 
       <article className="article-page">
         <div className="article-header">
-          <a href="/#blog" className="article-back">
+          <Link href="/#blog" className="article-back">
             ← Volver al blog
-          </a>
+          </Link>
           <div className="article-meta">
             <span className="article-category">{mappedPost.categories.join(' · ')}</span>
             <span className="article-date">{mappedPost.date}</span>
@@ -67,9 +74,11 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           {mappedPost.author && (
             <div className="article-author">
               {mappedPost.author.imageUrl && (
-                <img
+                <Image
                   src={mappedPost.author.imageUrl}
                   alt={mappedPost.author.name || 'Autor'}
+                  width={100}
+                  height={100}
                   className="author-avatar"
                 />
               )}
@@ -82,7 +91,14 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
         {mappedPost.imageUrl && (
           <div className="article-hero-image">
-            <img src={mappedPost.imageUrl} alt={mappedPost.imageAlt} />
+            <Image
+              src={mappedPost.imageUrl}
+              alt={mappedPost.imageAlt}
+              width={800}
+              height={500}
+              sizes="(max-width: 900px) 100vw, 800px"
+              priority
+            />
           </div>
         )}
 
@@ -93,38 +109,38 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         </div>
 
         <div className="article-footer">
-          <a href="/#contacto" className="button button-primary">
+          <Link href="/#contacto" className="button button-primary">
             ¿Tienes preguntas? Hablemos
-          </a>
-          <a href="/#blog" className="button button-ghost">
+          </Link>
+          <Link href="/#blog" className="button button-ghost">
             Ver más artículos
-          </a>
+          </Link>
         </div>
       </article>
 
       <footer className="footer">
         <div className="footer-main">
           <div>
-            <a className="brand footer-brand" href="/">
+            <Link className="brand footer-brand" href="/">
               <span className="brand-mark">b</span>bisni<span className="brand-dot">.</span>
-            </a>
+            </Link>
             <p>Riesgo claro.<br />Decisiones sólidas.</p>
           </div>
           <div className="footer-links">
             <div>
               <strong>Explora</strong>
-              <a href="/#servicios">Servicios</a>
-              <a href="/#blog">Perspectivas</a>
+              <Link href="/#servicios">Servicios</Link>
+              <Link href="/#blog">Perspectivas</Link>
             </div>
             <div>
               <strong>Empresa</strong>
-              <a href="/#contacto">Contacto</a>
-              <a href="/#contacto">Sobre bisni</a>
+              <Link href="/#contacto">Contacto</Link>
+              <Link href="/#contacto">Sobre bisni</Link>
             </div>
             <div>
               <strong>Legal</strong>
-              <a href="/#contacto">Aviso legal</a>
-              <a href="/#contacto">Privacidad</a>
+              <Link href="/#contacto">Aviso legal</Link>
+              <Link href="/#contacto">Privacidad</Link>
             </div>
           </div>
         </div>

@@ -1,5 +1,6 @@
 import {defineType, defineArrayMember} from 'sanity'
-import {ImageIcon} from '@sanity/icons/Image'
+import {ImageIcon as Image} from '@sanity/icons/Image'
+import {VideoIcon as Video} from '@sanity/icons/Video'
 
 export const blockContentType = defineType({
   title: 'Contenido enriquecido',
@@ -48,7 +49,7 @@ export const blockContentType = defineType({
     }),
     defineArrayMember({
       type: 'image',
-      icon: ImageIcon,
+      icon: Image,
       options: {hotspot: true},
       fields: [
         {
@@ -57,6 +58,33 @@ export const blockContentType = defineType({
           title: 'Texto alternativo',
         },
       ],
+    }),
+    defineArrayMember({
+      type: 'object',
+      name: 'video',
+      title: 'Video',
+      icon: Video,
+      fields: [
+        {
+          name: 'url',
+          type: 'url',
+          title: 'URL del video',
+          description: 'URL de YouTube o Vimeo',
+          validation: (rule) => rule.required(),
+        },
+      ],
+      preview: {
+        select: {
+          url: 'url',
+        },
+        prepare(selection) {
+          const {url} = selection
+          return {
+            title: 'Video',
+            subtitle: url,
+          }
+        },
+      },
     }),
   ],
 })
