@@ -83,6 +83,20 @@ Afinado recomendado en Windows (rendimiento y estabilidad):
 
 El rate limit en memoria es válido para una sola instancia. Si despliegas en varias, cámbialo por Upstash Redis, Vercel KV o similar (`lib/rate-limit.ts`).
 
+## Newsletter (Zoho Campaigns)
+
+La sección `#newsletter` de la landing (`components/home-page.tsx`) renderiza el formulario de `components/newsletter-form.tsx`, que envía a Zoho Campaigns mediante la variante documentada **"No JavaScript Embedding"**: un `<form>` HTML nativo cuyo `action` es `https://zgnp-zngp.maillist-manage.com/weboptin.zc` y cuyo `target` es un iframe oculto llamado `_zcSignup`, también renderizado por el componente.
+
+El formulario pide **email y nombre de pila obligatorio**: dos campos en una sola fila (con `aria-label`, sin etiqueta visible) y botón oscuro, para que no se parezca al formulario de consulta. Justo debajo, el puente «¿Buscas resolver un caso concreto? Hablemos» enlaza a `#contacto` y separa explícitamente la suscripción de la consulta.
+
+- El nombre visible se envía como `FIRSTNAME` porque el merge tag de Zoho `$[FNAME|Suscriptor]$` lee **First Name**. El snippet original de Zoho pedía el nombre en `LASTNAME` (Apellidos), que nunca rellenaría `FNAME`; aquí se invierte a propósito.
+- `LASTNAME` se envía **vacío a propósito** con un `<input type="hidden">`: Zoho acepta el campo vacío y algunas listas lo esperan, pero no alimenta el merge tag. Si la lista o el formulario de Zoho no exponen el campo First Name, `$[FNAME|Suscriptor]$` cae a su valor por defecto.
+- No se carga `https://ma.zoho.com/js/optin.min.js`: esa variante inyecta IDs globales duplicados y no puede informar del éxito desde otro origen.
+- La validación del formulario es local (`lib/newsletter.ts`) y usa un honeypot `website` como el del formulario de contacto. Valida `CONTACT_EMAIL` (email) y `FIRSTNAME` (nombre, 2–120 caracteres ya recortado).
+- El envío es nativo (sin `preventDefault()` cuando los datos son válidos) y la respuesta de Zoho aterriza en el iframe oculto, en otro origen. Por eso **la web no puede confirmar la suscripción**: el mensaje de éxito solo avisa de que se ha enviado un correo y pide revisar la bandeja de entrada y confirmar.
+- Para que ese mensaje sea cierto, el **doble opt-in debe estar activado** en Zoho (Settings → Consent & Privacy). Sin doble opt-in no se envía correo de confirmación y la copia sería engañosa.
+- Los campos ocultos (`submitType`, `formType`, `mode`, `zcvers`, `zx`, `zcld`, `zctd`, `zc_formIx`, `zc_trackCode`, `oldListIds`) y los metadatos `dt_*` (`dt_FIRSTNAME`, `dt_CONTACT_EMAIL`, `dt_LASTNAME`) están copiados literalmente de Zoho en `components/newsletter-form.tsx`. `dt_FIRSTNAME` declara el nombre como obligatorio (`true`), a diferencia del snippet original de Zoho (`false`). Si cambias el formulario en Zoho, vuelve a copiarlos desde su código de inserción sin reordenarlos.
+
 ## Estructura
 
 ```text

@@ -20,6 +20,7 @@ import {
   Zap,
 } from 'lucide-react'
 import { ContactForm } from '@/components/contact-form'
+import { NewsletterForm } from '@/components/newsletter-form'
 import { SiteHeader } from '@/components/site-header'
 import type { BlogPost } from '@/lib/blog'
 import type { ReactNode } from 'react'
@@ -190,6 +191,22 @@ export function HomePage({ posts, categories, background, contactBackground, foo
             })}
           </div>
         )}
+      </section>
+
+      <section className="newsletter section" id="newsletter">
+        <div className="newsletter-copy">
+          <div className="section-heading">
+            <div>
+              <p className="section-kicker">Newsletter</p>
+              <h2>Una idea útil,<br /><em>una vez al mes.</em></h2>
+            </div>
+          </div>
+          <p className="section-intro">Riesgo, ciberseguridad y cumplimiento. Un correo al mes, sin ruido y sin spam.</p>
+        </div>
+        <div className="newsletter-action">
+          <NewsletterForm />
+          <p className="newsletter-bridge">¿Buscas resolver un caso concreto? <a href="#contacto">Hablemos</a></p>
+        </div>
       </section>
 
       <section className="contact section" id="contacto">{contactBackground}<div className="contact-copy"><p className="section-kicker">Hablemos</p><h2>El próximo movimiento<br /><em>empieza aquí.</em></h2><p>Cuéntanos qué te preocupa. Te ayudaremos a ponerle nombre, contexto y un plan.</p><div className="contact-details"><div><MapPin aria-hidden="true" /><span>Calle Serrano 55<br />28006 Madrid</span></div><div><Mail aria-hidden="true" /><span>hola@bisni.es</span></div><div><Globe2 aria-hidden="true" /><span>+34 910 123 456</span></div></div></div><ContactForm /></section>
