@@ -22,15 +22,15 @@ export default function GlobalError({
         }}
       >
         <div style={{ maxWidth: 460 }}>
-          <p style={{ fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#3d999d' }}>
+          <p style={{ fontSize: 14, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#0e7b88' }}>
             Error inesperado
           </p>
           <h1 style={{ fontSize: 32, lineHeight: 1.1, margin: '12px 0' }}>
             Algo ha fallado por nuestra parte.
           </h1>
-          <p style={{ color: '#5f7778', lineHeight: 1.6, fontSize: 14 }}>
+          <p style={{ color: '#56696b', lineHeight: 1.6, fontSize: 16 }}>
             Vuelve a intentarlo. Si el problema continúa, escríbenos a{' '}
-            <a href="mailto:hola@bisni.es" style={{ color: '#319da7' }}>
+            <a href="mailto:hola@bisni.es" style={{ color: '#0e7b88' }}>
               hola@bisni.es
             </a>
             .
@@ -52,7 +52,7 @@ export default function GlobalError({
             Reintentar
           </button>
           {error.digest ? (
-            <p style={{ marginTop: 16, fontSize: 11, color: '#8ba09e' }}>Referencia: {error.digest}</p>
+            <p style={{ marginTop: 16, fontSize: 14, color: '#56696b' }}>Referencia: {error.digest}</p>
           ) : null}
         </div>
       </body>
