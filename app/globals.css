@@ -163,6 +163,7 @@ h1,h2,h3,p { margin:0; } h1,h2 { font-weight:600; letter-spacing:-.02em; } h1 { 
    salmón de las superficies oscuras no se lee sobre el papel claro. */
 .newsletter-form .field-error { color:var(--color-sienna); }
 .newsletter-status { margin:0; color:var(--color-signal); font-size:11px; line-height:1.5; }
+.newsletter-status.is-error { color:var(--color-sienna); }
 /* Puente explícito al formulario de consulta: separa la suscripción de la
    consulta para que no se confundan. */
 .newsletter-bridge { font-size:11px; color:var(--color-muted); }

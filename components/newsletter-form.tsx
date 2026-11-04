@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, type FormEvent } from 'react'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { ArrowUpRight, Check } from 'lucide-react'
 import { validateNewsletterInput, type NewsletterErrors } from '@/lib/newsletter'
 
@@ -30,14 +30,45 @@ const ZOHO_ACTION = 'https://zgnp-zngp.maillist-manage.com/weboptin.zc'
 const ZOHO_TARGET = '_zcSignup'
 const SUCCESS_MESSAGE =
   'Te enviamos un correo para confirmar tu suscripción. Revisa tu bandeja de entrada.'
+const UNCONFIRMED_MESSAGE =
+  'No hemos podido confirmar el envío. Revisa tu conexión y vuelve a intentarlo.'
+/**
+ * Tiempo máximo de espera a que el iframe reciba la respuesta de Zoho. Si no
+ * llega, asumimos que el envío no salió (sin red, bloqueador, iframe bloqueado)
+ * y devolvemos el control para que la persona pueda reintentar.
+ */
+const CONFIRM_TIMEOUT_MS = 8_000
+
+type Status = 'idle' | 'sending' | 'sent' | 'unconfirmed'
 
 export function NewsletterForm() {
   const [errors, setErrors] = useState<NewsletterErrors>({})
-  const [submitted, setSubmitted] = useState(false)
+  const [status, setStatus] = useState<Status>('idle')
+  const timeoutRef = useRef<number | null>(null)
+
+  useEffect(
+    () => () => {
+      if (timeoutRef.current !== null) window.clearTimeout(timeoutRef.current)
+    },
+    [],
+  )
+
+  const sending = status === 'sending'
+  const sent = status === 'sent'
+
+  /** El iframe cargó: la respuesta de Zoho llegó y el envío salió de verdad. */
+  function handleFrameLoad() {
+    if (status !== 'sending') return
+    if (timeoutRef.current !== null) {
+      window.clearTimeout(timeoutRef.current)
+      timeoutRef.current = null
+    }
+    setStatus('sent')
+  }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    // Evita un doble envío si se pulsa el botón más de una vez.
-    if (submitted) {
+    // Evita un doble envío mientras el primero viaja.
+    if (sending) {
       event.preventDefault()
       return
     }
@@ -67,7 +98,15 @@ export function NewsletterForm() {
     // Envío nativo: NO llamamos a preventDefault(). El navegador manda el
     // formulario al iframe oculto y la respuesta de Zoho nunca toca el DOM.
     setErrors({})
-    setSubmitted(true)
+    setStatus('sending')
+
+    // Si el iframe no carga en este plazo, el envío no salió: se libera el
+    // formulario para que se pueda reintentar sin recargar la página.
+    if (timeoutRef.current !== null) window.clearTimeout(timeoutRef.current)
+    timeoutRef.current = window.setTimeout(() => {
+      timeoutRef.current = null
+      setStatus((current) => (current === 'sending' ? 'unconfirmed' : current))
+    }, CONFIRM_TIMEOUT_MS)
   }
 
   return (
@@ -102,9 +141,9 @@ export function NewsletterForm() {
             aria-invalid={errors.email ? true : undefined}
             aria-describedby={errors.email ? 'EMBED_FORM_EMAIL_ERROR' : undefined}
           />
-          <button className="button button-dark" type="submit" disabled={submitted}>
-            {submitted ? 'Enviado' : 'Suscribirme'}{' '}
-            {submitted ? <Check aria-hidden="true" /> : <ArrowUpRight aria-hidden="true" />}
+          <button className="button button-dark" type="submit" disabled={sending || sent}>
+            {sending ? 'Enviando…' : sent ? 'Enviado' : status === 'unconfirmed' ? 'Reintentar' : 'Suscribirme'}{' '}
+            {sent ? <Check aria-hidden="true" /> : <ArrowUpRight aria-hidden="true" />}
           </button>
         </div>
         {errors.name && (
@@ -167,21 +206,29 @@ export function NewsletterForm() {
           </label>
         </div>
 
-        {submitted && (
-          <p className="newsletter-status" role="status" aria-live="polite">
+        {sent && (
+          <p className="newsletter-status" role="status">
             {SUCCESS_MESSAGE}
+          </p>
+        )}
+        {status === 'unconfirmed' && (
+          <p className="newsletter-status is-error" role="alert">
+            {UNCONFIRMED_MESSAGE}
           </p>
         )}
       </form>
 
       {/* Destino del envío: el navegador carga aquí la respuesta de Zoho,
-          fuera de la vista y sin sacar al usuario de la página. */}
+          fuera de la vista y sin sacar al usuario de la página. El `load` es la
+          única señal fiable de que el envío salió (no podemos leer el
+          contenido por ser otro origen). */}
       <iframe
         name={ZOHO_TARGET}
         title="Respuesta de Zoho Campaigns"
         aria-hidden="true"
         tabIndex={-1}
         className="newsletter-frame"
+        onLoad={handleFrameLoad}
       />
     </>
   )
