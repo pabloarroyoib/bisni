@@ -168,7 +168,7 @@ h1,h2,h3,p { margin:0; } h1,h2 { font-weight:600; letter-spacing:-.02em; } h1 { 
 .newsletter-form input { border:0; border-bottom:1px solid var(--color-line); background:transparent; padding:9px 0; color:var(--color-ink); font-size:var(--fs-body); }
 .newsletter-form input:focus { border-color:var(--color-signal); }
 .newsletter-form input::placeholder { color:var(--color-muted); }
-.newsletter-form .button:disabled { opacity:.55; cursor:not-allowed; transform:none; }
+.newsletter-form .button:disabled, .newsletter-form .button[aria-disabled="true"] { opacity:.55; cursor:not-allowed; transform:none; }
 /* El error hereda el layout de `.field-error`; solo cambia el color porque el
    salmón de las superficies oscuras no se lee sobre el papel claro. */
 .newsletter-form .field-error { color:var(--color-sienna); }

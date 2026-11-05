@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState, type FormEvent } from 'react'
+import { useEffect, useId, useRef, useState, type FormEvent } from 'react'
 import { ArrowUpRight, Check } from 'lucide-react'
 import { validateNewsletterInput, type NewsletterErrors } from '@/lib/newsletter'
 
@@ -22,14 +22,18 @@ import { validateNewsletterInput, type NewsletterErrors } from '@/lib/newsletter
  * nativo que apunta al endpoint de Zoho y envía a un iframe oculto llamado
  * `_zcSignup`. La variante JS (optin.min.js) inyecta IDs globales duplicados y
  * no puede informar del éxito desde otro origen; la variante sin JS está
- * documentada, no necesita OAuth y el doble opt-in de Zoho es la confirmación
- * real. Por eso la UI no afirma que la suscripción esté confirmada: solo pide
- * revisar el correo y confirmar.
+ * documentada y no necesita OAuth.
+ *
+ * El doble opt-in está desactivado en Zoho, así que el contacto entra directo a
+ * la lista y el mensaje de éxito no menciona ningún correo de confirmación. La
+ * respuesta sigue siendo cross-origin: lo único verificable es que el iframe
+ * cargó, o sea que el envío salió. Si Zoho vuelve a activar el doble opt-in,
+ * `SUCCESS_MESSAGE` tiene que volver a pedir la confirmación por correo.
  */
 const ZOHO_ACTION = 'https://zgnp-zngp.maillist-manage.com/weboptin.zc'
 const ZOHO_TARGET = '_zcSignup'
 const SUCCESS_MESSAGE =
-  'Te enviamos un correo para confirmar tu suscripción. Revisa tu bandeja de entrada.'
+  'Listo. Ya estás en la lista y vas a recibir el próximo número.'
 const UNCONFIRMED_MESSAGE =
   'No hemos podido confirmar el envío. Revisa tu conexión y vuelve a intentarlo.'
 /**
@@ -44,7 +48,18 @@ type Status = 'idle' | 'sending' | 'sent' | 'unconfirmed'
 export function NewsletterForm() {
   const [errors, setErrors] = useState<NewsletterErrors>({})
   const [status, setStatus] = useState<Status>('idle')
+  // Ids únicos por instancia: si el formulario se renderiza dos veces en la
+  // misma página, `aria-describedby` no debe apuntar al error del otro.
+  const fieldId = useId()
+  const nameErrorId = `${fieldId}-name-error`
+  const emailErrorId = `${fieldId}-email-error`
   const timeoutRef = useRef<number | null>(null)
+  // Un envío está en vuelo mientras el iframe no haya cargado. Es un ref y no
+  // el estado para que el handler del `load` no dependa de un render previo:
+  // si Zoho tarda más que el timeout, el load tardío tiene que marcar éxito
+  // igual (si no, se le dice que falló cuando sí se registró y se invita a
+  // duplicar la suscripción).
+  const pendingRef = useRef(false)
 
   useEffect(
     () => () => {
@@ -56,9 +71,14 @@ export function NewsletterForm() {
   const sending = status === 'sending'
   const sent = status === 'sent'
 
-  /** El iframe cargó: la respuesta de Zoho llegó y el envío salió de verdad. */
+  /**
+   * El iframe cargó: la respuesta de Zoho llegó y el envío salió de verdad.
+   * El `load` inicial del iframe (about:blank) no cuenta porque no hay envío
+   * pendiente.
+   */
   function handleFrameLoad() {
-    if (status !== 'sending') return
+    if (!pendingRef.current) return
+    pendingRef.current = false
     if (timeoutRef.current !== null) {
       window.clearTimeout(timeoutRef.current)
       timeoutRef.current = null
@@ -67,8 +87,11 @@ export function NewsletterForm() {
   }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    // Evita un doble envío mientras el primero viaja.
-    if (sending) {
+    // Un envío ya salió o está viajando: no se vuelve a postear, para no crear
+    // un contacto duplicado en Zoho. El botón sigue enfocable (deshabilitarlo
+    // dentro del handler aborta la sumisión en algunos navegadores), así que el
+    // freno tiene que estar acá.
+    if (sending || sent) {
       event.preventDefault()
       return
     }
@@ -97,7 +120,11 @@ export function NewsletterForm() {
 
     // Envío nativo: NO llamamos a preventDefault(). El navegador manda el
     // formulario al iframe oculto y la respuesta de Zoho nunca toca el DOM.
+    // El botón NO se deshabilita durante el envío: hay navegadores que abortan
+    // la sumisión si el submitter queda deshabilitado dentro del handler. El
+    // doble envío lo frena el guard de `sending`.
     setErrors({})
+    pendingRef.current = true
     setStatus('sending')
 
     // Si el iframe no carga en este plazo, el envío no salió: se libera el
@@ -117,6 +144,7 @@ export function NewsletterForm() {
         method="POST"
         target={ZOHO_TARGET}
         noValidate
+        aria-busy={sending || undefined}
         onSubmit={handleSubmit}
       >
         <div className="newsletter-row">
@@ -128,10 +156,9 @@ export function NewsletterForm() {
             autoComplete="given-name"
             aria-label="Tu nombre"
             aria-invalid={errors.name ? true : undefined}
-            aria-describedby={errors.name ? 'EMBED_FORM_NAME_ERROR' : undefined}
+            aria-describedby={errors.name ? nameErrorId : undefined}
           />
           <input
-            id="EMBED_FORM_EMAIL_LABEL"
             name="CONTACT_EMAIL"
             type="email"
             required
@@ -139,20 +166,20 @@ export function NewsletterForm() {
             autoComplete="email"
             aria-label="Tu email"
             aria-invalid={errors.email ? true : undefined}
-            aria-describedby={errors.email ? 'EMBED_FORM_EMAIL_ERROR' : undefined}
+            aria-describedby={errors.email ? emailErrorId : undefined}
           />
-          <button className="button button-dark" type="submit" disabled={sending || sent}>
+          <button className="button button-dark" type="submit" aria-disabled={sending || sent || undefined}>
             {sending ? 'Enviando…' : sent ? 'Enviado' : status === 'unconfirmed' ? 'Reintentar' : 'Suscribirme'}{' '}
             {sent ? <Check aria-hidden="true" /> : <ArrowUpRight aria-hidden="true" />}
           </button>
         </div>
         {errors.name && (
-          <span className="field-error" id="EMBED_FORM_NAME_ERROR" role="alert">
+          <span className="field-error" id={nameErrorId} role="alert">
             {errors.name}
           </span>
         )}
         {errors.email && (
-          <span className="field-error" id="EMBED_FORM_EMAIL_ERROR" role="alert">
+          <span className="field-error" id={emailErrorId} role="alert">
             {errors.email}
           </span>
         )}
@@ -185,20 +212,14 @@ export function NewsletterForm() {
             elimina. */}
         <input type="hidden" name="LASTNAME" value="" />
 
-        {/* Metadatos que Zoho espera junto al formulario. `dt_FIRSTNAME` declara
-            el nombre como obligatorio (`true`); el snippet de Zoho lo traía con
-            `false`, pero aquí se exige en cliente. */}
-        <span id="dt_FIRSTNAME" style={{ display: 'none' }}>
-          1,true,1,Nombre,2
-        </span>
-        <span id="dt_CONTACT_EMAIL" style={{ display: 'none' }}>
-          1,true,6,Correo electrónico de contacto,2
-        </span>
-        <span id="dt_LASTNAME" style={{ display: 'none' }}>
-          1,false,1,Apellidos,2
-        </span>
+        {/* Los `dt_*` del snippet de Zoho no van: solo los usaba su JavaScript
+            para mapear etiquetas, que acá no se carga, y sin ese script son
+            spans inertes con IDs fijos. */}
 
-        {/* Honeypot anti-bots: invisible para personas, tentador para scripts. */}
+        {/* Honeypot anti-bots: invisible para personas, tentador para scripts.
+            Es una barrera blanda: el envío va directo a Zoho, así que quien
+            postee contra el endpoint sin pasar por esta página lo esquiva. La
+            protección real exigiría proxear el alta por un route handler. */}
         <div className="form-honeypot" aria-hidden="true">
           <label>
             No rellenar
