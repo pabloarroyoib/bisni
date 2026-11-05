@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Globe2, Mail } from 'lucide-react'
+import { CONTACT_EMAIL, mailtoHref } from '@/lib/email'
 
 const LINK_GROUPS = [
   {
@@ -64,9 +65,10 @@ export function SiteFooter() {
           <Link href="/#contacto" aria-label="LinkedIn">
             <Globe2 aria-hidden="true" />
           </Link>
-          <Link href="/#contacto" aria-label="Email">
+          {/* El sobre abre el correo: antes apuntaba a #contacto, que no es lo que promete el ícono. */}
+          <a href={mailtoHref()} aria-label={`Enviar un correo a ${CONTACT_EMAIL}`}>
             <Mail aria-hidden="true" />
-          </Link>
+          </a>
         </span>
         <span>
           Hecho con intención <span className="brand-dot">●</span>

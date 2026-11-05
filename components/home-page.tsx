@@ -22,6 +22,7 @@ import {
 import { ContactForm } from '@/components/contact-form'
 import { NewsletterForm } from '@/components/newsletter-form'
 import { SiteHeader } from '@/components/site-header'
+import { CONTACT_EMAIL, gmailComposeUrl, mailtoHref } from '@/lib/email'
 import type { BlogPost } from '@/lib/blog'
 import type { ReactNode } from 'react'
 
@@ -209,7 +210,7 @@ export function HomePage({ posts, categories, background, contactBackground, foo
         </div>
       </section>
 
-      <section className="contact section" id="contacto">{contactBackground}<div className="contact-copy"><p className="section-kicker">Hablemos</p><h2>El próximo movimiento<br /><em>empieza aquí.</em></h2><p>Cuéntanos qué te preocupa. Te ayudaremos a ponerle nombre, contexto y un plan.</p><div className="contact-details"><div><MapPin aria-hidden="true" /><span>Calle Serrano 55<br />28006 Madrid</span></div><div><Mail aria-hidden="true" /><span>hola@bisni.es</span></div><div><Globe2 aria-hidden="true" /><span>+34 910 123 456</span></div></div></div><ContactForm /></section>
+      <section className="contact section" id="contacto">{contactBackground}<div className="contact-copy"><p className="section-kicker">Hablemos</p><h2>El próximo movimiento<br /><em>empieza aquí.</em></h2><p>Cuéntanos qué te preocupa. Te ayudaremos a ponerle nombre, contexto y un plan.</p><div className="contact-details"><div><MapPin aria-hidden="true" /><span>Calle Serrano 55<br />28006 Madrid</span></div><div><Mail aria-hidden="true" /><span><a href={mailtoHref()}>{CONTACT_EMAIL}</a><a className="mail-alt" href={gmailComposeUrl()} target="_blank" rel="noopener noreferrer">o abrir en Gmail</a></span></div><div><Globe2 aria-hidden="true" /><span>+34 910 123 456</span></div></div></div><ContactForm /></section>
 
       {footer}
     </main>
