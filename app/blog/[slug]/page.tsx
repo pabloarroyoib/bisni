@@ -2,8 +2,10 @@ import { cache } from 'react'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import { mapPost, type SanityPost } from '@/lib/blog'
-import { POST_QUERY } from '@/sanity/lib/queries'
+import { ArrowUpRight } from 'lucide-react'
+import { BlogCard } from '@/components/blog-card'
+import { mapPost, mapPosts, pickRelatedPosts, type SanityPost } from '@/lib/blog'
+import { POSTS_QUERY, POST_QUERY } from '@/sanity/lib/queries'
 import { sanityFetch } from '@/sanity/lib/live'
 import type { Metadata } from 'next'
 import { PostBody } from '@/components/post-body'
@@ -54,6 +56,14 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     notFound()
   }
 
+  // Relacionados: primero los de la misma categoría, completando con los más recientes.
+  const postsResult = await sanityFetch({ query: POSTS_QUERY })
+  const relatedPosts = pickRelatedPosts(
+    mapPosts(postsResult.data as SanityPost[] | null),
+    mappedPost._id,
+    3,
+  )
+
   return (
     <main className="site-shell">
       <SiteHeader />
@@ -62,7 +72,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
       <article className="article-page">
         <div className="article-header">
-          <Link href="/#blog" className="article-back">
+          <Link href="/blog" className="article-back">
             ← Volver al blog
           </Link>
           <div className="article-meta">
@@ -107,15 +117,23 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           <PostBody value={mappedPost.body} />
         </div>
 
-        <div className="article-footer">
-          <Link href="/#contacto" className="button button-primary">
-            ¿Tienes preguntas? Hablemos
-          </Link>
-          <Link href="/#blog" className="button button-ghost">
-            Ver más artículos
-          </Link>
-        </div>
       </article>
+
+      {relatedPosts.length > 0 ? (
+        <section className="related section" aria-labelledby="related-title">
+          <div className="related-head">
+            <h2 id="related-title">También te puede interesar</h2>
+            <Link href="/blog" className="button button-dark">
+              Ver todas las notas <ArrowUpRight aria-hidden="true" />
+            </Link>
+          </div>
+          <div className="related-grid">
+            {relatedPosts.map((post) => (
+              <BlogCard key={post._id} post={post} />
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       <SiteFooter />
     </main>
