@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { mapPost, mapPosts, toCategoryNames, type SanityPost } from '@/lib/blog'
+import { mapPost, mapPosts, pickRelatedPosts, toCategoryNames, type SanityPost } from '@/lib/blog'
 
 function block(text: string) {
   return {
@@ -103,5 +103,49 @@ describe('toCategoryNames', () => {
 
   it('solo devuelve "Todos" sin categorías', () => {
     expect(toCategoryNames(null)).toEqual(['Todos'])
+  })
+})
+
+describe('pickRelatedPosts', () => {
+  function post(id: string, categories: string[], iso: string): SanityPost {
+    return {
+      _id: id,
+      title: `Titulo ${id}`,
+      slug: id,
+      publishedAt: iso,
+      categories,
+      body: [block('texto')],
+    }
+  }
+
+  const actual = post('actual', ['Ciberseguridad', 'Normativa'], '2026-10-28T00:00:00Z')
+  const mismaCategoria = post('ciber', ['Ciberseguridad'], '2026-10-20T00:00:00Z')
+  const tambienNormativa = post('norma', ['Normativa'], '2026-10-10T00:00:00Z')
+  const otraCategoria = post('finanzas', ['Finanzas'], '2026-10-27T00:00:00Z')
+  const todos = mapPosts([actual, otraCategoria, mismaCategoria, tambienNormativa])
+
+  it('excluye el artículo actual', () => {
+    const resultado = pickRelatedPosts(todos, 'actual', 3)
+    expect(resultado.map((p) => p._id)).not.toContain('actual')
+  })
+
+  it('prioriza los de la misma categoría y completa con los más recientes', () => {
+    const resultado = pickRelatedPosts(todos, 'actual', 3)
+    expect(resultado.map((p) => p._id)).toEqual(['ciber', 'norma', 'finanzas'])
+  })
+
+  it('respeta el límite y no repite artículos', () => {
+    const resultado = pickRelatedPosts(todos, 'actual', 2)
+    expect(resultado).toHaveLength(2)
+    expect(new Set(resultado.map((p) => p._id)).size).toBe(2)
+  })
+
+  it('sin artículos relacionados devuelve lista vacía', () => {
+    const soloActual = mapPosts([actual])
+    expect(pickRelatedPosts(soloActual, 'actual', 3)).toEqual([])
+  })
+
+  it('con una lista vacía devuelve lista vacía', () => {
+    expect(pickRelatedPosts([], 'actual', 3)).toEqual([])
   })
 })

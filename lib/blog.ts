@@ -37,6 +37,8 @@ export type BlogPost = {
   read: string
   accent: BlogAccent
   imageUrl: string | null
+  /** Versión grande (1600×900) para el destacado; la de tarjeta es 800×500. */
+  heroImageUrl: string | null
   imageAlt: string
   body: unknown
   author?: {
@@ -100,6 +102,7 @@ export function mapPosts(posts: SanityPost[] | null | undefined): BlogPost[] {
       read: readingTime(post.body),
       accent: ACCENT_BY_CATEGORY[category] ?? ACCENTS[index % ACCENTS.length],
       imageUrl: image?.asset ? urlFor(image).width(800).height(500).fit('crop').url() : null,
+      heroImageUrl: image?.asset ? urlFor(image).width(1600).height(900).fit('crop').url() : null,
       imageAlt: image?.alt || post.title || '',
       body: post.body ?? [],
       author: author
@@ -128,3 +131,20 @@ export function toCategoryNames(
   return ['Todos', ...new Set(names)]
 }
 
+
+/**
+ * Elige los artículos que se muestran al final de una nota: primero los que
+ * comparten alguna categoría con el actual y después se completa con los más
+ * recientes. `posts` llega ordenado por fecha descendente, así que dentro de
+ * cada grupo se respeta ese orden.
+ */
+export function pickRelatedPosts(posts: BlogPost[], currentId: string, limit = 3): BlogPost[] {
+  const current = posts.find((post) => post._id === currentId)
+  const categories = new Set(current?.categories ?? [])
+  const others = posts.filter((post) => post._id !== currentId)
+
+  const sameCategory = others.filter((post) => post.categories.some((category) => categories.has(category)))
+  const rest = others.filter((post) => !sameCategory.includes(post))
+
+  return [...sameCategory, ...rest].slice(0, Math.max(0, limit))
+}
