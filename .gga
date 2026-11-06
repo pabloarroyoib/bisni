@@ -70,7 +70,7 @@
 #     opencode:openrouter/recursive/flint-v1.0:free         verificado
 #     opencode:openrouter/xingchen-agi/xing4.0-29b-a4b:free verificado
 #     opencode:openrouter/nvidia/nemotron-3.5-super-vl:free
-PROVIDER="opencode:openrouter/deepseek/deepseek-v4.1-flash-1017"
+PROVIDER="opencode:google/gemini-3.5-flash"
 
 # File patterns to include in review (comma-separated)
 # Default: * (all files)
