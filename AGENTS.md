@@ -129,6 +129,8 @@ opencode.jsonc                Agente `gga-reviewer` de solo lectura para el hook
 
 ## Observaciones y deuda técnica
 
+- **`package-lock.json` con npm 10**: este equipo tiene npm 11, que poda del lock las variantes por plataforma de `@typescript/typescript-*`. El CI usa Node 22 (npm 10) y `npm ci` falla con `Missing: @typescript/typescript-<plataforma> from lock file`. Al agregar dependencias, regenerar con `npx npm@10 install --package-lock-only --include=optional` antes de commitear el lock.
+
 - El diseño vive casi todo en `app/globals.css` con clases globales y reglas en una sola línea; Tailwind está configurado pero se usa poco.
 - Contenido comercial (servicios, dirección, email, teléfono, footer) está hardcodeado en `home-page.tsx`.
 - El rate limit del formulario es en memoria: no sirve con varias instancias (mover a Redis/KV si escala).
