@@ -100,7 +100,7 @@ opencode.jsonc                Agente `gga-reviewer` de solo lectura para el hook
 - `defineLive` solo recibe `serverToken` (`SANITY_API_READ_TOKEN`); no se expone ningún token al navegador.
 - El blog no usa `generateStaticParams`; el detalle se renderiza dinámicamente.
 - La home filtra búsqueda y categorías en el cliente (`home-page.tsx`).
-- El formulario hace `POST /api/contact`; sin `CONTACT_WEBHOOK_URL`, en dev se registra en consola y en producción responde `503`.
+- El formulario hace `POST /api/contact`. Entrega en cascada: **SMTP de Zoho Mail** (`SMTP_USER`, `SMTP_PASS`, `CONTACT_TO`, `CONTACT_FROM`; el mail lo arma `lib/contact-email.ts`), después `CONTACT_WEBHOOK_URL`, y si no hay ninguno de los dos, en dev se registra en consola y en producción responde `503`.
 
 ## Modelo de contenido (Sanity)
 

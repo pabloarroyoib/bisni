@@ -35,7 +35,13 @@ Todas están documentadas en `.env.example`.
 | `NEXT_PUBLIC_SANITY_API_VERSION` | No | Versión de API (por defecto la de `sanity/env.ts`) |
 | `SANITY_API_READ_TOKEN` | Recomendada | Token de lectura solo de servidor. Necesario para borradores y Live |
 | `NEXT_PUBLIC_SITE_URL` | No | URL canónica (`https://bisni.es` por defecto) |
-| `CONTACT_WEBHOOK_URL` | No | Endpoint que recibe los envíos del formulario |
+| `SMTP_HOST` | No | Servidor SMTP de Zoho (`smtp.zoho.com` por defecto) |
+| `SMTP_PORT` | No | Puerto SMTP (`465` por defecto, SSL directo) |
+| `SMTP_USER` | No | Cuenta de Zoho Mail que envía. Con `SMTP_PASS` y `CONTACT_TO` activa el email |
+| `SMTP_PASS` | No | Contraseña de aplicación de Zoho Mail |
+| `CONTACT_FROM` | No | Remitente visible (`SMTP_USER` por defecto) |
+| `CONTACT_TO` | No | Buzón que recibe las consultas del formulario |
+| `CONTACT_WEBHOOK_URL` | No | Alternativa sin SMTP: endpoint que recibe los envíos |
 | `CONTACT_WEBHOOK_SECRET` | No | Se envía como `Authorization: Bearer` al webhook |
 
 > El token de lectura **no** debe llevar prefijo `NEXT_PUBLIC_`: se usa únicamente en el servidor.
@@ -76,10 +82,37 @@ Afinado recomendado en Windows (rendimiento y estabilidad):
 
 ## Formulario de contacto
 
-`POST /api/contact` valida el cuerpo (`lib/contact.ts`), aplica un rate limit en memoria (5 envíos/minuto por IP) y reenvía el mensaje a `CONTACT_WEBHOOK_URL`.
+`POST /api/contact` valida el cuerpo (`lib/contact.ts`), aplica un rate limit en memoria (5 envíos/minuto por IP) y entrega el mensaje por una de dos vías.
 
-- Sin webhook en desarrollo: el envío se registra en la consola del servidor.
-- Sin webhook en producción: la API responde `503` y la UI muestra un fallback a `hola@bisni.es`.
+### Entrega por email (SMTP de Zoho Mail)
+
+Es la vía principal. Si están definidas `SMTP_USER`, `SMTP_PASS` y `CONTACT_TO`, el endpoint envía un email a ese buzón y **no** usa el webhook.
+
+| Variable | Por defecto | Para qué |
+| --- | --- | --- |
+| `SMTP_HOST` | `smtp.zoho.com` | Servidor SMTP de Zoho. |
+| `SMTP_PORT` | `465` | `465` usa SSL directo; `587` usa STARTTLS. |
+| `SMTP_USER` | — | Cuenta completa de Zoho Mail (por ejemplo `hola@bisni.es`). |
+| `SMTP_PASS` | — | Contraseña de aplicación de Zoho Mail. |
+| `CONTACT_FROM` | `SMTP_USER` | Remitente visible del email. |
+| `CONTACT_TO` | — | Buzón que recibe las consultas. |
+
+**Contraseña de aplicación, no la de la cuenta:** en Zoho Mail, `Configuración → Seguridad → Contraseñas de aplicación`. Requiere la verificación en dos pasos activada; Zoho muestra la contraseña una sola vez, así que cópiala directamente a `SMTP_PASS`. Revócala desde el mismo panel si se filtra.
+
+`CONTACT_FROM` debe ser del **mismo dominio** que `SMTP_USER` (por ejemplo `hola@bisni.es`): Zoho firma con el dominio de la cuenta y un remitente ajeno dispara los filtros de spam. El asunto identifica al remitente (`Nueva consulta de <nombre> (<empresa>)`, máximo 120 caracteres y sin CR/LF para evitar inyección de cabeceras) y el `Reply-To` apunta al email del formulario, así que responder desde el buzón contesta al visitante.
+
+El email se construye en `lib/contact-email.ts` (función pura, sin dependencias): versión en texto plano y HTML con todos los valores escapados y los saltos de línea del mensaje preservados.
+
+### Entrega por webhook (alternativa)
+
+Sin configuración SMTP, si existe `CONTACT_WEBHOOK_URL` el endpoint hace `POST` del JSON del formulario (Slack/Make/Zapier/hook propio), con `CONTACT_WEBHOOK_SECRET` opcional en la cabecera `Authorization`.
+
+### Sin ninguna vía configurada
+
+- En desarrollo: el envío se registra en la consola del servidor.
+- En producción: la API responde `503` y la UI muestra un fallback a `hola@bisni.es`.
+
+Un fallo de entrega (SMTP o webhook) responde `502`, así que el cliente sigue funcionando sin cambios. La vía SMTP usa el runtime de Node (`export const runtime = 'nodejs'`), porque `nodemailer` necesita sockets TCP.
 
 El rate limit en memoria es válido para una sola instancia. Si despliegas en varias, cámbialo por Upstash Redis, Vercel KV o similar (`lib/rate-limit.ts`).
 
@@ -116,6 +149,7 @@ components/
 lib/
   blog.ts                  Mapeo Sanity -> modelo de UI
   contact.ts               Validación del formulario
+  contact-email.ts         Construcción del email de contacto (SMTP)
   rate-limit.ts            Rate limit en memoria
   site.ts                  URL y metadatos base
 sanity/                    Esquemas, queries, cliente y Live
@@ -174,4 +208,40 @@ La caché evita re-revisar archivos sin cambios; `gga run --no-cache` la ignora.
 
 1. Configura las variables de entorno en el proveedor (Vercel, etc.).
 2. Define `NEXT_PUBLIC_SITE_URL` con el dominio real para que sitemap y Open Graph sean correctos.
-3. Configura `CONTACT_WEBHOOK_URL` si quieres recibir los envíos del formulario.
+3. Configura `SMTP_USER`, `SMTP_PASS` y `CONTACT_TO` para recibir los envíos del formulario por email; `CONTACT_WEBHOOK_URL` es la alternativa sin SMTP.
+
+## Checklist: migrar a un dominio y una cuenta reales
+
+La configuración actual vive en un dominio y una cuenta de Zoho de prueba. Al pasar a los definitivos, esto es lo que hay que tocar. Ordenado por dónde se hace.
+
+### Código (requiere commit y deploy)
+
+- [ ] **Formulario de newsletter** — si cambia la cuenta de Zoho Campaigns, reemplazar el bloque de campos ocultos en `components/newsletter-form.tsx` con los del nuevo snippet ("sin script"): `submitType`, `formType`, `mode`, `zcvers`, `zx`, `zcld`, `zctd`, `zc_formIx`, `zc_trackCode`, `oldListIds`. **`scriptless=yes` no se toca**: sin ese campo Zoho acepta y descarta el alta.
+- [ ] **Destinatario y remitente** — actualizar `CONTACT_TO` y `CONTACT_FROM` en el hosting; el remitente debe ser del dominio nuevo.
+- [ ] **`lib/email.ts`** — `CONTACT_EMAIL` y `CONTACT_SUBJECT` si cambia el correo público del sitio.
+
+### Hosting (Vercel)
+
+- [ ] **Dominio** — agregarlo al proyecto y redeployar.
+- [ ] **`NEXT_PUBLIC_SITE_URL`** — el dominio nuevo en *Production*. Se hornea en el build: **sin redeploy no toma efecto**.
+- [ ] **`SMTP_USER`, `SMTP_PASS`, `CONTACT_TO`, `CONTACT_FROM`** — buzón nuevo. Las de servidor se leen en runtime, pero el deployment existente no las ve: hace falta un deploy nuevo.
+- [ ] **Revocar el app password viejo** en Zoho Accounts → Seguridad.
+
+### Sanity (solo si cambia el proyecto; el dominio no lo toca)
+
+- [ ] **CORS** — agregar `https://tudominio.com` en *API → CORS origins*, conservando `http://localhost:3000`.
+- [ ] **Webhooks** — actualizar la URL si alguno apuntaba al dominio viejo.
+- [ ] **`NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET`, `SANITY_API_READ_TOKEN`** — **solo** si se migra a otro proyecto u organización de Sanity. Un cambio de dominio no los afecta.
+
+### Zoho Campaigns (cuenta nueva)
+
+- [ ] **Doble opt-in** — decidir de nuevo si se activa. Con el plan actual está desactivado y el `SUCCESS_MESSAGE` de `components/newsletter-form.tsx` lo refleja: si se activa, hay que volver a pedir la confirmación por correo o el mensaje miente.
+- [ ] **Plantilla del mail de bienvenida** — en el editor HTML el footer de baja lo agrega Zoho siempre y no se puede quitar. Dejar solo `$[LI:SUB_PREF]$` y no duplicar el enlace de baja (Zoho permite uno por campaña). Tokens válidos: `$[LI:UNSUBSCRIBE]$`, `$[LI:SUB_PREF]$`, `$[LI:UPDATEPROFILE]$`.
+- [ ] **Remitente verificado** — verificar la dirección "From" en Zoho para que los mails no caigan en spam.
+
+### Verificación antes de dar por cerrada la migración
+
+- [ ] Suscripción real desde el sitio: el contacto entra **directo a la lista** (o queda "no confirmado", si se activó el doble opt-in) y con el **First Name** poblado.
+- [ ] Consulta real desde "Hablemos": el mail llega al buzón nuevo y el **responder** apunta a quien consultó.
+- [ ] `npm test`, `npm run typecheck`, `npm run lint` y `npm run build` en verde, y el CI del push también.
+- [ ] Sitemap y Open Graph con el dominio nuevo (abrir `/sitemap.xml` y revisar el HTML).
