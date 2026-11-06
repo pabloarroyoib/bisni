@@ -137,6 +137,7 @@ El formulario pide **email y nombre de pila obligatorio**: dos campos en una sol
 app/
   layout.tsx               Metadatos, SanityLive y Analytics
   page.tsx                 Home (sanityFetch + mapeo de posts)
+  blog/page.tsx            Índice del blog con búsqueda y filtros
   blog/[slug]/page.tsx     Detalle del artículo
   studio/[[...tool]]/      Sanity Studio embebido
   api/contact/route.ts     Endpoint del formulario
@@ -145,6 +146,8 @@ app/
 components/
   home-page.tsx            Landing interactiva (client)
   contact-form.tsx         Formulario con estados de envío
+  blog-card.tsx            Tarjeta de artículo (home y blog)
+  blog-list.tsx            Listado del blog con búsqueda y filtros
   post-body.tsx            Portable Text (texto, imágenes, vídeo)
 lib/
   blog.ts                  Mapeo Sanity -> modelo de UI
@@ -158,6 +161,16 @@ sanity/                    Esquemas, queries, cliente y Live
 ## Contenido (Sanity)
 
 - **post**: título, slug, extracto, autor, imagen principal, categorías, fecha y cuerpo (Portable Text con imágenes y vídeo de YouTube/Vimeo/MP4).
+
+### Imágenes del blog
+
+Cada artículo se muestra en dos tamaños: la tarjeta de la grilla (800×500) y el destacado de `/blog` (1600×900). Consecuencias para quien edita en el Studio:
+
+- Subir imágenes de **al menos 1600 px de ancho** (ideal 2000 o más). Si la original es más chica, el destacado se ve blando: Sanity no puede inventar píxeles.
+- Arrastrar el **punto de interés** (hotspot) sobre la cara o el objeto central: de la misma imagen salen dos recortes con proporciones distintas (16:10 en la tarjeta, 16:9 en el destacado) y el hotspot protege el sujeto en ambas.
+- Evitar texto importante pegado a los bordes: el recorte se lo come.
+- El destacado es **el artículo más reciente**, no hay campo de "destacado" en el schema. Para curarlo habría que agregar un boolean a `post`.
+- Un artículo sin imagen principal no queda con un bloque gris: usa el acento de su categoría con la textura de curvas del sitio.
 - **author**: nombre, slug, imagen y biografía.
 - **category**: título, slug y descripción.
 

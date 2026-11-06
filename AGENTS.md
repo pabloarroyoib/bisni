@@ -42,6 +42,7 @@ Los scripts `dev`/`build`/`start` pasan por `scripts/next.mjs`, que normaliza el
 app/
   layout.tsx                  Layout raíz: metadata/viewport, <SanityLive />, Analytics, globals.css
   page.tsx                    Home (Server Component): sanityFetch de posts + categorías
+  blog/page.tsx               Índice del blog: listado completo con buscador y filtros
   blog/[slug]/page.tsx        Detalle del artículo, generateMetadata y notFound()
   api/contact/route.ts        POST del formulario (validación + rate limit + webhook)
   studio/[[...tool]]/page.tsx Sanity Studio embebido (force-static)
@@ -56,6 +57,8 @@ components/
   site-footer.tsx             Pie compartido (Server Component)
   contour-field.tsx           Textura "Relieve" (Server Component, SVG determinista)
   contact-form.tsx            Formulario con estados de envío/error/éxito
+  blog-card.tsx               Tarjeta de artículo, compartida por la home y /blog
+  blog-list.tsx               Listado del blog con buscador y filtros (cliente)
   post-body.tsx               PortableText (Server Component): imágenes, video (YouTube/Vimeo/Drive/directo), enlaces
   ui/button.tsx               Botón shadcn/base-ui con cva (sin usar)
 
@@ -99,7 +102,9 @@ opencode.jsonc                Agente `gga-reviewer` de solo lectura para el hook
 - `useCdn: true` en el cliente de Sanity.
 - `defineLive` solo recibe `serverToken` (`SANITY_API_READ_TOKEN`); no se expone ningún token al navegador.
 - El blog no usa `generateStaticParams`; el detalle se renderiza dinámicamente.
-- La home filtra búsqueda y categorías en el cliente (`home-page.tsx`).
+- La home muestra solo los 4 últimos artículos; el listado completo con búsqueda y filtros vive en `/blog` (`components/blog-list.tsx`, compartido con `blog-card.tsx`).
+- En `/blog` el artículo más reciente va como destacado (`components/blog-hero.tsx`) y el resto en una grilla de 3 columnas con una tarjeta ancha (`post-card-wide`) cada 5. El destacado se oculta mientras hay un filtro o búsqueda activos.
+- Cada post expone dos URLs de imagen desde `mapPosts`: `imageUrl` (800×500, tarjetas) y `heroImageUrl` (1600×900, destacado). El recorte usa el hotspot del Studio, así que el mismo punto de interés vale para las dos proporciones.
 - El formulario hace `POST /api/contact`. Entrega en cascada: **SMTP de Zoho Mail** (`SMTP_USER`, `SMTP_PASS`, `CONTACT_TO`, `CONTACT_FROM`; el mail lo arma `lib/contact-email.ts`), después `CONTACT_WEBHOOK_URL`, y si no hay ninguno de los dos, en dev se registra en consola y en producción responde `503`.
 
 ## Modelo de contenido (Sanity)

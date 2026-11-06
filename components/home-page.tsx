@@ -1,7 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
-import Image from 'next/image'
+import { useState } from 'react'
 import Link from 'next/link'
 import {
   ArrowUpRight,
@@ -14,11 +13,9 @@ import {
   Mail,
   MapPin,
   Network,
-  Search,
-  ShieldCheck,
-  Sparkles,
   Zap,
 } from 'lucide-react'
+import { BlogCard } from '@/components/blog-card'
 import { ContactForm } from '@/components/contact-form'
 import { NewsletterForm } from '@/components/newsletter-form'
 import { SiteHeader } from '@/components/site-header'
@@ -42,16 +39,11 @@ function riskColor(score: number) {
   return 'risk-low'
 }
 
-function categoryIcon(category: string) {
-  if (category === 'Ciberseguridad') return ShieldCheck
-  if (category === 'Finanzas') return BarChart3
-  if (category === 'Normativa') return FileCheck2
-  return Sparkles
-}
+/** Cuántos artículos muestra la home antes de mandar a /blog. */
+const HOME_BLOG_LIMIT = 4
 
 type HomePageProps = {
   posts: BlogPost[]
-  categories: string[]
   /** Textura "Relieve" de página completa, ya renderizada en el servidor. */
   background: ReactNode
   /** Textura "Relieve" de la sección de contacto (variante oscura). */
@@ -60,24 +52,14 @@ type HomePageProps = {
   footer: ReactNode
 }
 
-export function HomePage({ posts, categories, background, contactBackground, footer }: HomePageProps) {
+export function HomePage({ posts, background, contactBackground, footer }: HomePageProps) {
   const [industry, setIndustry] = useState('Tecnología')
   const [size, setSize] = useState('51–200')
   const [compliance, setCompliance] = useState('Medio')
   const [score, setScore] = useState<number | null>(null)
   const [selectedCell, setSelectedCell] = useState({ x: 3, y: 1 })
-  const [query, setQuery] = useState('')
-  const [category, setCategory] = useState('Todos')
 
-  const filteredPosts = useMemo(
-    () =>
-      posts.filter(
-        (post) =>
-          (category === 'Todos' || post.categories.includes(category)) &&
-          `${post.title} ${post.excerpt}`.toLowerCase().includes(query.toLowerCase()),
-      ),
-    [category, posts, query],
-  )
+  const teaserPosts = posts.slice(0, HOME_BLOG_LIMIT)
   const selectedRisk = (selectedCell.x + 1) * (5 - selectedCell.y)
   const selectedLevel = selectedRisk >= 16 ? 'CRÍTICO' : selectedRisk >= 10 ? 'ALTO' : selectedRisk >= 5 ? 'MEDIO' : 'BAJO'
 
@@ -126,72 +108,24 @@ export function HomePage({ posts, categories, background, contactBackground, foo
             <h2>Ideas para navegar<br /><em>lo que viene.</em></h2>
           </div>
         </div>
-        <div className="blog-controls">
-          <label className="search-box">
-            <Search aria-hidden="true" />
-            <span className="sr-only">Buscar artículos</span>
-            <input
-              type="search"
-              placeholder="Buscar artículos..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-            />
-          </label>
-          <div className="category-filters">
-            {categories.map((item) => (
-              <button
-                className={category === item ? 'active' : ''}
-                key={item}
-                type="button"
-                aria-pressed={category === item}
-                onClick={() => setCategory(item)}
-              >
-                {item}
-              </button>
-            ))}
-          </div>
-        </div>
-        {filteredPosts.length === 0 ? (
+        {teaserPosts.length === 0 ? (
           <p className="blog-empty">
-            {posts.length === 0
-              ? 'Aún no hay artículos publicados. Cuando publiques un artículo en el Studio, aparecerá aquí.'
-              : 'No hay artículos que coincidan con tu búsqueda.'}
+            Aún no hay artículos publicados. Cuando publiques un artículo en el Studio, aparecerá aquí.
           </p>
         ) : (
           <div className="post-grid">
-            {filteredPosts.map((post) => {
-              const Icon = categoryIcon(post.categories[0])
-              return (
-                <Link
-                  className="post-card"
-                  key={post._id}
-                  href={`/blog/${post.slug}`}
-                >
-                  <div className={`post-art ${post.imageUrl ? 'has-image' : post.accent}`}>
-                    {post.imageUrl ? (
-                      <Image
-                        className="post-cover"
-                        src={post.imageUrl}
-                        alt={post.imageAlt}
-                        fill
-                        sizes="(max-width: 650px) 50vw, (max-width: 900px) 50vw, 25vw"
-                      />
-                    ) : (
-                      <span className="post-art-mark"><Icon aria-hidden="true" /></span>
-                    )}
-                  </div>
-                  <div className="post-meta">
-                    <span>{post.categories.join(' · ')}</span>
-                    <span>{[post.date, post.read].filter(Boolean).join(' · ')}</span>
-                  </div>
-                  <h3>{post.title}</h3>
-                  {post.excerpt ? <p>{post.excerpt}</p> : null}
-                  <span className="post-card-cta">Leer artículo <ArrowUpRight aria-hidden="true" /></span>
-                </Link>
-              )
-            })}
+            {teaserPosts.map((post) => (
+              <BlogCard key={post._id} post={post} />
+            ))}
           </div>
         )}
+        {posts.length > HOME_BLOG_LIMIT ? (
+          <div className="blog-more">
+            <Link className="button button-ghost" href="/blog">
+              Ver más artículos <ArrowUpRight aria-hidden="true" />
+            </Link>
+          </div>
+        ) : null}
       </section>
 
       <section className="newsletter section" id="newsletter">

@@ -6,11 +6,11 @@ import { usePathname } from 'next/navigation'
 import { ArrowUpRight, Menu, X } from 'lucide-react'
 
 const SECTIONS = [
-  { label: 'Servicios', hash: 'servicios' },
-  { label: 'Herramientas', hash: 'herramientas' },
-  { label: 'Matriz', hash: 'matriz' },
-  { label: 'Blog', hash: 'blog' },
-  { label: 'Contacto', hash: 'contacto' },
+  { label: 'Servicios', target: '#servicios' },
+  { label: 'Herramientas', target: '#herramientas' },
+  { label: 'Matriz', target: '#matriz' },
+  { label: 'Blog', target: '/blog' },
+  { label: 'Contacto', target: '#contacto' },
 ] as const
 
 /**
@@ -24,7 +24,9 @@ export function SiteHeader() {
   const onHome = pathname === '/'
 
   // En la home los anclajes son locales; desde otra ruta hay que volver a "/".
-  const href = (hash: string) => (onHome ? `#${hash}` : `/#${hash}`)
+  // Las rutas reales (como /blog) se dejan tal cual.
+  const href = (target: string) =>
+    !target.startsWith('#') ? target : onHome ? target : `/${target}`
 
   return (
     <header className="navbar">
@@ -33,14 +35,19 @@ export function SiteHeader() {
       </Link>
 
       <nav className={`nav-links ${open ? 'is-open' : ''}`} id="menu-principal" aria-label="Principal">
-        {SECTIONS.map(({ label, hash }) => (
-          <Link key={hash} href={href(hash)} onClick={() => setOpen(false)}>
+        {SECTIONS.map(({ label, target }) => (
+          <Link
+            key={target}
+            href={href(target)}
+            aria-current={pathname === target ? 'page' : undefined}
+            onClick={() => setOpen(false)}
+          >
             {label}
           </Link>
         ))}
       </nav>
 
-      <Link className="nav-cta" href={href('contacto')}>
+      <Link className="nav-cta" href={href('#contacto')}>
         Solicitar diagnóstico <ArrowUpRight aria-hidden="true" />
       </Link>
 

@@ -131,7 +131,7 @@ h1,h2,h3,p { margin:0; } h1,h2 { font-weight:600; letter-spacing:-.02em; } h1 { 
    (antes el padding:9vw se restaba del max-width y el texto quedaba en ~541px). */
 .article-header { width:min(800px,100% - 12vw);margin:0 auto;padding:80px 0 40px;overflow-wrap:anywhere; }.article-back { display:inline-flex;align-items:center;gap:8px;font-size:var(--fs-small);font-weight:700;color:var(--muted);margin-bottom:30px;transition:color .2s; }.article-back:hover { color:var(--ink); }.article-meta { display:flex;align-items:center;gap:16px;margin-bottom:24px;font-size:var(--fs-micro);flex-wrap:wrap; }.article-category { color:var(--teal);text-transform:uppercase;letter-spacing:.1em;font-weight:700; }.article-date,.article-read { color:var(--muted); }.article-header h1 { font-size:clamp(36px,5vw,56px);line-height:1.05;margin-bottom:20px; }.article-header .article-lead { color:var(--muted);line-height:1.6;font-size:var(--fs-lead);margin-bottom:24px;max-width:700px; }.article-author { display:flex;align-items:center;gap:12px;margin-top:20px; }.author-avatar { width:48px;height:48px;border-radius:50%;object-fit:cover; }.author-name { font-size:var(--fs-small);color:var(--muted); }.article-hero-image { width:min(800px,100% - 12vw);margin:0 auto 50px; }.article-hero-image img { width:100%;height:auto;display:block; }.article-content { width:min(800px,100% - 12vw);margin:0 auto;padding-bottom:80px; }/* `overflow-wrap:anywhere` parte cadenas larguísimas sin espacios (URLs, hashes,
    texto pegado) en vez de desbordar la columna. */
-.article-body { color:var(--ink);line-height:1.75;font-size:var(--fs-lead);overflow-wrap:anywhere; }.article-body p, .article-body li { color:var(--muted);line-height:1.8; }.article-body p { margin-top:17px; }.article-body h2 { font-size:28px;margin:40px 0 20px;letter-spacing:-.02em; }.article-body h3 { font-size:22px;margin:32px 0 16px;letter-spacing:-.02em; }.article-body h4 { font-size:18px;margin:28px 0 14px;letter-spacing:-.02em; }.article-body h5 { font-size:16px;margin:24px 0 12px;letter-spacing:-.01em;text-transform:uppercase;color:var(--muted); }.article-body p { margin-bottom:20px; }.article-body blockquote { border-left:3px solid var(--teal);padding-left:20px;margin:30px 0;color:var(--muted);font-style:italic; }.article-body ul,.article-body ol { margin:20px 0;padding-left:25px; }.article-body li { margin-bottom:10px; }.article-body img { width:100%;height:auto;margin:30px 0; }.article-body a { color:var(--teal);text-decoration:underline; }.video-container { position:relative;padding-bottom:56.25%;height:0;overflow:hidden;margin:30px 0;background:#000;border-radius:4px; }.video-container iframe,.video-container video { position:absolute;top:0;left:0;width:100%;height:100%;border:0; }.article-footer { width:min(800px,100% - 12vw);margin:0 auto;padding:40px 0;border-top:1px solid var(--line);display:flex;gap:16px;flex-wrap:wrap; }
+.article-body { color:var(--ink);line-height:1.75;font-size:var(--fs-lead);overflow-wrap:anywhere; }.article-body p, .article-body li { color:var(--muted);line-height:1.8; }.article-body p { margin-top:17px; }.article-body h2 { font-size:28px;margin:40px 0 20px;letter-spacing:-.02em; }.article-body h3 { font-size:22px;margin:32px 0 16px;letter-spacing:-.02em; }.article-body h4 { font-size:18px;margin:28px 0 14px;letter-spacing:-.02em; }.article-body h5 { font-size:16px;margin:24px 0 12px;letter-spacing:-.01em;text-transform:uppercase;color:var(--muted); }.article-body p { margin-bottom:20px; }.article-body blockquote { border-left:3px solid var(--teal);padding-left:20px;margin:30px 0;color:var(--muted);font-style:italic; }.article-body ul,.article-body ol { margin:20px 0;padding-left:25px; }.article-body li { margin-bottom:10px; }.article-body img { width:100%;height:auto;margin:30px 0; }.article-body a { color:var(--teal);text-decoration:underline; }.video-container { position:relative;padding-bottom:56.25%;height:0;overflow:hidden;margin:30px 0;background:#000;border-radius:4px; }.video-container iframe,.video-container video { position:absolute;top:0;left:0;width:100%;height:100%;border:0; }
 @media (max-width:900px) { .nav-links { gap:16px;margin-right:20px; }.hero { padding-top:64px; }.hero-inner { grid-template-columns:1fr; gap:40px; }.hero-content h1 { max-width:none; }.hero-panel { max-width:460px; } .section { padding:90px 6vw; }.post-grid { grid-template-columns:repeat(2,1fr); }.contact { gap:7vw; }.footer-links { gap:35px; } /* A 12px las etiquetas del eje X no caben en horizontal bajo las 5 columnas
      (236px de texto en 188-215px: a 768 y 390 se desalineaban y desbordaban).
      En vertical caben sin partir palabras ni tocar el tamaño. */
@@ -188,3 +188,52 @@ h1,h2,h3,p { margin:0; } h1,h2 { font-weight:600; letter-spacing:-.02em; } h1 { 
 @media (max-width:1200px) { .tools-grid { grid-template-columns:1fr; } }
 @media (max-width:650px) { .matrix-main { overflow-x:auto; padding:0 4px; } .matrix-main .cells, .matrix-main .x-axis, .matrix-main .matrix-caption { width:336px; } .matrix-main .matrix-caption { text-align:left; } }
 
+
+/* --- Página de blog (/blog) --- */
+/* La cabecera es sticky: la sección necesita aire arriba para no quedar debajo. */
+.blog-index { padding-top:60px; }
+.blog-index h1 { font-size:clamp(38px,4.6vw,62px); }
+.blog-more { display:flex; justify-content:center; margin-top:40px; }
+/* La cabecera es sticky (76px en escritorio, 66px en móvil): por debajo de 100px el
+   padding no se reduce a la mitad o el título queda tapado por el navbar. */
+@media (max-width:900px) { .blog-index { padding-top:56px; } }
+@media (max-width:650px) { .blog-index { padding-top:48px; } }
+
+/* --- Blog: destacado, grilla de 3 y tarjeta ancha --- */
+.post-grid-3 { grid-template-columns:repeat(3,1fr); grid-auto-flow:dense; }
+.post-card-wide { grid-column:span 2; display:grid; grid-template-columns:1.05fr .95fr; gap:20px; align-items:stretch; }
+.post-card-wide .post-art { height:auto; align-self:stretch; margin-bottom:0; }
+.post-card-wide .post-card-body { display:flex; flex-direction:column; gap:6px; }
+.post-card-wide h3 { font-size:18px; }
+.blog-hero { display:grid; grid-template-columns:minmax(0,1.12fr) minmax(0,1fr); gap:36px; align-items:start; margin-bottom:52px; }
+.blog-hero-art { position:relative; aspect-ratio:16/9; overflow:hidden; }
+.blog-hero-body h2 { font-size:clamp(26px,3vw,41px); line-height:1.12; letter-spacing:-.02em; margin:6px 0 14px; transition:color .15s; }
+.blog-hero:hover h2 { color:var(--teal); }
+.blog-hero-excerpt { color:var(--muted); font-size:var(--fs-body); line-height:1.6; margin:0 0 16px; max-width:52ch; }
+.blog-hero .post-card-cta { margin-top:2px; }
+/* Sin imagen de portada: degradado del acento de la categoría con la textura de
+   curvas del sitio, en vez de un bloque de color plano con un ícono. */
+.post-art.no-image, .blog-hero-art.no-image { background-color:var(--color-paper); background-repeat:repeat; }
+.post-art.no-image.cyan, .blog-hero-art.no-image.cyan { background-image:repeating-radial-gradient(circle at 28% 32%, rgba(14,123,136,.16) 0 1px, transparent 1px 15px), linear-gradient(135deg,#d8eef0,#f3f6f6); }
+.post-art.no-image.navy, .blog-hero-art.no-image.navy { background-image:repeating-radial-gradient(circle at 32% 28%, rgba(40,63,85,.16) 0 1px, transparent 1px 15px), linear-gradient(135deg,#dbe3ea,#f3f6f6); }
+.post-art.no-image.lime, .blog-hero-art.no-image.lime { background-image:repeating-radial-gradient(circle at 30% 34%, rgba(105,121,92,.18) 0 1px, transparent 1px 15px), linear-gradient(135deg,#e2e7d9,#f3f6f6); }
+.post-art.no-image.orange, .blog-hero-art.no-image.orange { background-image:repeating-radial-gradient(circle at 26% 30%, rgba(168,90,56,.16) 0 1px, transparent 1px 15px), linear-gradient(135deg,#eddcd2,#f3f6f6); }
+@media (max-width:900px) { .post-grid-3 { grid-template-columns:repeat(2,1fr); } .post-card-wide { grid-column:span 1; grid-template-columns:1fr; gap:0; } .post-card-wide .post-art { margin-bottom:18px; } .blog-hero { grid-template-columns:1fr; gap:22px; margin-bottom:40px; } }
+@media (max-width:650px) { .post-grid-3 { grid-template-columns:1fr; } .post-card-wide h3 { font-size:20px; } .post-card-wide .post-art { height:125px; } }
+
+/* --- Artículo: también te puede interesar --- */
+.related { padding-top:0; }
+.related-head { display:flex; align-items:center; justify-content:space-between; gap:24px; margin-bottom:34px; }
+.related-head h2 { font-size:clamp(26px,3.2vw,42px); line-height:1.1; letter-spacing:-.02em; }
+/* .button-dark es width:100% (lo usa la calculadora); en la fila del titulo se acota. */
+.related-head .button { flex:none; width:auto; white-space:nowrap; }
+.related-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+@media (max-width:900px) { .related-grid { grid-template-columns:repeat(2,1fr); } .related-head { flex-direction:column; align-items:flex-start; gap:16px; } }
+@media (max-width:650px) { .related-grid { grid-template-columns:1fr; } }
+
+/* --- Blog: filtros por categoría en móvil --- */
+/* Seis chips no entran en 390px: por debajo de 650px se muestra un desplegable. */
+.category-select { display:none; }
+.category-select select { appearance:none;width:100%;border:1px solid var(--color-line);background:#fff;color:var(--color-ink);padding:11px 14px;font-size:var(--fs-small);border-radius:3px; }
+.category-select select:focus-visible { outline:2px solid var(--color-signal);outline-offset:2px; }
+@media (max-width:650px) { .category-filters { display:none; } .category-select { display:block;width:100%; } }
