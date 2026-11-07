@@ -1,6 +1,6 @@
 # GROU Asesores
 
-Sitio corporativo B2B de **GROU Asesores**: consultoría de gestión de riesgos, ciberseguridad y cumplimiento ISO 31000. Incluye landing con herramientas interactivas (calculadora de riesgo y matriz) y un blog gestionado desde un Sanity Studio embebido.
+Sitio corporativo B2B de **GROU Asesores**: consultoría de gestión de riesgos, ciberseguridad y cumplimiento ISO 31000. Incluye una landing con el programa de seguros en cuatro etapas y un blog gestionado desde un Sanity Studio embebido.
 
 ## Stack
 

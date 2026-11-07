@@ -7,8 +7,6 @@ import { ArrowUpRight, Menu, X } from 'lucide-react'
 
 const SECTIONS = [
   { label: 'Servicios', target: '#servicios' },
-  { label: 'Herramientas', target: '#herramientas' },
-  { label: 'Matriz', target: '#matriz' },
   { label: 'Blog', target: '/blog' },
   { label: 'Contacto', target: '#contacto' },
 ] as const
@@ -30,8 +28,8 @@ export function SiteHeader() {
 
   return (
     <header className="navbar">
-      <Link className="brand" href="/" aria-label="bisni inicio">
-        <span className="brand-mark">b</span>bisni<span className="brand-dot">.</span>
+      <Link className="brand" href="/" aria-label="GROU Asesores inicio">
+        <span className="brand-mark">g</span>GROU Asesores
       </Link>
 
       <nav className={`nav-links ${open ? 'is-open' : ''}`} id="menu-principal" aria-label="Principal">
