@@ -14,7 +14,7 @@ _Actualizado: 2026-10-23_
 
 ## Resumen
 
-**bisni** es el sitio corporativo B2B de una consultora de gestión de riesgos, ciberseguridad y cumplimiento ISO 31000, en español, con un blog gestionado desde un Sanity Studio embebido. El proyecto fue scaffolded con v0.app (`generator: 'v0.app'` en los metadatos).
+**GROU Asesores** es el sitio corporativo B2B de una consultora de gestión de riesgos, ciberseguridad y cumplimiento ISO 31000, en español, con un blog gestionado desde un Sanity Studio embebido. El proyecto fue scaffolded con v0.app (`generator: 'v0.app'` en los metadatos).
 
 - Rama actual: `main`. Últimos commits: integración completa de Sanity para el blog y corrección de categorías/token de lectura.
 - Cambios sin commitear (sesión 2026-10-23): tooling (ESLint/Vitest/CI), API de contacto, SEO, `sanityFetch`, `next/image` y el fix del build en Windows.

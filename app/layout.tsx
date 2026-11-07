@@ -11,13 +11,13 @@ const archivo = Archivo({
   display: 'swap',
 })
 
-const defaultTitle = 'bisni — Riesgo claro. Decisiones sólidas.'
+const defaultTitle = 'GROU Asesores — Protección integral para empresas'
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
     default: defaultTitle,
-    template: '%s | bisni',
+    template: '%s | GROU Asesores',
   },
   description: siteDescription,
   applicationName: siteName,

@@ -9,6 +9,8 @@
  * No se usa Gmail como enlace principal a propósito: forzarlo dejaría afuera a
  * quien no tiene cuenta de Google o no está logueado en el navegador.
  */
+// TODO(rebrand): el correo sigue siendo el de bisni.es porque es la casilla real
+// y la que recibe las consultas. Al pasar a GROU Asesores, cambiar dirección y asunto.
 export const CONTACT_EMAIL = 'hola@bisni.es'
 export const CONTACT_SUBJECT = 'Consulta desde bisni.es'
 

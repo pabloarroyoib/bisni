@@ -15,7 +15,7 @@ const LINK_GROUPS = [
     title: 'Empresa',
     links: [
       { label: 'Contacto', href: '/#contacto' },
-      { label: 'Sobre bisni', href: '/#contacto' },
+      { label: 'Sobre GROU Asesores', href: '/#contacto' },
       { label: 'Trabaja con nosotros', href: '/#contacto' },
     ],
   },
@@ -36,7 +36,7 @@ export function SiteFooter() {
       <div className="footer-main">
         <div>
           <Link className="brand footer-brand" href="/">
-            <span className="brand-mark">b</span>bisni<span className="brand-dot">.</span>
+            <span className="brand-mark">g</span>GROU Asesores
           </Link>
           <p>
             Riesgo claro.
@@ -60,7 +60,7 @@ export function SiteFooter() {
       </div>
 
       <div className="footer-bottom">
-        <span>© 2026 bisni. Protegiendo tu futuro corporativo.</span>
+        <span>© 2026 GROU Asesores. Protegiendo tu futuro corporativo.</span>
         <span className="socials">
           <Link href="/#contacto" aria-label="LinkedIn">
             <Globe2 aria-hidden="true" />
