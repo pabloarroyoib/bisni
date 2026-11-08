@@ -57,12 +57,11 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 .brand { display:flex; align-items:center; gap:4px; font-size:24px; letter-spacing:-1.5px; font-weight:700; }
 .brand-mark { background:var(--teal); border-radius:50% 50% 50% 3px; color:white; display:inline-grid; place-items:center; width:25px; height:25px; font-size:18px; font-weight:700; margin-right:2px; }
 .brand-dot { color:var(--teal); }
-.nav-links { display:flex; gap:32px; margin-left:auto; margin-right:44px; font-size:var(--fs-small); color:var(--muted); }
+.nav-links { display:flex; gap:32px; margin-left:auto; font-size:var(--fs-small); color:var(--muted); }
 .nav-links a:hover { color:var(--ink); }
-.nav-cta,.button { display:inline-flex; align-items:center; justify-content:center; gap:10px; border-radius:3px; font-size:var(--fs-small); font-weight:700; letter-spacing:.02em; transition:transform .2s, background .2s; }
-.nav-cta { background:var(--ink); color:#fff; padding:13px 17px; }
-.nav-cta svg,.button svg,.text-link svg,.post-card button svg { width:15px; }
-.nav-cta:hover,.button:hover { transform:translateY(-2px); }
+.button { display:inline-flex; align-items:center; justify-content:center; gap:10px; border-radius:3px; font-size:var(--fs-small); font-weight:700; letter-spacing:.02em; transition:transform .2s, background .2s; }
+.button svg,.text-link svg,.post-card button svg { width:15px; }
+.button:hover { transform:translateY(-2px); }
 .mobile-menu { display:none; border:0; background:transparent; }
 .hero { padding:84px 7vw 96px; border-bottom:1px solid var(--line); }
 .hero-inner { max-width:900px; margin:0 auto; position:relative; z-index:1; }
@@ -101,7 +100,11 @@ h1,h2,h3,p { margin:0; } h1,h2 { font-weight:600; letter-spacing:-.02em; } h1 { 
 .contact-details a { color:#fff;text-decoration:underline;text-underline-offset:3px;transition:color .15s; }
 .contact-details a:hover { color:var(--color-signal-light); }
 .contact-details .mail-alt { display:block;color:var(--color-on-dark-muted);font-size:var(--fs-small);text-decoration:none;margin-top:4px; }
-.contact-details .mail-alt:hover { color:var(--color-signal-light);text-decoration:underline; }.contact-form { align-self:center;display:flex;flex-direction:column;gap:20px; }.form-row { display:grid;grid-template-columns:1fr 1fr;gap:17px; }.contact-form label { color:var(--color-on-dark); }.contact-form input,.contact-form textarea { border:0;border-bottom:1px solid var(--color-on-dark-line);background:transparent;padding:8px 0;color:#fff;outline:0;resize:vertical;font-size:var(--fs-body); }.contact-form input:focus,.contact-form textarea:focus { border-color:var(--color-signal-light); }.contact-form input::placeholder,.contact-form textarea::placeholder { color:var(--color-on-dark-muted); }.contact-form .button { align-self:start;margin-top:4px; }.privacy-note { display:flex;align-items:center;gap:7px;color:var(--color-on-dark-muted);font-size:var(--fs-small); }.privacy-note svg { width:12px;color:var(--color-signal-light);flex:none; }
+.contact-details .mail-alt:hover { color:var(--color-signal-light);text-decoration:underline; }.contact-form { align-self:center;display:flex;flex-direction:column;gap:20px; }.form-row { display:grid;grid-template-columns:1fr 1fr;gap:17px; }
+/* Label arriba e input abajo. Sin esto el label queda `display:block` y el input,
+   que es inline-block, se acomoda al lado del texto y se superpone con él
+   (se veía en "Email corporativo" y en el textarea). */
+.contact-form label { display:flex; flex-direction:column; gap:8px; font-size:var(--fs-small); font-weight:700; color:var(--color-on-dark); }.contact-form input,.contact-form textarea { border:0;border-bottom:1px solid var(--color-on-dark-line);background:transparent;padding:8px 0;color:#fff;outline:0;resize:vertical;font-size:var(--fs-body); }.contact-form input:focus,.contact-form textarea:focus { border-color:var(--color-signal-light); }.contact-form input::placeholder,.contact-form textarea::placeholder { color:var(--color-on-dark-muted); }.contact-form .button { align-self:start;margin-top:4px; }.privacy-note { display:flex;align-items:center;gap:7px;color:var(--color-on-dark-muted);font-size:var(--fs-small); }.privacy-note svg { width:12px;color:var(--color-signal-light);flex:none; }
 .footer { background:var(--color-surface-deep);color:var(--color-on-dark);padding:58px 9vw 25px; }.footer-main { display:flex;justify-content:space-between;padding-bottom:55px;gap:40px; }.footer-brand { color:#fff; }.footer-main>div:first-child p { color:var(--color-on-dark-muted);font-size:var(--fs-body);line-height:1.6;margin-top:20px; }.footer-links { display:flex;gap:85px; }.footer-links div { display:flex;flex-direction:column;gap:12px; }.footer-links strong { color:#dce6e4;font-size:var(--fs-micro);text-transform:uppercase;letter-spacing:.13em;margin-bottom:5px; }.footer-links a { font-size:var(--fs-small);transition:color .15s; }.footer-links a:hover { color:#fff; }.footer-bottom { border-top:1px solid #22383d;padding-top:20px;display:flex;justify-content:space-between;align-items:center;gap:14px;font-size:var(--fs-small);color:var(--color-on-dark-muted); }.socials { display:flex;gap:12px; }.socials a { width:34px;height:34px;border:1px solid var(--color-on-dark-line);border-radius:50%;display:grid;place-items:center;transition:border-color .15s,color .15s; }.socials a:hover { border-color:var(--color-signal-light);color:#fff; }.socials svg { width:14px; }
 .article-lead { color:var(--muted);line-height:1.6;font-size:var(--fs-lead);margin-bottom:24px; }
 .article-page { min-height:100vh; background:#fff; }/* La columna de lectura es de 800px reales: el gutter va fuera del ancho máximo
@@ -113,7 +116,7 @@ h1,h2,h3,p { margin:0; } h1,h2 { font-weight:600; letter-spacing:-.02em; } h1 { 
      (236px de texto en 188-215px: a 768 y 390 se desalineaban y desbordaban).
      En vertical caben sin partir palabras ni tocar el tamaño. */
  }
-@media (max-width:650px) { .navbar { height:66px;padding:0 5vw; }.nav-links { display:none;position:absolute;top:66px;left:0;right:0;background:#fff;padding:20px 5vw;flex-direction:column;gap:18px;border-bottom:1px solid var(--line); }.nav-links.is-open { display:flex; }.nav-cta { display:none; }.mobile-menu { display:block;color:var(--ink); }.mobile-menu svg { width:22px; }.hero { padding:56px 6vw 64px; }.hero-inner { gap:36px; }.hero-copy { font-size:var(--fs-body); }.section { padding:75px 6vw; }.section-heading { flex-direction:column;align-items:flex-start;gap:23px;margin-bottom:35px; }.section-intro { width:auto; }.contact { grid-template-columns:1fr; }.blog-controls { align-items:flex-start;flex-direction:column; }.category-filters { flex-wrap:wrap; }.post-grid { grid-template-columns:1fr 1fr;gap:24px 12px; }.post-art { height:125px; }.post-card h3 { font-size:18px; }.contact { gap:50px; }.newsletter-row { flex-direction:column; }.newsletter-row input { flex:none; width:100%; }.footer { padding:48px 6vw 23px; }.footer-main { flex-direction:column;gap:40px;padding-bottom:35px; }.footer-links { justify-content:space-between;gap:15px; }.footer-bottom { flex-wrap:wrap;gap:15px; }.footer-bottom>span:last-child { width:100%; }.form-row { grid-template-columns:1fr;gap:20px; } .article-body { font-size:17px; } .article-lead,.article-header .article-lead { font-size:17px; } }
+@media (max-width:650px) { .navbar { height:66px;padding:0 5vw; }.nav-links { display:none;position:absolute;top:66px;left:0;right:0;background:#fff;padding:20px 5vw;flex-direction:column;gap:18px;border-bottom:1px solid var(--line); }.nav-links.is-open { display:flex; }.mobile-menu { display:block;color:var(--ink); }.mobile-menu svg { width:22px; }.hero { padding:56px 6vw 64px; }.hero-inner { gap:36px; }.hero-copy { font-size:var(--fs-body); }.section { padding:75px 6vw; }.section-heading { flex-direction:column;align-items:flex-start;gap:23px;margin-bottom:35px; }.section-intro { width:auto; }.contact { grid-template-columns:1fr; }.blog-controls { align-items:flex-start;flex-direction:column; }.category-filters { flex-wrap:wrap; }.post-grid { grid-template-columns:1fr 1fr;gap:24px 12px; }.post-art { height:125px; }.post-card h3 { font-size:18px; }.contact { gap:50px; }.newsletter-row { flex-direction:column; }.newsletter-row input { flex:none; width:100%; }.footer { padding:48px 6vw 23px; }.footer-main { flex-direction:column;gap:40px;padding-bottom:35px; }.footer-links { justify-content:space-between;gap:15px; }.footer-bottom { flex-wrap:wrap;gap:15px; }.footer-bottom>span:last-child { width:100%; }.form-row { grid-template-columns:1fr;gap:20px; } .article-body { font-size:17px; } .article-lead,.article-header .article-lead { font-size:17px; } }
 
 /* --- Accesibilidad sobre superficies oscuras --- */
 .contact a:focus-visible, .contact button:focus-visible, .contact input:focus-visible, .contact textarea:focus-visible,
@@ -220,7 +223,6 @@ h1,h2,h3,p { margin:0; } h1,h2 { font-weight:600; letter-spacing:-.02em; } h1 { 
 .hero-cards { display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start; }
 .hero-card { background:rgba(255,255,255,.92);backdrop-filter:blur(6px);border:1px solid var(--color-line);border-radius:18px;padding:32px;box-shadow:0 22px 45px -30px rgba(16,28,34,.45);transition:transform .3s ease,box-shadow .3s ease; }
 .hero-card:hover { transform:translateY(-4px);box-shadow:0 26px 50px -28px rgba(16,28,34,.5); }
-.hero-card-number { display:block;font-size:var(--fs-micro);font-weight:700;letter-spacing:.12em;color:var(--color-signal);margin-bottom:10px; }
 .hero-card h3 { font-size:19px;font-weight:600;line-height:1.25;letter-spacing:-.02em;margin-bottom:10px; }
 .hero-card p { color:var(--color-muted);font-size:var(--fs-small);line-height:1.65; }
 .hero-card-2 { margin-top:48px; }
@@ -228,30 +230,33 @@ h1,h2,h3,p { margin:0; } h1,h2 { font-weight:600; letter-spacing:-.02em; } h1 { 
 @media (max-width:1050px) { .hero-inner { grid-template-columns:1fr;gap:40px; } .hero-text { position:static; } }
 @media (max-width:650px) { .hero { padding:56px 6vw 64px; } .hero-cards { grid-template-columns:1fr;gap:18px; } .hero-card-2,.hero-card-3 { margin-top:0; } .hero-card { padding:24px; } }
 
-/* --- Programa de seguros: panel fijo y tira horizontal movida por el scroll vertical ---
-   La sección mide `--stage-count` viewports y el panel (`.services-timeline-sticky`)
-   uno, así que el recorrido útil es `count - 1` viewports: mientras dura, el panel
-   queda fijo y el scroll vertical de la página desplaza la tira. Cada tarjeta mide un
-   panel completo, por eso la siguiente entra desde la derecha a medida que la anterior
-   sale por la izquierda. El recorte (`overflow:hidden`) va en el viewport, no en un ancestro del sticky:
-   un ancestro con overflow hidden, auto o scroll rompe el `position:sticky`. */
-.services-timeline { position:relative; z-index:1; height:calc(var(--stage-count) * 100vh); height:calc(var(--stage-count) * 100svh); }
-/* El padding superior es la altura libre bajo la navbar sticky. */
-.services-timeline-sticky { position:sticky; top:0; display:flex; flex-direction:column; justify-content:center; gap:28px; height:100vh; height:100svh; padding:clamp(88px,12vh,108px) 0 clamp(32px,5vh,48px); }
-.services-timeline-head { margin-inline:5.5vw; margin-bottom:0; }
+/* --- Programa de seguros: fila horizontal con botones de avance ---
+   Las cuatro etapas van en una fila y se pasa de una a otra con los botones de
+   anterior/siguiente (y con los puntos). La sección mide lo que mide su contenido:
+   ya no hay panel sticky ni una pantalla de scroll por etapa, así que atravesarla
+   no cuesta cuatro pantallas. El desplazamiento es un `transform` sobre la tira con
+   transición CSS: no hay listeners de scroll ni intercepción de la rueda. */
+.services-timeline { position:relative; z-index:1; padding:clamp(92px,12vh,130px) 0; }
+.services-timeline-head { margin-inline:5.5vw; margin-bottom:44px; }
 .services-timeline-head h2 { font-size:clamp(30px,3.6vw,50px); }
 .services-timeline-head .section-intro { width:300px; font-size:var(--fs-small); line-height:1.6; }
 .services-timeline-label { margin-top:14px; font-size:var(--fs-micro); font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--color-signal); }
-.services-timeline-progress { position:relative; height:2px; margin-inline:5.5vw; border-radius:2px; background:var(--color-line); }
-.services-timeline-progress-fill { position:absolute; inset:0; display:block; border-radius:2px; background:var(--color-signal); transform:scaleX(0); transform-origin:left center; }
-/* Punto de 12px por etapa, de 0% a 100% del ancho de la barra. */
-.services-timeline-dot { position:absolute; top:50%; width:12px; height:12px; margin:-6px 0 0 -6px; border:1px solid var(--color-line); border-radius:50%; background:#fff; }
-.services-timeline-dot.is-filled { border-color:var(--color-signal); background:var(--color-signal); }
-/* El recorte va en el viewport: la tira solo se ve dentro del panel. */
+.services-timeline-progress { position:relative; height:2px; margin:0 5.5vw 26px; border-radius:2px; background:var(--color-line); }
+.services-timeline-progress-fill { position:absolute; inset:0; display:block; border-radius:2px; background:var(--color-signal); transform-origin:left center; transition:transform .5s ease; }
+/* Punto de 12px con área clicable de 24px: el círculo se dibuja en el pseudo. */
+.services-timeline-dot { position:absolute; top:50%; width:24px; height:24px; margin:-12px 0 0 -12px; display:grid; place-items:center; padding:0; border:0; border-radius:50%; background:transparent; }
+.services-timeline-dot::before { content:''; width:12px; height:12px; border:1px solid var(--color-line); border-radius:50%; background:#fff; transition:border-color .25s ease, background .25s ease; }
+.services-timeline-dot.is-filled::before { border-color:var(--color-signal); background:var(--color-signal); }
+/* El recorte va acá: la tira entra y sale dentro del viewport. */
 .services-timeline-viewport { position:relative; overflow:hidden; }
-/* La tira mide `count` paneles de ancho y se desplaza ese ancho por estilo directo. */
-.services-timeline-track { display:flex; width:calc(var(--stage-count) * 100%); will-change:transform; }
-.services-timeline-card { flex:0 0 calc(100% / var(--stage-count)); min-width:0; display:grid; grid-template-columns:minmax(0,5fr) minmax(0,6fr); align-items:center; gap:6vw; padding:clamp(36px,6vh,64px) 5.5vw; border-block:1px solid var(--color-line); background:rgba(255,255,255,.92); }
+/* Desplazamiento suave: curva de salida larga (expo-out) para que frene sin
+   golpe, más tiempo que antes y un fundido de la tarjeta entrante. La duración
+   vive en variables para poder acortarla con `prefers-reduced-motion`. */
+.services-timeline-track { --stage-slide:.8s; --stage-ease:cubic-bezier(.4,0,.2,1); display:flex; width:calc(var(--stage-count) * 100%); transition:transform var(--stage-slide) var(--stage-ease); will-change:transform; }
+.services-timeline-card { flex:0 0 calc(100% / var(--stage-count)); min-width:0; display:grid; grid-template-columns:minmax(0,5fr) minmax(0,6fr); align-items:center; gap:6vw; padding:clamp(36px,6vh,64px) 5.5vw; border-block:1px solid var(--color-line); background:rgba(255,255,255,.92); opacity:.35; transition:opacity .55s ease; }
+/* La etapa en el panel se ve plena; las que pasan por al lado acompañan con un
+   fundido, así la entrada no arranca de golpe cuando termina el deslizamiento. */
+.services-timeline-card.is-current { opacity:1; }
 .services-timeline-card-main { display:flex; flex-direction:column; gap:20px; }
 .services-timeline-card-top { display:flex; align-items:center; gap:16px; }
 .services-timeline-card-number { font-size:34px; font-weight:600; line-height:1; letter-spacing:-.03em; color:var(--color-signal); }
@@ -259,13 +264,154 @@ h1,h2,h3,p { margin:0; } h1,h2 { font-weight:600; letter-spacing:-.02em; } h1 { 
 .services-timeline-card-icon svg { width:16px; height:16px; }
 .services-timeline-card h3 { font-size:clamp(28px,3.2vw,46px); font-weight:600; line-height:1.08; letter-spacing:-.02em; }
 .services-timeline-card p { max-width:60ch; color:var(--color-muted); font-size:var(--fs-body); line-height:1.7; }
+/* Botones en los costados de la tira. El contenedor no captura el puntero. */
+.services-timeline-navs { position:absolute; inset:0; pointer-events:none; }
+.services-timeline-nav { position:absolute; top:50%; transform:translateY(-50%); display:grid; place-items:center; width:52px; height:52px; padding:0; border:1px solid var(--color-line); border-radius:50%; background:rgba(255,255,255,.94); color:var(--color-ink); box-shadow:0 18px 40px -26px rgba(16,28,34,.65); pointer-events:auto; transition:background .2s ease, border-color .2s ease, color .2s ease, opacity .2s ease; }
+.services-timeline-nav svg { width:22px; height:22px; }
+.services-timeline-nav.is-prev { left:clamp(10px,2.4vw,34px); }
+.services-timeline-nav.is-next { right:clamp(10px,2.4vw,34px); }
+.services-timeline-nav:hover:not(:disabled) { border-color:var(--color-signal); background:var(--color-signal); color:#fff; }
+.services-timeline-nav:disabled { opacity:.32; cursor:not-allowed; }
+/* Reducir movimiento: el cambio sigue siendo un fundido corto, no instantáneo. */
+@media (prefers-reduced-motion: reduce) {
+  .services-timeline-track { --stage-slide:.25s !important; }
+  .services-timeline-card { transition-duration:.25s !important; }
+}
 @media (max-width:900px) {
-  .services-timeline-sticky { gap:24px; padding-bottom:32px; }
-  .services-timeline-head { flex-direction:column; align-items:flex-start; gap:23px; margin-inline:6vw; }
+  .services-timeline-head { flex-direction:column; align-items:flex-start; gap:23px; margin-inline:6vw; margin-bottom:32px; }
   .services-timeline-head h2 { font-size:clamp(32px,4.6vw,62px); }
   .services-timeline-head .section-intro { width:auto; }
-  .services-timeline-progress { margin-inline:6vw; }
+  .services-timeline-progress { margin:0 6vw 22px; }
   .services-timeline-card { grid-template-columns:minmax(0,1fr); align-content:center; gap:18px; padding:28px 6vw; }
   .services-timeline-card h3 { font-size:clamp(24px,6vw,32px); }
   .services-timeline-card p { font-size:var(--fs-small); }
+  /* En pantallas angostas los botones van debajo: arriba taparían el texto. */
+  .services-timeline-navs { position:static; display:flex; justify-content:center; gap:14px; margin-top:22px; }
+  .services-timeline-nav { position:static; transform:none; width:46px; height:46px; }
+}
+
+/* --- Nosotros: carrusel de marcos con fundido cruzado y panel de contenido ---
+   Columna izquierda (40%) con tres marcos fijos: el frontal nítido y dos detrás,
+   difuminados y más chicos. Las posiciones no cambian nunca; dentro de cada marco
+   viven las tres imágenes montadas y solo cambian sus clases (on / prev / resto).
+   Así el cambio es un fundido cruzado en el mismo lugar, sin desmontar nada y sin
+   que se vea el fondo vacío. El subtítulo repite la mecánica en el marco frontal.
+   Ojo: la regla global de `prefers-reduced-motion` congela toda transición con
+   `!important`; el bloque final repone el fundido y deja afuera solo el zoom.
+   `position` y `z-index` propios: los marcos tienen z-index alto y, sin un contexto
+   de apilamiento acá, se pintaban por encima de las secciones vecinas. */
+.about { position:relative; z-index:1; display:grid; grid-template-columns:40fr 60fr; align-items:center; gap:clamp(40px,6vw,90px); padding:clamp(92px,12vh,130px) 5.5vw; }
+.about-visual { position:relative; justify-self:center; width:100%; max-width:460px; }
+.about-stage { position:relative; width:100%; max-width:360px; margin-inline:auto; aspect-ratio:4/5; }
+.about-frame { position:absolute; inset:0; margin:0; transform:translate(var(--frame-x, 0%), var(--frame-y, 0%)) scale(var(--frame-s, 1)); transform-origin:center; will-change:transform; }
+.about-frame-inner { position:absolute; inset:0; overflow:hidden; border:1px solid var(--color-line); border-radius:20px; background:var(--color-surface); box-shadow:0 34px 70px -44px rgba(16,28,34,.6); }
+/* Las cartas de atrás llevan tinte para separarse del fondo blanco del sitio. */
+.about-frame:not(:first-child) .about-frame-inner { background:var(--color-signal-soft); }
+/* Capas: `on` entra arriba con fundido y un zoom de 106% a 100%; `prev` se queda
+   visible debajo mientras dura el fundido; el resto queda oculto y agrandado. */
+.about-layer { position:absolute; inset:0; z-index:0; opacity:0; transform:scale(1.06); transition:opacity 1.3s ease-in-out, transform 1.8s cubic-bezier(.22,.8,.24,1); }
+.about-layer.is-on { z-index:2; opacity:1; transform:scale(1); }
+.about-layer.is-prev { z-index:1; opacity:1; transform:scale(1); }
+/* La capa del logo lleva fondo opaco propio: con `contain` la capa no cubre todo
+   el marco y la imagen anterior, que queda debajo durante el fundido, asomaría.
+   El aire alrededor del logo va en la propia <img> (el `inset:0` de `fill` se
+   resuelve contra el padding box del contenedor, así que ahí no tendría efecto). */
+.about-layer-logo { background:var(--color-surface); }
+.about-frame:not(:first-child) .about-layer-logo { background:var(--color-signal-soft); }
+.about-image { object-fit:cover; }
+.about-captions { position:absolute; left:0; right:0; top:calc(100% + 18px); height:64px; }
+/* El que sale se apaga en .35s; el que entra espera .4s y sube, así nunca se
+   superponen dos textos en pantalla. */
+.about-caption { position:absolute; inset:0; opacity:0; transform:translateY(8px); transition:opacity .35s ease, transform .35s ease; }
+.about-caption.is-on { opacity:1; transform:translateY(0); transition:opacity .6s ease .4s, transform .6s ease .4s; }
+.about-caption b { display:block; color:var(--color-ink); font-size:var(--fs-body); font-weight:600; letter-spacing:-.01em; }
+.about-caption small { display:block; margin-top:3px; color:var(--color-muted); font-size:var(--fs-small); line-height:1.45; }
+/* `margin-top` deja lugar al subtítulo, que está fuera del flujo del escenario. */
+.about-dots { display:flex; justify-content:center; gap:9px; margin-top:92px; }
+.about-dot { width:10px; height:10px; padding:0; border:0; border-radius:999px; background:var(--color-line); transition:width .3s ease, background .3s ease; }
+.about-dot.is-current { width:28px; background:var(--color-signal); }
+.about-dot:focus-visible { outline:2px solid var(--color-signal); outline-offset:3px; }
+.about-content { position:relative; z-index:1; }
+.about-content h2 { font-size:clamp(32px,4.4vw,58px); line-height:1.04; }
+.about-label { display:block; margin-top:30px; color:var(--color-signal); font-size:var(--fs-micro); font-weight:700; letter-spacing:.14em; text-transform:uppercase; }
+.about-label + p { margin-top:8px; }
+.about-content p:not(.section-kicker):not(.about-label) { max-width:34em; margin-top:22px; color:var(--color-muted); font-size:var(--fs-lead); line-height:1.7; }
+.about-cta { margin-top:32px; }
+@media (max-width:900px) {
+  .about { grid-template-columns:1fr; gap:52px; padding:90px 6vw; }
+  .about-visual { max-width:340px; justify-self:center; }
+  .about-stage { max-width:300px; }
+  /* Menos corrimiento lateral: en una columna los marcos no tienen margen para salirse. */
+  .about-frame:nth-child(2) { --frame-x:8%; --frame-y:-5%; }
+  .about-frame:nth-child(3) { --frame-x:20%; --frame-y:-10%; }
+  .about-dots { margin-top:86px; }
+  .about-content p:not(.section-kicker):not(.about-label) { font-size:var(--fs-body); }
+}
+/* Reducir movimiento conserva el fundido: se quitan el zoom y el desplazamiento,
+   nunca la transición de opacidad (si no, el cambio sería instantáneo). */
+@media (prefers-reduced-motion: reduce) {
+  .about-layer { transition:opacity 1.3s ease-in-out !important; transform:none !important; }
+  .about-caption { transition:opacity .35s ease !important; transform:none !important; }
+  .about-caption.is-on { transition:opacity .6s ease .4s !important; }
+}
+
+/* --- Riesgos y Seguros: acordeón ---
+   La altura se anima con CSS Grid: el panel pasa de `0fr` a `1fr` y el hijo tiene
+   `min-height:0; overflow:hidden`, así crece hasta su altura real sin medir nada con
+   JavaScript y un subdesplegable abierto estira al padre de forma continua. El panel
+   cerrado queda con `visibility:hidden` recién al terminar el cierre: sale del orden
+   de tabulación sin cortar la animación. Los paneles anidados abiertos usan
+   `visibility:inherit` (no `visible`), para que no se vean dentro de un padre cerrado.
+   La regla global de `prefers-reduced-motion` congela toda transición con
+   `!important`; el bloque final acorta los tiempos sin eliminar el despliegue. */
+.risk { position:relative; z-index:1; padding:clamp(92px,12vh,130px) 0; }
+.risk-inner { width:min(940px, 100% - 12vw); margin-inline:auto; }
+.risk h2 { margin-top:14px; font-size:clamp(32px,4.6vw,54px); line-height:1.04; }
+.risk-intro { max-width:620px; margin:18px 0 44px; color:var(--color-muted); font-size:var(--fs-lead); line-height:1.7; }
+.risk-item { margin-bottom:14px; border:1px solid var(--color-line); border-radius:20px; background:var(--color-surface); transition:border-color .3s ease, box-shadow .3s ease; }
+.risk-item.is-open { border-color:var(--color-signal); box-shadow:0 30px 60px -44px rgba(16,28,34,.5); }
+.risk-heading { margin:0; }
+.risk-trigger { display:flex; align-items:center; gap:16px; width:100%; padding:22px 24px; border:0; border-radius:20px; background:transparent; text-align:left; }
+.risk-trigger:focus-visible { outline:2px solid var(--color-signal); outline-offset:2px; }
+.risk-number { min-width:34px; color:var(--color-signal); font-size:20px; font-weight:700; letter-spacing:-.02em; }
+.risk-title { flex:1; color:var(--color-ink); font-size:clamp(18px,2.2vw,22px); font-weight:600; line-height:1.25; letter-spacing:-.02em; }
+.risk-chevron { display:grid; place-items:center; flex:none; width:36px; height:36px; border:1px solid var(--color-line); border-radius:10px; background:var(--color-surface); color:var(--color-muted); transition:transform .45s cubic-bezier(.22,.8,.24,1), background-color .3s ease, border-color .3s ease, color .3s ease; }
+.risk-chevron svg { width:16px; height:16px; }
+.risk-item.is-open .risk-chevron { transform:rotate(180deg); background:var(--color-signal); border-color:var(--color-signal); color:#fff; }
+/* Panel: 0fr cerrado, 1fr abierto. Nunca `display:none` ni `max-height` fijo. */
+.risk-panel { display:grid; grid-template-rows:0fr; opacity:0; visibility:hidden; transition:grid-template-rows .5s cubic-bezier(.22,.8,.24,1), opacity .4s ease, visibility 0s linear .5s; }
+.risk-panel.is-open { grid-template-rows:1fr; opacity:1; visibility:inherit; transition:grid-template-rows .5s cubic-bezier(.22,.8,.24,1), opacity .4s ease; }
+.risk-panel-inner { min-height:0; overflow:hidden; }
+.risk-body { padding:0 24px 26px 74px; }
+.risk-p { margin-bottom:14px; color:var(--color-muted); font-size:var(--fs-body); line-height:1.7; }
+.risk-label { display:block; margin:6px 0 8px; color:var(--color-signal); font-size:var(--fs-micro); font-weight:700; letter-spacing:.14em; text-transform:uppercase; }
+.risk-box { margin:6px 0 14px; padding:14px 16px; border-radius:12px; background:var(--color-signal-soft); color:var(--color-ink); font-size:var(--fs-body); line-height:1.6; }
+.risk-box b { display:block; margin-bottom:2px; font-weight:600; }
+.risk-term { margin-bottom:14px; padding:2px 0 2px 14px; border-left:3px solid var(--color-signal); color:var(--color-muted); font-size:var(--fs-body); line-height:1.65; }
+.risk-term b { display:block; color:var(--color-ink); font-weight:600; }
+.risk-note { display:block; margin-top:2px; color:var(--color-signal); font-size:var(--fs-small); font-style:normal; font-weight:600; }
+.risk-chips { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+.risk-chip { padding:6px 12px; border:1px solid var(--color-line); border-radius:999px; background:var(--color-surface); color:var(--color-ink); font-size:var(--fs-small); font-weight:600; }
+/* Subsecciones: fondo propio, más compactas y sin sombra. */
+.risk-item.is-sub { margin-bottom:10px; border-color:transparent; border-radius:16px; background:var(--color-paper); box-shadow:none; }
+.risk-item.is-sub.is-open { border-color:var(--color-line); }
+.risk-item.is-sub .risk-trigger { gap:12px; padding:16px 18px; border-radius:16px; }
+.risk-item.is-sub .risk-title { font-size:var(--fs-body); }
+.risk-item.is-sub .risk-chevron { width:30px; height:30px; border-radius:8px; }
+.risk-item.is-sub .risk-chevron svg { width:14px; height:14px; }
+.risk-item.is-sub .risk-body { padding:0 18px 18px; }
+@media (max-width:650px) {
+  /* Sin la sangría de 74px: en móvil el texto usa todo el ancho del panel. */
+  .risk-trigger { gap:12px; padding:18px; }
+  .risk-body { padding:0 18px 20px; }
+  .risk-number { min-width:26px; font-size:18px; }
+  .risk-p, .risk-box, .risk-term { font-size:var(--fs-small); }
+}
+/* Reducir movimiento: se acortan los tiempos y no rota el chevron, pero el panel
+   sigue desplegándose y fundiéndose (nunca `transition:none`). */
+@media (prefers-reduced-motion: reduce) {
+  .risk-panel { transition:grid-template-rows .3s ease, opacity .3s ease, visibility 0s linear .3s !important; }
+  .risk-panel.is-open { transition:grid-template-rows .3s ease, opacity .3s ease !important; }
+  .risk-chevron { transition:background-color .3s ease, border-color .3s ease, color .3s ease !important; }
+  .risk-item.is-open .risk-chevron { transform:none !important; }
 }

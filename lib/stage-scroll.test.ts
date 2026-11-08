@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { stageActiveIndex, stageTrackOffsetPercent } from './stage-scroll'
+import { stageTrackOffsetPercent } from './stage-scroll'
 
 /**
  * Posición de la tarjeta `index` medida en anchos de panel: 0 significa que está
@@ -29,13 +29,3 @@ describe('posición de las tarjetas', () => {
   })
 })
 
-describe('stageActiveIndex', () => {
-  it('recorre las etapas en orden a lo largo del recorrido', () => {
-    expect([0, 1 / 3, 2 / 3, 1].map((progress) => stageActiveIndex(progress, 4))).toEqual([0, 1, 2, 3])
-  })
-
-  it('acota el progreso fuera de rango', () => {
-    expect(stageActiveIndex(-0.5, 4)).toBe(0)
-    expect(stageActiveIndex(1.5, 4)).toBe(3)
-  })
-})

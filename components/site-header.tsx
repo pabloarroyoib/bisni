@@ -3,10 +3,12 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { ArrowUpRight, Menu, X } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 
 const SECTIONS = [
+  { label: 'Inicio', target: '#inicio' },
   { label: 'Servicios', target: '#servicios' },
+  { label: 'Nosotros', target: '#nosotros' },
   { label: 'Blog', target: '/blog' },
   { label: 'Contacto', target: '#contacto' },
 ] as const
@@ -44,10 +46,6 @@ export function SiteHeader() {
           </Link>
         ))}
       </nav>
-
-      <Link className="nav-cta" href={href('#contacto')}>
-        Solicitar diagnóstico <ArrowUpRight aria-hidden="true" />
-      </Link>
 
       <button
         className="mobile-menu"

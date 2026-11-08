@@ -59,6 +59,7 @@ components/
   contact-form.tsx            Formulario con estados de envío/error/éxito
   blog-card.tsx               Tarjeta de artículo, compartida por la home y /blog
   blog-list.tsx               Listado del blog con buscador y filtros (cliente)
+  about-section.tsx           Sección "Nosotros": carrusel de cartas con fundido cruzado + panel de contenido
   post-body.tsx               PortableText (Server Component): imágenes, video (YouTube/Vimeo/Drive/directo), enlaces
   ui/button.tsx               Botón shadcn/base-ui con cva (sin usar)
 
@@ -119,6 +120,7 @@ opencode.jsonc                Agente `gga-reviewer` de solo lectura para el hook
 ## Diseño
 
 - **Tokens**: definidos en el bloque `@theme` de `app/globals.css` (Tailwind v4, CSS-first): `--color-ink`, `--color-signal`, `--color-paper`, `--color-line`, `--color-muted`, `--color-surface-dark/deep`, `--color-signal-light`, `--color-on-dark*`. Las variables históricas (`--teal`, `--ink`, `--navy`…) apuntan a esos tokens, así que cambiar un token repinta todo el sitio.
+- **Carrusel de "Nosotros"** (`components/about-section.tsx`): tres marcos fijos —el frontal nítido y dos detrás, con `blur`— y dentro de cada marco las tres imágenes siempre montadas como capas. El cambio es solo de clases (`is-on` / `is-prev` / resto), así el paso 1 → 2 → 3 → 1 es un fundido cruzado en el mismo lugar, sin desmontar nada y sin que se vea el fondo vacío. Rota cada 4 s y se pausa con el mouse o el foco. Los logos van con `object-fit: contain` y su capa lleva fondo opaco, porque con `contain` la capa no cubre el marco y asomaría la imagen anterior. La regla global de `prefers-reduced-motion` congela toda transición con `!important`: el bloque del carrusel repone el fundido de opacidad y deja afuera solo el zoom y el desplazamiento del subtítulo.
 - **Tipografía**: una sola familia, **Archivo**, vía `next/font/google` (`--font-archivo` en `app/layout.tsx`). Títulos en peso 600 y tracking `-.02em`.
 - **"Relieve"**: la textura de fondo. Curvas de nivel que evocan un mapa de relieve del riesgo. `components/contour-field.tsx` (Server Component, generación determinista para no romper la hidratación) + `.contour-field-page` / `.contour-field-panel` en `globals.css`.
   - `page`: una sola capa detrás de **toda** la página. Exige un `viewBox` alto (`1200×3200`); con uno apaisado, `preserveAspectRatio="slice"` lo escala ~8× en una página de ~4850px y las curvas quedan gigantes.

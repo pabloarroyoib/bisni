@@ -1,8 +1,9 @@
 'use client'
 
-import { motion, useMotionValueEvent, useScroll, useSpring, useTransform } from 'framer-motion'
-import { useRef, useState, type CSSProperties, type ReactNode } from 'react'
-import { stageActiveIndex, stageTrackOffsetPercent } from '@/lib/stage-scroll'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { useState, type CSSProperties, type ReactNode } from 'react'
+import { stageTrackOffsetPercent } from '@/lib/stage-scroll'
+
 
 type StageIconName = 'diagnostico' | 'diseno' | 'implementacion' | 'seguimiento'
 
@@ -71,98 +72,121 @@ const stages: Stage[] = [
     text: 'Junto a tu equipo definimos los plazos de revisión y los responsables de cada paso, para que el programa se mantenga vigente y ajustado a la realidad de la empresa a medida que cambia.',
   },
 ]
-
 /**
- * Sección "Programa de seguros": cada etapa ocupa todo el ancho del panel y el scroll
- * vertical de la página pasa de una tarjeta a la siguiente deslizándolas en horizontal:
- * la que está en el panel sale por la izquierda y la siguiente entra por la derecha.
+ * Sección "Programa de seguros": las cuatro etapas van en una fila horizontal y se
+ * pasa de una a otra con los botones de anterior/siguiente (y los puntos), sin
+ * scroll. Antes la sección medía una pantalla por etapa y el scroll vertical movía
+ * la tira: para atravesarla había que scrollear cuatro pantallas. Ahora mide lo que
+ * mide su contenido y el avance es explícito.
  *
- * El progreso del scroll pasa por un resorte (`useSpring`) antes de mover la tira. Así,
- * una muesca de rueda (100px) ya no se traduce en un salto de un frame, sino en un
- * desplazamiento con inercia al arrancar y al frenar. El scroll de la página es el
- * nativo: no hay listeners de `wheel` ni `preventDefault`.
+ * El desplazamiento es solo un `transform` sobre la tira, con transición CSS: no hay
+ * listeners de scroll ni intercepción de la rueda, y la página sigue scrolleando de
+ * forma nativa.
  */
 export function HorizontalStages() {
-  const sectionRef = useRef<HTMLElement>(null)
-  const [active, setActive] = useState(0)
+  const total = stages.length
+  const [index, setIndex] = useState(0)
 
-  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end end'] })
-
-  // Suavizado: el progreso persigue al scroll real con física de resorte.
-  const progress = useSpring(scrollYProgress, { stiffness: 300, damping: 30, mass: 0.3 })
-
-  // Todo se deriva del progreso suavizado. El porcentaje es del ancho de la tira (N paneles).
-  const x = useTransform(progress, [0, 1], ['0%', `${stageTrackOffsetPercent(1, stages.length)}%`])
-
-  // Solo se re-renderiza cuando cambia la etapa activa, no en cada frame.
-  useMotionValueEvent(progress, 'change', (value) => {
-    const next = stageActiveIndex(value, stages.length)
-    setActive((current) => (current === next ? current : next))
-  })
+  const atStart = index === 0
+  const atEnd = index === total - 1
+  // Progreso 0..1 del recorrido entre la primera y la última etapa.
+  const progress = index / (total - 1)
 
   return (
     <section
       className="services services-timeline"
       id="servicios"
-      ref={sectionRef}
-      style={{ '--stage-count': stages.length } as CSSProperties}
+      style={{ '--stage-count': total } as CSSProperties}
     >
-      <div className="services-timeline-sticky">
-        <div className="section-heading services-timeline-head">
-          <div>
-            <p className="section-kicker">Lo que hacemos</p>
-            <h2>PROGRAMA DE SEGUROS</h2>
-            <p className="services-timeline-label">ETAPAS</p>
-          </div>
-          <p className="section-intro">
-            Es el plan de seguros diseñado para las necesidades específicas de protección integral y que se alinea con
-            los objetivos estratégicos de tu empresa.
-          </p>
+      <div className="section-heading services-timeline-head">
+        <div>
+          <p className="section-kicker">Lo que hacemos</p>
+          <h2>PROGRAMA DE SEGUROS</h2>
+          <p className="services-timeline-label">ETAPAS</p>
         </div>
+        <p className="section-intro">
+          Es el plan de seguros diseñado para las necesidades específicas de protección integral y que se alinea con
+          los objetivos estratégicos de tu empresa.
+        </p>
+      </div>
 
-        {/* Decorativo: el estado real está en las tarjetas y en su numeración. */}
-        <div className="services-timeline-progress" aria-hidden="true">
-          <motion.span className="services-timeline-progress-fill" style={{ scaleX: progress }} />
-          {stages.map((stage, index) => (
-            <span
-              className={`services-timeline-dot${index <= active ? ' is-filled' : ''}`}
+      <div className="services-timeline-progress">
+        <span className="services-timeline-progress-fill" aria-hidden="true" style={{ transform: `scaleX(${progress})` }} />
+        {stages.map((stage, dotIndex) => (
+          <button
+            key={stage.title}
+            type="button"
+            className={`services-timeline-dot${dotIndex <= index ? ' is-filled' : ''}`}
+            style={{ left: `${(dotIndex / (total - 1)) * 100}%` }}
+            aria-label={`Ir a la etapa ${dotIndex + 1}: ${stage.title}`}
+            aria-current={dotIndex === index}
+            onClick={() => setIndex(dotIndex)}
+          />
+        ))}
+      </div>
+
+      <div className="services-timeline-viewport">
+        <div
+          className="services-timeline-track"
+          style={{ transform: `translate3d(${stageTrackOffsetPercent(progress, total)}%, 0, 0)` }}
+        >
+          {stages.map((stage, cardIndex) => (
+            <article
+              className={`services-timeline-card${cardIndex === index ? ' is-current' : ''}`}
               key={stage.title}
-              style={{ left: `${(index / (stages.length - 1)) * 100}%` }}
-            />
+              aria-hidden={cardIndex !== index}
+            >
+              <div className="services-timeline-card-main">
+                <div className="services-timeline-card-top">
+                  <span className="services-timeline-card-number">{String(cardIndex + 1).padStart(2, '0')}</span>
+                  <span className="services-timeline-card-icon">
+                    <svg
+                      aria-hidden="true"
+                      focusable="false"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={1.6}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      {STAGE_ICONS[stage.icon]}
+                    </svg>
+                  </span>
+                </div>
+                <h3>{stage.title}</h3>
+              </div>
+              <p>{stage.text}</p>
+            </article>
           ))}
         </div>
 
-        {/* El recorte va en el viewport: la tira solo se ve dentro del panel. */}
-        <div className="services-timeline-viewport">
-          <motion.div className="services-timeline-track" style={{ x }}>
-            {stages.map((stage, index) => (
-              <article className="services-timeline-card" key={stage.title}>
-                <div className="services-timeline-card-main">
-                  <div className="services-timeline-card-top">
-                    <span className="services-timeline-card-number">{String(index + 1).padStart(2, '0')}</span>
-                    <span className="services-timeline-card-icon">
-                      <svg
-                        aria-hidden="true"
-                        focusable="false"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth={1.6}
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        {STAGE_ICONS[stage.icon]}
-                      </svg>
-                    </span>
-                  </div>
-                  <h3>{stage.title}</h3>
-                </div>
-                <p>{stage.text}</p>
-              </article>
-            ))}
-          </motion.div>
+        <div className="services-timeline-navs">
+          <button
+            type="button"
+            className="services-timeline-nav is-prev"
+            onClick={() => setIndex((value) => Math.max(0, value - 1))}
+            disabled={atStart}
+            aria-label="Etapa anterior"
+          >
+            <ChevronLeft aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            className="services-timeline-nav is-next"
+            onClick={() => setIndex((value) => Math.min(total - 1, value + 1))}
+            disabled={atEnd}
+            aria-label="Etapa siguiente"
+          >
+            <ChevronRight aria-hidden="true" />
+          </button>
         </div>
       </div>
+
+      {/* Anuncia el cambio de etapa sin ocupar espacio en pantalla. */}
+      <p className="sr-only" aria-live="polite">
+        Etapa {index + 1} de {total}: {stages[index].title}
+      </p>
     </section>
   )
 }

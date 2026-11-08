@@ -5,6 +5,8 @@ import { ArrowUpRight, Globe2, Mail, MapPin } from 'lucide-react'
 import { BlogCard } from '@/components/blog-card'
 import { ContactForm } from '@/components/contact-form'
 import { HorizontalStages } from '@/components/horizontal-stages'
+import { AboutSection } from '@/components/about-section'
+import { RiskAccordion } from '@/components/risk-accordion'
 import { NewsletterForm } from '@/components/newsletter-form'
 import { SiteHeader } from '@/components/site-header'
 import { CONTACT_EMAIL, gmailComposeUrl, mailtoHref } from '@/lib/email'
@@ -22,8 +24,8 @@ const valueCards = [
     text: 'Identificamos las vulnerabilidades específicas de tu sector para diseñar coberturas de seguros que cubran cada eventualidad de manera precisa.',
   },
   {
-    title: 'Gestión Continua del Riesgo',
-    text: 'Analizamos tus riesgos en operaciones, infraestructura, capital humano y responsabilidad civil, brindando asesoría continua para acompañar la evolución de tu empresa.',
+    title: 'Nuestra misión',
+    text: 'Entender cada riesgo y diseñar seguros empresariales que permitan a las compañías operar con confianza y resiliencia. Ser un aliado estratégico para la prevención y la protección del valor de las empresas.',
   },
 ]
 
@@ -65,7 +67,6 @@ export function HomePage({ posts, background, contactBackground, footer }: HomeP
           <div className="hero-cards">
             {valueCards.map(({ title, text }, index) => (
               <article className={`hero-card hero-card-${index + 1}`} key={title}>
-                <span className="hero-card-number">{String(index + 1).padStart(2, '0')}</span>
                 <h3>{title}</h3>
                 <p>{text}</p>
               </article>
@@ -76,7 +77,10 @@ export function HomePage({ posts, background, contactBackground, footer }: HomeP
 
       <HorizontalStages />
 
-      
+      <AboutSection />
+
+      <RiskAccordion />
+
 
       <section className="blog section" id="blog">
         <div className="section-heading">
