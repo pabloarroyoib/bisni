@@ -2,6 +2,7 @@
 
 import { useId, useState, type ReactNode } from 'react'
 import { riskSections, type RiskContent, type RiskSub } from '@/lib/risk-insurance'
+import { Reveal } from '@/components/reveal'
 
 /**
  * Desplegable genérico. La altura se anima con CSS Grid: el panel pasa de
@@ -116,7 +117,7 @@ export function RiskAccordion() {
 
   return (
     <section className="risk" id="riesgos" aria-labelledby="riesgos-titulo">
-      <div className="risk-inner">
+      <Reveal className="risk-inner">
         <h2 id="riesgos-titulo">Riesgos y Seguros</h2>
         <p className="risk-intro">
           El Programa de Seguros es central para la gestión de riesgos, actúa principalmente en tres áreas.
@@ -136,7 +137,7 @@ export function RiskAccordion() {
             ))}
           </RiskDisclosure>
         ))}
-      </div>
+      </Reveal>
     </section>
   )
 }

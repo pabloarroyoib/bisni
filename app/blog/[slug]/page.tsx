@@ -11,6 +11,7 @@ import type { Metadata } from 'next'
 import { PostBody } from '@/components/post-body'
 import { SiteFooter } from '@/components/site-footer'
 import { SiteHeader } from '@/components/site-header'
+import { Reveal } from '@/components/reveal'
 
 /**
  * `cache()` deduplica la petición entre `generateMetadata` y el render: sin él
@@ -71,7 +72,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       <span id="contenido" tabIndex={-1} />
 
       <article className="article-page">
-        <div className="article-header">
+        <Reveal className="article-header">
           <Link href="/blog" className="article-back">
             ← Volver al blog
           </Link>
@@ -98,10 +99,10 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               </span>
             </div>
           )}
-        </div>
+        </Reveal>
 
         {mappedPost.imageUrl && (
-          <div className="article-hero-image">
+          <Reveal variant="scale" className="article-hero-image">
             <Image
               src={mappedPost.imageUrl}
               alt={mappedPost.imageAlt}
@@ -110,26 +111,28 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               sizes="(max-width: 900px) 100vw, 800px"
               priority
             />
-          </div>
+          </Reveal>
         )}
 
-        <div className="article-content">
+        <Reveal className="article-content">
           <PostBody value={mappedPost.body} />
-        </div>
+        </Reveal>
 
       </article>
 
       {relatedPosts.length > 0 ? (
         <section className="related section" aria-labelledby="related-title">
-          <div className="related-head">
+          <Reveal className="related-head">
             <h2 id="related-title">También te puede interesar</h2>
             <Link href="/blog" className="button button-dark">
               Ver todas las notas <ArrowUpRight aria-hidden="true" />
             </Link>
-          </div>
+          </Reveal>
           <div className="related-grid">
             {relatedPosts.map((post) => (
-              <BlogCard key={post._id} post={post} />
+              <Reveal className="related-card-reveal" key={post._id}>
+                <BlogCard post={post} />
+              </Reveal>
             ))}
           </div>
         </section>

@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react'
 import { Search } from 'lucide-react'
 import { BlogCard } from '@/components/blog-card'
 import { BlogHero } from '@/components/blog-hero'
+import { Reveal } from '@/components/reveal'
 import type { BlogPost } from '@/lib/blog'
 
 type BlogListProps = {
@@ -40,7 +41,7 @@ export function BlogList({ posts, categories }: BlogListProps) {
 
   return (
     <>
-      <div className="blog-controls">
+      <Reveal className="blog-controls">
         <label className="search-box">
           <Search aria-hidden="true" />
           <span className="sr-only">Buscar artículos</span>
@@ -75,25 +76,36 @@ export function BlogList({ posts, categories }: BlogListProps) {
             ))}
           </select>
         </label>
-      </div>
+      </Reveal>
 
-      {heroPost ? <BlogHero post={heroPost} /> : null}
+      {heroPost ? (
+        <Reveal variant="scale" className="blog-hero-reveal">
+          <BlogHero post={heroPost} />
+        </Reveal>
+      ) : null}
 
       {filteredPosts.length === 0 ? (
-        <p className="blog-empty">
-          {posts.length === 0
-            ? 'Aún no hay artículos publicados. Cuando publiques un artículo en el Studio, aparecerá aquí.'
-            : 'No hay artículos que coincidan con tu búsqueda.'}
-        </p>
+        <Reveal>
+          <p className="blog-empty">
+            {posts.length === 0
+              ? 'Aún no hay artículos publicados. Cuando publiques un artículo en el Studio, aparecerá aquí.'
+              : 'No hay artículos que coincidan con tu búsqueda.'}
+          </p>
+        </Reveal>
       ) : (
         <div className="post-grid post-grid-3">
-          {gridPosts.map((post, index) => (
-            <BlogCard
-              key={post._id}
-              post={post}
-              variant={(index + 1) % WIDE_EVERY === 0 ? 'wide' : 'default'}
-            />
-          ))}
+          {gridPosts.map((post, index) => {
+            const variant = (index + 1) % WIDE_EVERY === 0 ? 'wide' : 'default'
+
+            return (
+              <Reveal
+                className={`post-grid-reveal${variant === 'wide' ? ' is-wide' : ''}`}
+                key={post._id}
+              >
+                <BlogCard post={post} variant={variant} />
+              </Reveal>
+            )
+          })}
         </div>
       )}
     </>

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { BlogList } from '@/components/blog-list'
+import { Reveal } from '@/components/reveal'
 import { SiteFooter } from '@/components/site-footer'
 import { SiteHeader } from '@/components/site-header'
 import { mapPosts, toCategoryNames, type SanityCategory, type SanityPost } from '@/lib/blog'
@@ -28,14 +29,14 @@ export default async function BlogIndexPage() {
       <SiteHeader />
 
       <section className="blog blog-index section">
-        <div className="section-heading">
+        <Reveal className="section-heading">
           <div>
             <h1>Ideas para navegar<br /><em>lo que viene.</em></h1>
           </div>
           <p className="section-intro">
             Todo lo que publicamos sobre riesgo, ciberseguridad y cumplimiento, en un solo lugar.
           </p>
-        </div>
+        </Reveal>
 
         <BlogList posts={posts} categories={categories} />
       </section>

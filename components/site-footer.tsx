@@ -1,5 +1,7 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import { Globe2, Mail } from 'lucide-react'
+import { Reveal } from '@/components/reveal'
 import { CONTACT_EMAIL, mailtoHref } from '@/lib/email'
 
 const LINK_GROUPS = [
@@ -33,10 +35,12 @@ const LINK_GROUPS = [
 export function SiteFooter() {
   return (
     <footer className="footer">
-      <div className="footer-main">
+      <Reveal className="footer-main">
         <div>
-          <Link className="brand footer-brand" href="/">
-            <span className="brand-mark">g</span>GROU Asesores
+          <Link className="brand footer-brand" href="/" aria-label="GROU Asesores inicio">
+            {/* Variante clara: el logo original tiene "ASESORES" en azul oscuro y
+                sobre este fondo no se leería. */}
+            <Image src="/grou-logo-claro.webp" alt="" width={508} height={292} className="brand-logo" />
           </Link>
           <p>
             Riesgo claro.
@@ -57,9 +61,9 @@ export function SiteFooter() {
             </div>
           ))}
         </nav>
-      </div>
+      </Reveal>
 
-      <div className="footer-bottom">
+      <Reveal className="footer-bottom">
         <span>© 2026 GROU Asesores. Protegiendo tu futuro corporativo.</span>
         <span className="socials">
           <Link href="/#contacto" aria-label="LinkedIn">
@@ -73,7 +77,7 @@ export function SiteFooter() {
         <span>
           Hecho con intención <span className="brand-dot">●</span>
         </span>
-      </div>
+      </Reveal>
     </footer>
   )
 }

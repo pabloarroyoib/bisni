@@ -3,9 +3,10 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useState, type CSSProperties, type ReactNode } from 'react'
 import { stageTrackOffsetPercent } from '@/lib/stage-scroll'
+import { Reveal } from '@/components/reveal'
 
 
-type StageIconName = 'diagnostico' | 'diseno' | 'implementacion' | 'seguimiento'
+type StageIconName = 'diagnostico' | 'diseno' | 'seguimiento'
 
 /**
  * Iconos inline (sin librería de iconos): trazo sobre un viewBox de 24 unidades,
@@ -25,12 +26,6 @@ const STAGE_ICONS: Record<StageIconName, ReactNode> = {
       <path d="M9.5 12.5h5M9.5 16h3.5" />
     </>
   ),
-  implementacion: (
-    <>
-      <path d="M12 3.5 5 6.5v5.2c0 4 2.9 7.4 7 8.8 4.1-1.4 7-4.8 7-8.8V6.5z" />
-      <path d="m9 12 2.2 2.2L15.5 10" />
-    </>
-  ),
   seguimiento: (
     <>
       <path d="M20 12a8 8 0 1 1-2.5-5.8" />
@@ -47,8 +42,10 @@ type Stage = {
 }
 
 /**
- * Programa de seguros en cuatro etapas. La tercera etapa original
- * ("Implementación y seguimiento") se separó en 03 y 04.
+ * Programa de seguros en tres etapas: la implementación y el seguimiento van
+ * juntos porque forman un solo tramo de trabajo (emitir las pólizas y mantenerlas
+ * vigentes). El ancho de la tira y el desplazamiento salen de `stages.length`, así
+ * que agregar o quitar etapas no requiere tocar el CSS.
  */
 const stages: Stage[] = [
   {
@@ -62,21 +59,16 @@ const stages: Stage[] = [
     text: 'Con base en el diagnóstico, elaboramos propuestas de seguros que reducen la exposición a pérdidas y aseguran la operatividad ante eventos adversos. Combinan coberturas de responsabilidad civil, daños materiales y riesgos de capital humano. Presentamos el plan al cliente, explicando beneficios, exclusiones y procesos de reclamación.',
   },
   {
-    title: 'Implementación',
-    icon: 'implementacion',
-    text: 'Negociamos con las aseguradoras las condiciones de cada cobertura y gestionamos la emisión de las pólizas.',
-  },
-  {
-    title: 'Seguimiento',
+    title: 'Implementación y seguimiento',
     icon: 'seguimiento',
-    text: 'Junto a tu equipo definimos los plazos de revisión y los responsables de cada paso, para que el programa se mantenga vigente y ajustado a la realidad de la empresa a medida que cambia.',
+    text: 'Negociamos con las aseguradoras las condiciones de cada cobertura y gestionamos la emisión de las pólizas. Junto a tu equipo definimos los plazos de revisión y los responsables de cada paso, para que el programa se mantenga vigente y ajustado a la realidad de la empresa a medida que cambia.',
   },
 ]
 /**
- * Sección "Programa de seguros": las cuatro etapas van en una fila horizontal y se
+ * Sección "Programa de seguros": las tres etapas van en una fila horizontal y se
  * pasa de una a otra con los botones de anterior/siguiente (y los puntos), sin
  * scroll. Antes la sección medía una pantalla por etapa y el scroll vertical movía
- * la tira: para atravesarla había que scrollear cuatro pantallas. Ahora mide lo que
+ * la tira: para atravesarla había que scrollear varias pantallas. Ahora mide lo que
  * mide su contenido y el avance es explícito.
  *
  * El desplazamiento es solo un `transform` sobre la tira, con transición CSS: no hay
@@ -98,7 +90,7 @@ export function HorizontalStages() {
       id="servicios"
       style={{ '--stage-count': total } as CSSProperties}
     >
-      <div className="section-heading services-timeline-head">
+      <Reveal className="section-heading services-timeline-head">
         <div>
           <p className="section-kicker">Lo que hacemos</p>
           <h2>PROGRAMA DE SEGUROS</h2>
@@ -108,7 +100,7 @@ export function HorizontalStages() {
           Es el plan de seguros diseñado para las necesidades específicas de protección integral y que se alinea con
           los objetivos estratégicos de tu empresa.
         </p>
-      </div>
+      </Reveal>
 
       <div className="services-timeline-progress">
         <span className="services-timeline-progress-fill" aria-hidden="true" style={{ transform: `scaleX(${progress})` }} />

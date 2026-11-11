@@ -13,6 +13,10 @@ describe('stageTrackOffsetPercent', () => {
   it('al final del recorrido desplaza la tira un panel menos de su ancho', () => {
     expect(stageTrackOffsetPercent(1, 4)).toBeCloseTo(-75, 10)
   })
+
+  it('con tres etapas el desplazamiento final es dos tercios del ancho', () => {
+    expect(stageTrackOffsetPercent(1, 3)).toBeCloseTo(-66.6666667, 6)
+  })
 })
 
 describe('posición de las tarjetas', () => {
@@ -25,6 +29,12 @@ describe('posición de las tarjetas', () => {
   it('cada tarjeta llega al panel en su tramo del recorrido', () => {
     for (const index of [0, 1, 2, 3]) {
       expect(cardOffsetInPanels(index, index / 3, 4)).toBeCloseTo(0, 10)
+    }
+  })
+
+  it('con tres etapas cada tarjeta llega al panel en su tramo', () => {
+    for (const index of [0, 1, 2]) {
+      expect(cardOffsetInPanels(index, index / 2, 3)).toBeCloseTo(0, 10)
     }
   })
 })

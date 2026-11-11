@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import { useEffect, useState, type CSSProperties } from 'react'
+import { Reveal } from '@/components/reveal'
 
 type Slide = {
   src: string
@@ -161,16 +162,26 @@ export function AboutSection() {
       </div>
 
       <div className="about-content">
-        <p className="section-kicker">Nosotros</p>
-        <h2 id="nosotros-titulo">Riesgo claro.<br />Decisiones sólidas.</h2>
-        <p className="about-label">Nuestra misión</p>
-        <p>
-          Entender cada riesgo y diseñar seguros empresariales que permitan a las compañías operar con confianza y
-          resiliencia. Ser un aliado estratégico para la prevención y la protección del valor de las empresas.
-        </p>
-        <a className="button button-primary about-cta" href="#contacto">
-          Hablemos
-        </a>
+        <Reveal>
+          <p className="section-kicker">Nosotros</p>
+        </Reveal>
+        <Reveal>
+          <h2 id="nosotros-titulo">Riesgo claro.<br />Decisiones sólidas.</h2>
+        </Reveal>
+        <Reveal className="about-label-reveal">
+          <p className="about-label">Nuestra misión</p>
+        </Reveal>
+        <Reveal className="about-mission-copy-reveal">
+          <p className="about-mission-copy">
+            Entender cada riesgo y diseñar seguros empresariales que permitan a las compañías operar con confianza y
+            resiliencia. Ser un aliado estratégico para la prevención y la protección del valor de las empresas.
+          </p>
+        </Reveal>
+        <Reveal className="about-cta-reveal">
+          <a className="button button-primary about-cta" href="#contacto">
+            Hablemos
+          </a>
+        </Reveal>
       </div>
     </section>
   )

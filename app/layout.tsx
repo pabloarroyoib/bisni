@@ -1,6 +1,8 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Archivo } from 'next/font/google'
+import 'lenis/dist/lenis.css'
+import { SmoothScroll } from '@/components/smooth-scroll'
 import { SanityLive } from '@/sanity/lib/live'
 import { siteDescription, siteName, siteUrl } from '@/lib/site'
 import './globals.css'
@@ -80,7 +82,7 @@ export default function RootLayout({
         <a className="skip-link" href="#contenido">
           Saltar al contenido
         </a>
-        {children}
+        <SmoothScroll>{children}</SmoothScroll>
         <SanityLive />
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>

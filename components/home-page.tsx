@@ -8,6 +8,7 @@ import { HorizontalStages } from '@/components/horizontal-stages'
 import { AboutSection } from '@/components/about-section'
 import { RiskAccordion } from '@/components/risk-accordion'
 import { NewsletterForm } from '@/components/newsletter-form'
+import { Reveal, Stagger, StaggerItem } from '@/components/reveal'
 import { SiteHeader } from '@/components/site-header'
 import { CONTACT_EMAIL, gmailComposeUrl, mailtoHref } from '@/lib/email'
 import type { BlogPost } from '@/lib/blog'
@@ -59,19 +60,27 @@ export function HomePage({ posts, background, contactBackground, footer }: HomeP
 
       <section className="hero" id="inicio">
         <div className="hero-inner">
-          <div className="hero-text">
-            <p className="hero-kicker">GROU Asesores</p>
-            <h1>Protección integral para empresas</h1>
-            <p className="hero-copy">En GROU Asesores evaluamos los riesgos específicos de cada empresa y diseñamos soluciones de seguros a medida para proteger los activos de tu organización, fortaleciendo la capacidad de respuesta de la empresa ante eventos críticos. Así puedes enfocarte en el crecimiento mientras nosotros gestionamos la protección. Trabajamos de manera proactiva para anticipar amenazas y diseñar soluciones a medida.</p>
-          </div>
-          <div className="hero-cards">
+          <Stagger className="hero-text" immediate>
+            <StaggerItem>
+              <p className="hero-kicker">GROU Asesores</p>
+            </StaggerItem>
+            <StaggerItem>
+              <h1>Protección integral para empresas</h1>
+            </StaggerItem>
+            <StaggerItem>
+              <p className="hero-copy">En GROU Asesores evaluamos los riesgos específicos de cada empresa y diseñamos soluciones de seguros a medida para proteger los activos de tu organización, fortaleciendo la capacidad de respuesta de la empresa ante eventos críticos. Así puedes enfocarte en el crecimiento mientras nosotros gestionamos la protección. Trabajamos de manera proactiva para anticipar amenazas y diseñar soluciones a medida.</p>
+            </StaggerItem>
+          </Stagger>
+          <Stagger className="hero-cards" immediate>
             {valueCards.map(({ title, text }, index) => (
-              <article className={`hero-card hero-card-${index + 1}`} key={title}>
-                <h3>{title}</h3>
-                <p>{text}</p>
-              </article>
+              <StaggerItem className={`hero-card-${index + 1}`} key={title}>
+                <article className="hero-card">
+                  <h3>{title}</h3>
+                  <p>{text}</p>
+                </article>
+              </StaggerItem>
             ))}
-          </div>
+          </Stagger>
         </div>
       </section>
 
@@ -83,49 +92,57 @@ export function HomePage({ posts, background, contactBackground, footer }: HomeP
 
 
       <section className="blog section" id="blog">
-        <div className="section-heading">
+        <Reveal className="section-heading">
           <div>
             <p className="section-kicker">Perspectivas GROU Asesores</p>
             <h2>Ideas para navegar<br /><em>lo que viene.</em></h2>
           </div>
-        </div>
+        </Reveal>
         {teaserPosts.length === 0 ? (
-          <p className="blog-empty">
-            Aún no hay artículos publicados. Cuando publiques un artículo en el Studio, aparecerá aquí.
-          </p>
+          <Reveal>
+            <p className="blog-empty">
+              Aún no hay artículos publicados. Cuando publiques un artículo en el Studio, aparecerá aquí.
+            </p>
+          </Reveal>
         ) : (
           <div className="post-grid">
             {teaserPosts.map((post) => (
-              <BlogCard key={post._id} post={post} />
+              <Reveal className="post-grid-reveal" key={post._id}>
+                <BlogCard post={post} />
+              </Reveal>
             ))}
           </div>
         )}
         {posts.length > HOME_BLOG_LIMIT ? (
-          <div className="blog-more">
+          <Reveal className="blog-more">
             <Link className="button button-ghost" href="/blog">
               Ver más artículos <ArrowUpRight aria-hidden="true" />
             </Link>
-          </div>
+          </Reveal>
         ) : null}
       </section>
 
       <section className="newsletter section" id="newsletter">
         <div className="newsletter-copy">
-          <div className="section-heading">
-            <div>
-              <p className="section-kicker">Newsletter</p>
-              <h2>Una idea útil,<br /><em>una vez al mes.</em></h2>
+          <Reveal>
+            <div className="section-heading">
+              <div>
+                <p className="section-kicker">Newsletter</p>
+                <h2>Una idea útil,<br /><em>una vez al mes.</em></h2>
+              </div>
             </div>
-          </div>
-          <p className="section-intro">Riesgo, ciberseguridad y cumplimiento. Un correo al mes, sin ruido y sin spam.</p>
+          </Reveal>
+          <Reveal>
+            <p className="section-intro">Riesgo, ciberseguridad y cumplimiento. Un correo al mes, sin ruido y sin spam.</p>
+          </Reveal>
         </div>
-        <div className="newsletter-action">
+        <Reveal className="newsletter-action">
           <NewsletterForm />
           <p className="newsletter-bridge">¿Buscas resolver un caso concreto? <a href="#contacto">Hablemos</a></p>
-        </div>
+        </Reveal>
       </section>
 
-      <section className="contact section" id="contacto">{contactBackground}<div className="contact-copy"><p className="section-kicker">Hablemos</p><h2>El próximo movimiento<br /><em>empieza aquí.</em></h2><p>Cuéntanos qué te preocupa. Te ayudaremos a ponerle nombre, contexto y un plan.</p><div className="contact-details"><div><MapPin aria-hidden="true" /><span>Calle Serrano 55<br />28006 Madrid</span></div><div><Mail aria-hidden="true" /><span><a href={mailtoHref()}>{CONTACT_EMAIL}</a><a className="mail-alt" href={gmailComposeUrl()} target="_blank" rel="noopener noreferrer">o abrir en Gmail</a></span></div><div><Globe2 aria-hidden="true" /><span>+34 910 123 456</span></div></div></div><ContactForm /></section>
+      <section className="contact section" id="contacto">{contactBackground}<Reveal className="contact-copy"><p className="section-kicker">Hablemos</p><h2>El próximo movimiento<br /><em>empieza aquí.</em></h2><p>Cuéntanos qué te preocupa. Te ayudaremos a ponerle nombre, contexto y un plan.</p><div className="contact-details"><div><MapPin aria-hidden="true" /><span>Calle Serrano 55<br />28006 Madrid</span></div><div><Mail aria-hidden="true" /><span><a href={mailtoHref()}>{CONTACT_EMAIL}</a><a className="mail-alt" href={gmailComposeUrl()} target="_blank" rel="noopener noreferrer">o abrir en Gmail</a></span></div><div><Globe2 aria-hidden="true" /><span>+34 910 123 456</span></div></div></Reveal><Reveal className="contact-form-reveal"><ContactForm /></Reveal></section>
 
       {footer}
     </main>

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Menu, X } from 'lucide-react'
@@ -31,7 +32,14 @@ export function SiteHeader() {
   return (
     <header className="navbar">
       <Link className="brand" href="/" aria-label="GROU Asesores inicio">
-        <span className="brand-mark">g</span>GROU Asesores
+        <Image
+          src="/grou-logo.webp"
+          alt=""
+          width={508}
+          height={292}
+          className="brand-logo"
+          priority
+        />
       </Link>
 
       <nav className={`nav-links ${open ? 'is-open' : ''}`} id="menu-principal" aria-label="Principal">
