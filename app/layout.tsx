@@ -79,6 +79,12 @@ export default function RootLayout({
   return (
     <html lang="es" className={archivo.variable}>
       <body className="antialiased">
+        {/* Sin JavaScript, los bloques con aparición al scroll quedarían con la
+            opacidad 0 que les deja el SSR. Este CSS solo se aplica cuando el
+            navegador no ejecuta scripts. */}
+        <noscript>
+          <style>{'[data-reveal]{opacity:1!important;transform:none!important}'}</style>
+        </noscript>
         <a className="skip-link" href="#contenido">
           Saltar al contenido
         </a>

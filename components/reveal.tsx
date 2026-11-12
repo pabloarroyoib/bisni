@@ -89,6 +89,7 @@ export function Reveal({
   return (
     <motion.div
       ref={ref}
+      data-reveal=""
       className={className}
       initial={hidden(variant, y)}
       animate={shown ? SHOWN : hidden(variant, y)}
@@ -116,6 +117,7 @@ export function Stagger({
   return (
     <motion.div
       ref={ref}
+      data-reveal=""
       className={className}
       initial="hidden"
       animate={shown ? 'show' : 'hidden'}
@@ -141,6 +143,7 @@ export function StaggerItem({
 
   return (
     <motion.div
+      data-reveal=""
       className={className}
       variants={{
         hidden: hidden(variant, y),
