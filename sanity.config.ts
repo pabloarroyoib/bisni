@@ -5,7 +5,7 @@
  */
 
 import {visionTool} from '@sanity/vision'
-import {defineConfig} from 'sanity'
+import {defineConfig, defineSingleton} from 'sanity'
 import {structureTool} from 'sanity/structure'
 
 // Go to https://www.sanity.io/docs/api-versioning to learn how API versioning works
@@ -21,6 +21,12 @@ export default defineConfig({
   dataset,
   // Add and edit the content schema in the './sanity/schemaTypes' folder
   schema,
+  document: {
+    // La home es un documento único con `_id: 'homePage'`: no se crea ni se duplica.
+    singletons: [
+      defineSingleton({documentId: 'homePage', schemaType: 'homePage', title: 'Home'}),
+    ],
+  },
   plugins: [
     structureTool({structure}),
     // Vision is for querying with GROQ from inside the Studio

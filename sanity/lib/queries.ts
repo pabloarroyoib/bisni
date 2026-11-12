@@ -41,3 +41,55 @@ export const SITEMAP_QUERY = defineQuery(`*[_type == "post" && defined(slug.curr
   "lastModified": coalesce(_updatedAt, publishedAt, _createdAt)
 }`)
 
+/**
+ * Contenido de la home. El `_id` es fijo porque es un singleton: si el documento
+ * todavía no existe, la consulta devuelve `null` y el resolver usa los defaults.
+ */
+export const HOME_QUERY = defineQuery(`*[_id == "homePage"][0]{
+  nav { items[] { label, href, variant }, socials[] { network, href } },
+  hero { title, paragraph, cards[] { title, text } },
+  stages { kicker, title, label, intro, stages[] { title, text, icon } },
+  about {
+    kicker,
+    title,
+    mission,
+    cta { label, href },
+    slides[] { image, alt, title, isLogo, pad }
+  },
+  risks {
+    title,
+    intro,
+    sections[] {
+      title,
+      paragraphs,
+      label,
+      box { title, text },
+      terms[] { name, text, note },
+      chips,
+      subs[] { title, paragraphs, label, box { title, text }, terms[] { name, text, note }, chips }
+    }
+  },
+  blog { kicker, title },
+  newsletter { kicker, title, bridgeText, bridgeLink { label, href } },
+  contact {
+    kicker,
+    title,
+    paragraph,
+    details[] { icon, text, href },
+    form {
+      nameLabel,
+      namePlaceholder,
+      companyLabel,
+      companyPlaceholder,
+      emailLabel,
+      emailPlaceholder,
+      messageLabel,
+      messagePlaceholder,
+      submitLabel,
+      sendingLabel,
+      privacyNote
+    }
+  },
+  footer { tagline, linkGroups[] { title, links[] { label, href } }, legal }
+}`)
+
