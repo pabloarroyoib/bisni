@@ -3,12 +3,13 @@
 import { useState, type FormEvent } from 'react'
 import { ArrowUpRight, Check } from 'lucide-react'
 import type { ContactErrors } from '@/lib/contact'
+import type { ContactFormContent } from '@/lib/home-content'
 
 type Status = 'idle' | 'sending' | 'success' | 'error'
 
 const GENERIC_ERROR = 'No hemos podido enviar tu consulta. Inténtalo de nuevo en unos minutos.'
 
-export function ContactForm() {
+export function ContactForm({ copy }: { copy: ContactFormContent }) {
   const [status, setStatus] = useState<Status>('idle')
   const [message, setMessage] = useState('')
   const [errors, setErrors] = useState<ContactErrors>({})
@@ -86,24 +87,24 @@ export function ContactForm() {
     <form className="contact-form" onSubmit={handleSubmit} noValidate>
       <div className="form-row">
         <label>
-          Tu nombre
-          <input name="name" required placeholder="Nombre y apellidos" autoComplete="name" />
+          {copy.nameLabel}
+          <input name="name" required placeholder={copy.namePlaceholder} autoComplete="name" />
           {errors.name && <span className="field-error">{errors.name}</span>}
         </label>
         <label>
-          Empresa
-          <input name="company" required placeholder="Nombre de empresa" autoComplete="organization" />
+          {copy.companyLabel}
+          <input name="company" required placeholder={copy.companyPlaceholder} autoComplete="organization" />
           {errors.company && <span className="field-error">{errors.company}</span>}
         </label>
       </div>
       <label>
-        Email corporativo
-        <input name="email" required type="email" placeholder="tu@empresa.com" autoComplete="email" />
+        {copy.emailLabel}
+        <input name="email" required type="email" placeholder={copy.emailPlaceholder} autoComplete="email" />
         {errors.email && <span className="field-error">{errors.email}</span>}
       </label>
       <label>
-        ¿En qué podemos ayudarte?
-        <textarea name="message" required placeholder="Cuéntanos brevemente tu reto..." rows={4} />
+        {copy.messageLabel}
+        <textarea name="message" required placeholder={copy.messagePlaceholder} rows={4} />
         {errors.message && <span className="field-error">{errors.message}</span>}
       </label>
 
@@ -116,7 +117,7 @@ export function ContactForm() {
       </div>
 
       <button className="button button-primary" type="submit" disabled={sending}>
-        {sending ? 'Enviando…' : 'Enviar consulta'} <ArrowUpRight aria-hidden="true" />
+        {sending ? copy.sendingLabel : copy.submitLabel} <ArrowUpRight aria-hidden="true" />
       </button>
 
       {message && (
@@ -129,7 +130,7 @@ export function ContactForm() {
         </p>
       )}
 
-      <p className="privacy-note"><Check aria-hidden="true" /> Respetamos tu privacidad. Nunca compartiremos tus datos.</p>
+      <p className="privacy-note"><Check aria-hidden="true" /> {copy.privacyNote}</p>
     </form>
   )
 }

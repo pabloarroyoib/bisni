@@ -4,15 +4,13 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useState, type CSSProperties, type ReactNode } from 'react'
 import { stageTrackOffsetPercent } from '@/lib/stage-scroll'
 import { Reveal } from '@/components/reveal'
-
-
-type StageIconName = 'diagnostico' | 'diseno' | 'seguimiento'
+import type { StageIcon, StagesContent } from '@/lib/home-content'
 
 /**
  * Iconos inline (sin librería de iconos): trazo sobre un viewBox de 24 unidades,
  * el tamaño final lo fija `.services-timeline-card-icon svg`.
  */
-const STAGE_ICONS: Record<StageIconName, ReactNode> = {
+const STAGE_ICONS: Record<StageIcon, ReactNode> = {
   diagnostico: (
     <>
       <circle cx="11" cy="11" r="6.5" />
@@ -35,35 +33,6 @@ const STAGE_ICONS: Record<StageIconName, ReactNode> = {
   ),
 }
 
-type Stage = {
-  title: string
-  text: string
-  icon: StageIconName
-}
-
-/**
- * Programa de seguros en tres etapas: la implementación y el seguimiento van
- * juntos porque forman un solo tramo de trabajo (emitir las pólizas y mantenerlas
- * vigentes). El ancho de la tira y el desplazamiento salen de `stages.length`, así
- * que agregar o quitar etapas no requiere tocar el CSS.
- */
-const stages: Stage[] = [
-  {
-    title: 'Diagnóstico',
-    icon: 'diagnostico',
-    text: 'Nuestro equipo realiza un relevamiento donde recopilamos información detallada sobre las operaciones, activos y exposición a riesgos de la empresa. Analizamos los datos para identificar vulnerabilidades críticas y áreas de mejora. El resultado es un informe claro que sirve de base para diseñar la estrategia de seguros.',
-  },
-  {
-    title: 'Diseño y propuesta',
-    icon: 'diseno',
-    text: 'Con base en el diagnóstico, elaboramos propuestas de seguros que reducen la exposición a pérdidas y aseguran la operatividad ante eventos adversos. Combinan coberturas de responsabilidad civil, daños materiales y riesgos de capital humano. Presentamos el plan al cliente, explicando beneficios, exclusiones y procesos de reclamación.',
-  },
-  {
-    title: 'Implementación y seguimiento',
-    icon: 'seguimiento',
-    text: 'Negociamos con las aseguradoras las condiciones de cada cobertura y gestionamos la emisión de las pólizas. Junto a tu equipo definimos los plazos de revisión y los responsables de cada paso, para que el programa se mantenga vigente y ajustado a la realidad de la empresa a medida que cambia.',
-  },
-]
 /**
  * Sección "Programa de seguros": las tres etapas van en una fila horizontal y se
  * pasa de una a otra con los botones de anterior/siguiente (y los puntos), sin
@@ -75,7 +44,8 @@ const stages: Stage[] = [
  * listeners de scroll ni intercepción de la rueda, y la página sigue scrolleando de
  * forma nativa.
  */
-export function HorizontalStages() {
+export function HorizontalStages({ content }: { content: StagesContent }) {
+  const { stages } = content
   const total = stages.length
   const [index, setIndex] = useState(0)
 
@@ -92,21 +62,18 @@ export function HorizontalStages() {
     >
       <Reveal className="section-heading services-timeline-head">
         <div>
-          <p className="section-kicker">Lo que hacemos</p>
-          <h2>PROGRAMA DE SEGUROS</h2>
-          <p className="services-timeline-label">ETAPAS</p>
+          <p className="section-kicker">{content.kicker}</p>
+          <h2>{content.title}</h2>
+          <p className="services-timeline-label">{content.label}</p>
         </div>
-        <p className="section-intro">
-          Es el plan de seguros diseñado para las necesidades específicas de protección integral y que se alinea con
-          los objetivos estratégicos de tu empresa.
-        </p>
+        <p className="section-intro">{content.intro}</p>
       </Reveal>
 
       <div className="services-timeline-progress">
         <span className="services-timeline-progress-fill" aria-hidden="true" style={{ transform: `scaleX(${progress})` }} />
         {stages.map((stage, dotIndex) => (
           <button
-            key={stage.title}
+            key={`${dotIndex}-${stage.title}`}
             type="button"
             className={`services-timeline-dot${dotIndex <= index ? ' is-filled' : ''}`}
             style={{ left: `${(dotIndex / (total - 1)) * 100}%` }}
@@ -125,7 +92,7 @@ export function HorizontalStages() {
           {stages.map((stage, cardIndex) => (
             <article
               className={`services-timeline-card${cardIndex === index ? ' is-current' : ''}`}
-              key={stage.title}
+              key={`${cardIndex}-${stage.title}`}
               aria-hidden={cardIndex !== index}
             >
               <div className="services-timeline-card-main">

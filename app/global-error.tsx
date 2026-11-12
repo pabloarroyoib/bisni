@@ -2,10 +2,10 @@
 
 export default function GlobalError({
   error,
-  retry,
+  reset,
 }: {
   error: Error & { digest?: string }
-  retry: () => void
+  reset: () => void
 }) {
   return (
     <html lang="es">
@@ -22,7 +22,7 @@ export default function GlobalError({
         }}
       >
         <div style={{ maxWidth: 460 }}>
-          <p style={{ fontSize: 14, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#0e7b88' }}>
+          <p style={{ fontSize: 14, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#0d3858' }}>
             Error inesperado
           </p>
           <h1 style={{ fontSize: 32, lineHeight: 1.1, margin: '12px 0' }}>
@@ -30,14 +30,14 @@ export default function GlobalError({
           </h1>
           <p style={{ color: '#56696b', lineHeight: 1.6, fontSize: 16 }}>
             Vuelve a intentarlo. Si el problema continúa, escríbenos a{' '}
-            <a href="mailto:hola@bisni.es" style={{ color: '#0e7b88' }}>
+            <a href="mailto:hola@bisni.es" style={{ color: '#0d3858' }}>
               hola@bisni.es
             </a>
             .
           </p>
           <button
             type="button"
-            onClick={() => retry()}
+            onClick={() => reset()}
             style={{
               marginTop: 20,
               padding: '12px 18px',

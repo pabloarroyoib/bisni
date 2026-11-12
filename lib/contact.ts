@@ -59,7 +59,7 @@ export function validateContactInput(input: unknown): ContactValidation {
   }
 
   if (email.length === 0) {
-    errors.email = 'Indica tu email corporativo.'
+    errors.email = 'Indica tu email.'
   } else if (email.length > CONTACT_LIMITS.email.max || !EMAIL_PATTERN.test(email)) {
     errors.email = 'El email no parece válido.'
   }

@@ -1,7 +1,8 @@
 'use client'
 
 import { useId, useState, type ReactNode } from 'react'
-import { riskSections, type RiskContent, type RiskSub } from '@/lib/risk-insurance'
+import { type RiskContent, type RiskSub } from '@/lib/risk-insurance'
+import type { RisksContent } from '@/lib/home-content'
 import { Reveal } from '@/components/reveal'
 
 /**
@@ -64,8 +65,8 @@ function RiskDisclosure({
 function RiskContentBlock({ content }: { content: RiskContent }) {
   return (
     <>
-      {content.paragraphs?.map((paragraph) => (
-        <p className="risk-p" key={paragraph}>
+      {content.paragraphs?.map((paragraph, index) => (
+        <p className="risk-p" key={`${index}-${paragraph}`}>
           {paragraph}
         </p>
       ))}
@@ -79,18 +80,18 @@ function RiskContentBlock({ content }: { content: RiskContent }) {
         </div>
       )}
 
-      {content.terms?.map((term) => (
-        <div className="risk-term" key={term.name}>
+      {content.terms?.map((term, index) => (
+        <div className="risk-term" key={`${index}-${term.name}`}>
           <b>{term.name}</b>
           {term.text}
           {term.note && <em className="risk-note">{term.note}</em>}
         </div>
       ))}
 
-      {content.chips && (
+      {content.chips && content.chips.length > 0 && (
         <div className="risk-chips">
-          {content.chips.map((chip) => (
-            <span className="risk-chip" key={chip}>
+          {content.chips.map((chip, index) => (
+            <span className="risk-chip" key={`${index}-${chip}`}>
               {chip}
             </span>
           ))}
@@ -111,29 +112,27 @@ function RiskSubItem({ sub }: { sub: RiskSub }) {
   )
 }
 
-export function RiskAccordion() {
+export function RiskAccordion({ content }: { content: RisksContent }) {
   // Primer nivel: se abre una sola área a la vez.
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   return (
     <section className="risk" id="riesgos" aria-labelledby="riesgos-titulo">
       <Reveal className="risk-inner">
-        <h2 id="riesgos-titulo">Riesgos y Seguros</h2>
-        <p className="risk-intro">
-          El Programa de Seguros es central para la gestión de riesgos, actúa principalmente en tres áreas.
-        </p>
+        <h2 id="riesgos-titulo">{content.title}</h2>
+        <p className="risk-intro">{content.intro}</p>
 
-        {riskSections.map((section, index) => (
+        {content.sections.map((section, index) => (
           <RiskDisclosure
-            key={section.title}
+            key={`${index}-${section.title}`}
             number={String(index + 1).padStart(2, '0')}
             title={section.title}
             open={openIndex === index}
             onToggle={() => setOpenIndex(openIndex === index ? null : index)}
           >
             <RiskContentBlock content={section} />
-            {section.subs?.map((sub) => (
-              <RiskSubItem key={sub.title} sub={sub} />
+            {section.subs?.map((sub, subIndex) => (
+              <RiskSubItem key={`${subIndex}-${sub.title}`} sub={sub} />
             ))}
           </RiskDisclosure>
         ))}

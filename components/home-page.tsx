@@ -1,41 +1,34 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowUpRight, Globe2, Mail, MapPin } from 'lucide-react'
+import { ArrowUpRight, Globe2, Mail, MapPin, Phone } from 'lucide-react'
 import { BlogCard } from '@/components/blog-card'
 import { ContactForm } from '@/components/contact-form'
 import { HorizontalStages } from '@/components/horizontal-stages'
+import { MultilineText } from '@/components/multiline-text'
 import { AboutSection } from '@/components/about-section'
 import { RiskAccordion } from '@/components/risk-accordion'
 import { NewsletterForm } from '@/components/newsletter-form'
 import { Reveal, Stagger, StaggerItem } from '@/components/reveal'
 import { SiteHeader } from '@/components/site-header'
-import { CONTACT_EMAIL, gmailComposeUrl, mailtoHref } from '@/lib/email'
+import { gmailComposeUrl } from '@/lib/email'
 import type { BlogPost } from '@/lib/blog'
+import type { ContactIcon, HomeContent } from '@/lib/home-content'
 import type { ReactNode } from 'react'
 
-/** Tarjetas que explican la propuesta de valor, debajo del hero. */
-const valueCards = [
-  {
-    title: 'Te ayudamos',
-    text: 'GROU Asesores ofrece soluciones de seguros empresariales diseñadas para proteger activos, reducir riesgos y asegurar la continuidad operativa de tu negocio.',
-  },
-  {
-    title: 'Soluciones Personalizadas',
-    text: 'Identificamos las vulnerabilidades específicas de tu sector para diseñar coberturas de seguros que cubran cada eventualidad de manera precisa.',
-  },
-  {
-    title: 'Nuestra misión',
-    text: 'Entender cada riesgo y diseñar seguros empresariales que permitan a las compañías operar con confianza y resiliencia. Ser un aliado estratégico para la prevención y la protección del valor de las empresas.',
-  },
-]
-
-
+/** Ícono de cada dato de contacto: el select del Studio es cerrado. */
+const CONTACT_ICONS: Record<ContactIcon, typeof MapPin> = {
+  map: MapPin,
+  mail: Mail,
+  globe: Globe2,
+  phone: Phone,
+}
 
 /** Cuántos artículos muestra la home antes de mandar a /blog. */
 const HOME_BLOG_LIMIT = 4
 
 type HomePageProps = {
+  content: HomeContent
   posts: BlogPost[]
   /** Textura "Relieve" de página completa, ya renderizada en el servidor. */
   background: ReactNode
@@ -45,15 +38,12 @@ type HomePageProps = {
   footer: ReactNode
 }
 
-export function HomePage({ posts, background, contactBackground, footer }: HomePageProps) {
-
+export function HomePage({ content, posts, background, contactBackground, footer }: HomePageProps) {
   const teaserPosts = posts.slice(0, HOME_BLOG_LIMIT)
-
-
 
   return (
     <main className="site-shell">
-      <SiteHeader />
+      <SiteHeader items={content.nav} socials={content.navSocials} />
 
       {background}
       <span id="contenido" tabIndex={-1} />
@@ -62,18 +52,15 @@ export function HomePage({ posts, background, contactBackground, footer }: HomeP
         <div className="hero-inner">
           <Stagger className="hero-text" immediate>
             <StaggerItem>
-              <p className="hero-kicker">GROU Asesores</p>
+              <h1>{content.hero.title}</h1>
             </StaggerItem>
             <StaggerItem>
-              <h1>Protección integral para empresas</h1>
-            </StaggerItem>
-            <StaggerItem>
-              <p className="hero-copy">En GROU Asesores evaluamos los riesgos específicos de cada empresa y diseñamos soluciones de seguros a medida para proteger los activos de tu organización, fortaleciendo la capacidad de respuesta de la empresa ante eventos críticos. Así puedes enfocarte en el crecimiento mientras nosotros gestionamos la protección. Trabajamos de manera proactiva para anticipar amenazas y diseñar soluciones a medida.</p>
+              <p className="hero-copy">{content.hero.paragraph}</p>
             </StaggerItem>
           </Stagger>
           <Stagger className="hero-cards" immediate>
-            {valueCards.map(({ title, text }, index) => (
-              <StaggerItem className={`hero-card-${index + 1}`} key={title}>
+            {content.hero.cards.map(({ title, text }, index) => (
+              <StaggerItem className={`hero-card-${index + 1}`} key={`${index}-${title}`}>
                 <article className="hero-card">
                   <h3>{title}</h3>
                   <p>{text}</p>
@@ -84,18 +71,19 @@ export function HomePage({ posts, background, contactBackground, footer }: HomeP
         </div>
       </section>
 
-      <HorizontalStages />
+      <HorizontalStages content={content.stages} />
 
-      <AboutSection />
+      <AboutSection content={content.about} />
 
-      <RiskAccordion />
-
+      <RiskAccordion content={content.risks} />
 
       <section className="blog section" id="blog">
         <Reveal className="section-heading">
           <div>
-            <p className="section-kicker">Perspectivas GROU Asesores</p>
-            <h2>Ideas para navegar<br /><em>lo que viene.</em></h2>
+            <p className="section-kicker">{content.blog.kicker}</p>
+            <h2>
+              <MultilineText text={content.blog.title} />
+            </h2>
           </div>
         </Reveal>
         {teaserPosts.length === 0 ? (
@@ -127,22 +115,66 @@ export function HomePage({ posts, background, contactBackground, footer }: HomeP
           <Reveal>
             <div className="section-heading">
               <div>
-                <p className="section-kicker">Newsletter</p>
-                <h2>Una idea útil,<br /><em>una vez al mes.</em></h2>
+                <p className="section-kicker">{content.newsletter.kicker}</p>
+                <h2>
+                  <MultilineText text={content.newsletter.title} />
+                </h2>
               </div>
             </div>
-          </Reveal>
-          <Reveal>
-            <p className="section-intro">Riesgo, ciberseguridad y cumplimiento. Un correo al mes, sin ruido y sin spam.</p>
           </Reveal>
         </div>
         <Reveal className="newsletter-action">
           <NewsletterForm />
-          <p className="newsletter-bridge">¿Buscas resolver un caso concreto? <a href="#contacto">Hablemos</a></p>
+          <p className="newsletter-bridge">
+            {content.newsletter.bridgeText}{' '}
+            <a href={content.newsletter.bridgeLink.href}>{content.newsletter.bridgeLink.label}</a>
+          </p>
         </Reveal>
       </section>
 
-      <section className="contact section" id="contacto">{contactBackground}<Reveal className="contact-copy"><p className="section-kicker">Hablemos</p><h2>El próximo movimiento<br /><em>empieza aquí.</em></h2><p>Cuéntanos qué te preocupa. Te ayudaremos a ponerle nombre, contexto y un plan.</p><div className="contact-details"><div><MapPin aria-hidden="true" /><span>Calle Serrano 55<br />28006 Madrid</span></div><div><Mail aria-hidden="true" /><span><a href={mailtoHref()}>{CONTACT_EMAIL}</a><a className="mail-alt" href={gmailComposeUrl()} target="_blank" rel="noopener noreferrer">o abrir en Gmail</a></span></div><div><Globe2 aria-hidden="true" /><span>+34 910 123 456</span></div></div></Reveal><Reveal className="contact-form-reveal"><ContactForm /></Reveal></section>
+      <section className="contact section" id="contacto">
+        {contactBackground}
+        <Reveal className="contact-copy">
+          <p className="section-kicker">{content.contact.kicker}</p>
+          <h2>
+            <MultilineText text={content.contact.title} />
+          </h2>
+          <p>{content.contact.paragraph}</p>
+          <div className="contact-details">
+            {content.contact.details.map((detail, index) => {
+              const Icon = CONTACT_ICONS[detail.icon]
+
+              return (
+                <div key={`${index}-${detail.text}`}>
+                  <Icon aria-hidden="true" />
+                  <span>
+                    {detail.href ? (
+                      <>
+                        <a href={detail.href}>{detail.text}</a>
+                        {detail.icon === 'mail' ? (
+                          <a
+                            className="mail-alt"
+                            href={gmailComposeUrl(detail.text)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            o abrir en Gmail
+                          </a>
+                        ) : null}
+                      </>
+                    ) : (
+                      <MultilineText text={detail.text} />
+                    )}
+                  </span>
+                </div>
+              )
+            })}
+          </div>
+        </Reveal>
+        <Reveal className="contact-form-reveal">
+          <ContactForm copy={content.contact.form} />
+        </Reveal>
+      </section>
 
       {footer}
     </main>

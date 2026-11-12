@@ -53,6 +53,8 @@ export function NewsletterForm() {
   const fieldId = useId()
   const nameErrorId = `${fieldId}-name-error`
   const emailErrorId = `${fieldId}-email-error`
+  const privacyId = `${fieldId}-privacy`
+  const privacyErrorId = `${fieldId}-privacy-error`
   const timeoutRef = useRef<number | null>(null)
   // Un envío está en vuelo mientras el iframe no haya cargado. Es un ref y no
   // el estado para que el handler del `load` no dependa de un render previo:
@@ -100,6 +102,7 @@ export function NewsletterForm() {
     const result = validateNewsletterInput({
       email: data.get('CONTACT_EMAIL'),
       name: data.get('FIRSTNAME'),
+      privacy: data.get('privacy'),
       website: data.get('website'),
     })
 
@@ -168,7 +171,7 @@ export function NewsletterForm() {
             aria-invalid={errors.email ? true : undefined}
             aria-describedby={errors.email ? emailErrorId : undefined}
           />
-          <button className="button button-dark" type="submit" aria-disabled={sending || sent || undefined}>
+          <button className="button button-dark button-navy" type="submit" aria-disabled={sending || sent || undefined}>
             {sending ? 'Enviando…' : sent ? 'Enviado' : status === 'unconfirmed' ? 'Reintentar' : 'Suscribirme'}{' '}
             {sent ? <Check aria-hidden="true" /> : <ArrowUpRight aria-hidden="true" />}
           </button>
@@ -181,6 +184,24 @@ export function NewsletterForm() {
         {errors.email && (
           <span className="field-error" id={emailErrorId} role="alert">
             {errors.email}
+          </span>
+        )}
+
+        <div className="newsletter-privacy">
+          <input
+            id={privacyId}
+            name="privacy"
+            type="checkbox"
+            value="accepted"
+            required
+            aria-invalid={errors.privacy ? true : undefined}
+            aria-describedby={errors.privacy ? privacyErrorId : undefined}
+          />
+          <label htmlFor={privacyId}>Leí y acepto la política de privacidad.</label>
+        </div>
+        {errors.privacy && (
+          <span className="field-error" id={privacyErrorId} role="alert">
+            {errors.privacy}
           </span>
         )}
 

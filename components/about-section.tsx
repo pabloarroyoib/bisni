@@ -2,44 +2,9 @@
 
 import Image from 'next/image'
 import { useEffect, useState, type CSSProperties } from 'react'
+import { MultilineText } from '@/components/multiline-text'
 import { Reveal } from '@/components/reveal'
-
-type Slide = {
-  src: string
-  alt: string
-  title: string
-  caption: string
-  /** Los logos van con `contain` para no recortar el texto; el retrato llena el marco. */
-  contain?: boolean
-  /** Aire alrededor del logo, en % del marco. Un logotipo muy apaisado necesita menos. */
-  pad?: number
-}
-
-// TODO(nosotros): los títulos y las bajadas son provisorios; reemplazarlos por el texto real.
-const slides: Slide[] = [
-  {
-    src: '/nosotros-1-pablo-arroyo.jpg',
-    alt: 'Pablo Arroyo, en la oficina de GROU Asesores',
-    title: 'Pablo Arroyo',
-    caption: 'Quienes están detrás de cada recomendación.',
-  },
-  {
-    src: '/nosotros-2-grupo-gaman.webp',
-    alt: 'Logo de Grupo Gaman',
-    title: 'Grupo Gaman',
-    caption: 'Una relación construida sobre la confianza.',
-    contain: true,
-    pad: 9,
-  },
-  {
-    src: '/nosotros-3-coa.webp',
-    alt: 'Logo de COA Asesores de Seguros',
-    title: 'COA Asesores de Seguros',
-    caption: 'Parte de la red con la que trabajamos.',
-    contain: true,
-    pad: 14,
-  },
-]
+import type { AboutContent } from '@/lib/home-content'
 
 /**
  * Tres marcos fijos en pantalla: el frontal nítido y dos detrás, más chicos y
@@ -54,7 +19,8 @@ const FRAMES = [
 
 const ROTATION_MS = 4000
 
-export function AboutSection() {
+export function AboutSection({ content }: { content: AboutContent }) {
+  const { slides } = content
   const total = slides.length
   const [current, setCurrent] = useState(0)
   const [paused, setPaused] = useState(false)
@@ -114,8 +80,8 @@ export function AboutSection() {
 
                     return (
                       <div
-                        key={slide.src}
-                        className={`about-layer about-layer-${slide.contain ? 'logo' : 'photo'}${state ? ` is-${state}` : ''}`}
+                        key={`${index}-${slide.src}`}
+                        className={`about-layer about-layer-${slide.isLogo ? 'logo' : 'photo'}${state ? ` is-${state}` : ''}`}
                       >
                         <Image
                           src={slide.src}
@@ -124,7 +90,7 @@ export function AboutSection() {
                           sizes="(max-width: 900px) 72vw, 30vw"
                           priority={isFront && index === 0}
                           className="about-image"
-                          style={slide.contain ? { objectFit: 'contain', padding: `${slide.pad ?? 14}%` } : undefined}
+                          style={slide.isLogo ? { objectFit: 'contain', padding: `${slide.pad ?? 14}%` } : undefined}
                         />
                       </div>
                     )
@@ -135,9 +101,8 @@ export function AboutSection() {
                 {isFront && (
                   <figcaption className="about-captions">
                     {slides.map((slide, index) => (
-                      <div key={slide.src} className={`about-caption${index === current ? ' is-on' : ''}`}>
+                      <div key={`${index}-${slide.src}`} className={`about-caption${index === current ? ' is-on' : ''}`}>
                         <b>{slide.title}</b>
-                        <small>{slide.caption}</small>
                       </div>
                     ))}
                   </figcaption>
@@ -150,7 +115,7 @@ export function AboutSection() {
         <div className="about-dots">
           {slides.map((slide, index) => (
             <button
-              key={slide.src}
+              key={`${index}-${slide.src}`}
               type="button"
               className={`about-dot${index === current ? ' is-current' : ''}`}
               aria-label={`Ir a la imagen ${index + 1} de ${total}`}
@@ -163,23 +128,19 @@ export function AboutSection() {
 
       <div className="about-content">
         <Reveal>
-          <p className="section-kicker">Nosotros</p>
+          <p className="section-kicker">{content.kicker}</p>
         </Reveal>
         <Reveal>
-          <h2 id="nosotros-titulo">Riesgo claro.<br />Decisiones sólidas.</h2>
-        </Reveal>
-        <Reveal className="about-label-reveal">
-          <p className="about-label">Nuestra misión</p>
+          <h2 id="nosotros-titulo">
+            <MultilineText text={content.title} />
+          </h2>
         </Reveal>
         <Reveal className="about-mission-copy-reveal">
-          <p className="about-mission-copy">
-            Entender cada riesgo y diseñar seguros empresariales que permitan a las compañías operar con confianza y
-            resiliencia. Ser un aliado estratégico para la prevención y la protección del valor de las empresas.
-          </p>
+          <p className="about-mission-copy">{content.mission}</p>
         </Reveal>
         <Reveal className="about-cta-reveal">
-          <a className="button button-primary about-cta" href="#contacto">
-            Hablemos
+          <a className="button button-primary about-cta" href={content.cta.href}>
+            {content.cta.label}
           </a>
         </Reveal>
       </div>

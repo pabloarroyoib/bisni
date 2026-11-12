@@ -2,6 +2,7 @@
 
 import type { LenisOptions } from 'lenis'
 import { ReactLenis } from 'lenis/react'
+import { usePathname } from 'next/navigation'
 import { useEffect, useState, type ReactNode } from 'react'
 
 /* Opciones verificadas contra el README y los tipos de lenis 1.3.27.
@@ -33,8 +34,14 @@ const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)'
  * nativo del navegador, sin interceptar rueda ni tacto. `ReactLenis root` va como
  * hermano sin DOM, no como wrapper de `children`, para que activarlo no desmonte
  * ni reinicie estado, formularios o Reveals.
+ *
+ * En `/studio` tampoco se monta: el Studio tiene sus propios paneles con scroll
+ * interno y Lenis intercepta la rueda a nivel de ventana (los paneles quedan
+ * clavados). Ahí el scroll tiene que ser el nativo.
  */
 export function SmoothScroll({ children }: { children: ReactNode }) {
+  const pathname = usePathname()
+  const isStudio = pathname === '/studio' || pathname.startsWith('/studio/')
   const [reduceMotion, setReduceMotion] = useState<boolean | null>(null)
 
   useEffect(() => {
@@ -48,7 +55,7 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
   return (
     <>
       {children}
-      {reduceMotion === false ? <ReactLenis root options={LENIS_OPTIONS} /> : null}
+      {reduceMotion === false && !isStudio ? <ReactLenis root options={LENIS_OPTIONS} /> : null}
     </>
   )
 }
