@@ -115,7 +115,7 @@ h1,h2,h3,p { margin:0; } h1,h2 { font-weight:600; letter-spacing:-.02em; } h1 { 
 /* Label arriba e input abajo. Sin esto el label queda `display:block` y el input,
    que es inline-block, se acomoda al lado del texto y se superpone con él
    (se veía en "Email corporativo" y en el textarea). */
-.contact-form label { display:flex; flex-direction:column; gap:8px; font-size:var(--fs-small); font-weight:700; color:var(--color-on-dark); }.contact-form input,.contact-form textarea { border:0;border-bottom:1px solid var(--color-on-dark-line);background:transparent;padding:8px 0;color:#fff;outline:0;resize:vertical;font-size:var(--fs-body); }.contact-form input:focus,.contact-form textarea:focus { border-color:var(--color-signal-light); }.contact-form input::placeholder,.contact-form textarea::placeholder { color:var(--color-on-dark-muted); }.contact-form .button { align-self:start;margin-top:4px; }.privacy-note { display:flex;align-items:center;gap:7px;color:var(--color-on-dark-muted);font-size:var(--fs-small); }.privacy-note svg { width:12px;color:var(--color-signal-light);flex:none; }
+.contact-form label { display:flex; flex-direction:column; gap:8px; font-size:var(--fs-small); font-weight:700; color:var(--color-on-dark); }.contact-form input,.contact-form textarea { border:0;border-bottom:1px solid var(--color-on-dark-line);background:transparent;padding:8px 0;color:#fff;outline:0;resize:vertical;font-size:var(--fs-body); }.contact-form input:focus,.contact-form textarea:focus { border-color:var(--color-signal-light); }.contact-form input::placeholder,.contact-form textarea::placeholder { color:var(--color-on-dark-muted); }.contact-form .button { align-self:start;margin-top:4px; }.privacy-note { display:flex;flex-wrap:wrap;align-items:center;gap:7px;color:var(--color-on-dark-muted);font-size:var(--fs-small); }.privacy-note svg { width:12px;color:var(--color-signal-light);flex:none; }
 .footer { background:var(--color-surface-deep);color:var(--color-on-dark);padding:58px 9vw 25px; }.footer-main { display:flex;justify-content:space-between;padding-bottom:55px;gap:40px; }.footer-brand { color:#fff; }.footer-main>div:first-child p { color:var(--color-on-dark-muted);font-size:var(--fs-body);line-height:1.6;margin-top:20px; }.footer-links { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:55px; }.footer-links div { display:flex;flex-direction:column;gap:12px; }.footer-group.is-wide { grid-column:span 2; }.footer-group.is-wide .footer-group-links { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(3,auto);grid-auto-flow:column;column-gap:24px;row-gap:12px; }.footer-links strong { color:#dce6e4;font-size:var(--fs-micro);text-transform:uppercase;letter-spacing:.13em;margin-bottom:5px; }.footer-links a { font-size:var(--fs-small);transition:color .15s; }.footer-links a:hover { color:#fff; }.footer-bottom { border-top:1px solid #22383d;padding-top:20px;display:flex;justify-content:space-between;align-items:center;gap:14px;font-size:var(--fs-small);color:var(--color-on-dark-muted); }.socials { display:flex;gap:12px; }.socials a { width:34px;height:34px;border:1px solid var(--color-on-dark-line);border-radius:50%;display:grid;place-items:center;transition:border-color .15s,color .15s; }.socials a:hover { border-color:var(--color-signal-light);color:#fff; }.socials svg { width:14px; }
 .article-lead { color:var(--muted);line-height:1.6;font-size:var(--fs-lead);margin-bottom:24px; }
 .article-page { min-height:100vh; background:#fff; }/* La columna de lectura es de 800px reales: el gutter va fuera del ancho máximo
@@ -163,9 +163,9 @@ h1,h2,h3,p { margin:0; } h1,h2 { font-weight:600; letter-spacing:-.02em; } h1 { 
 /* El error hereda el layout de `.field-error`; solo cambia el color porque el
    salmón de las superficies oscuras no se lee sobre el papel claro. */
 .newsletter-form .field-error { color:var(--color-sienna); }
-.newsletter-privacy { display:flex; align-items:flex-start; gap:8px; color:var(--color-muted); font-size:var(--fs-micro); line-height:1.5; }
-.newsletter-privacy input { width:auto; height:auto; flex:none; margin:3px 0 0; padding:0; border:0; accent-color:var(--color-signal-text); }
-.newsletter-privacy label { cursor:pointer; }
+.newsletter-privacy { margin-top:12px;color:var(--color-muted);font-size:var(--fs-micro);line-height:1.5; }
+.newsletter-privacy a { color:inherit;text-decoration:underline;text-underline-offset:2px; }
+.newsletter-privacy a:hover { color:var(--color-ink); }
 .newsletter-status { margin:0; color:var(--color-signal-text); font-size:var(--fs-small); line-height:1.5; }
 .newsletter-status.is-error { color:var(--color-sienna); }
 /* Puente explícito al formulario de consulta: separa la suscripción de la
@@ -446,3 +446,18 @@ h1,h2,h3,p { margin:0; } h1,h2 { font-weight:600; letter-spacing:-.02em; } h1 { 
 @media (max-width:900px) { :root { --section-y:var(--section-y-md); } }
 @media (max-width:650px) { :root { --section-y:var(--section-y-sm); } }
 @media (max-width:650px) { .nav-links a.nav-cta { align-self:flex-start; } }
+
+/* Páginas legales: reusan la columna de lectura del artículo. El aviso de
+   borrador es visible hasta que el cliente carga los datos y aprueba el texto. */
+.legal-draft { margin:24px 0 8px;padding:14px 16px;border:1px solid var(--color-line);border-left:3px solid var(--color-signal);background:var(--color-paper);color:var(--muted);font-size:var(--fs-small);line-height:1.6; }
+.legal-ssn { width:min(800px,100% - 12vw);margin:0 auto 40px;display:flex;flex-direction:column;align-items:flex-start;gap:10px; }
+.legal-ssn-logo { display:block;width:auto;height:auto;max-height:72px;object-fit:contain; }
+.legal-ssn-line { margin:0;color:var(--muted);font-size:var(--fs-small); }
+.legal-links { width:min(800px,100% - 12vw);margin:0 auto;padding-bottom:80px;display:flex;flex-wrap:wrap;gap:18px;font-size:var(--fs-small); }
+.legal-links a { color:var(--color-signal-text);text-decoration:underline;text-underline-offset:3px; }
+/* Matrícula en el footer. El logo va sobre una placa clara para que se lea
+   igual sobre el fondo oscuro, sea cual sea el archivo que suba el cliente. */
+.footer-main>div:first-child .footer-ssn { display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-top:14px;font-size:var(--fs-small);color:var(--color-on-dark-muted); }
+.footer-ssn-logo { width:auto;height:auto;max-height:44px;object-fit:contain;background:#fff;padding:5px 8px;border-radius:4px; }
+.privacy-note a { color:inherit;text-decoration:underline;text-underline-offset:2px; }
+.privacy-note a:hover { color:#fff; }
