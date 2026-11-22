@@ -25,6 +25,11 @@ export default defineConfig({
     // La home es un documento único con `_id: 'homePage'`: no se crea ni se duplica.
     singletons: [
       defineSingleton({documentId: 'homePage', schemaType: 'homePage', title: 'Home'}),
+      defineSingleton({
+        documentId: 'siteSettings',
+        schemaType: 'siteSettings',
+        title: 'Datos del sitio',
+      }),
     ],
   },
   plugins: [

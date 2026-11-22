@@ -7,12 +7,14 @@ export const structure: StructureResolver = (S) =>
       // El id es fijo: la home vive en el documento `homePage` que registra
       // `document.singletons`, así que este ítem no puede crear duplicados.
       S.listItem().title('Home').singleton('homePage'),
+      S.listItem().title('Datos del sitio').singleton('siteSettings'),
+      S.documentTypeListItem('legalPage').title('Páginas legales'),
       S.divider(),
       S.documentTypeListItem('post').title('Artículos'),
       S.documentTypeListItem('category').title('Categorías'),
       S.documentTypeListItem('author').title('Autores'),
       S.divider(),
       ...S.documentTypeListItems().filter(
-        (item) => item.getId() && !['post', 'category', 'author'].includes(item.getId()!),
+        (item) => item.getId() && !['post', 'category', 'author', 'legalPage'].includes(item.getId()!),
       ),
     ])

@@ -75,7 +75,6 @@ export const HOME_QUERY = defineQuery(`*[_id == "homePage"][0]{
     kicker,
     title,
     paragraph,
-    details[] { icon, text, href },
     form {
       nameLabel,
       namePlaceholder,
@@ -87,9 +86,57 @@ export const HOME_QUERY = defineQuery(`*[_id == "homePage"][0]{
       messagePlaceholder,
       submitLabel,
       sendingLabel,
-      privacyNote
+      privacyNote,
+      privacyLinkLabel
     }
   },
   footer { tagline, linkGroups[] { title, links[] { label, href } }, legal }
+}`)
+
+/**
+ * Datos legales y de contacto del responsable. Singleton con `_id` fijo: si el
+ * documento no existe, la consulta devuelve `null` y el resolver usa los
+ * valores por defecto (vacíos, sin datos inventados).
+ */
+export const SITE_SETTINGS_QUERY = defineQuery(`*[_id == "siteSettings"][0]{
+  legalName,
+  tradeName,
+  taxId,
+  address,
+  officeAddress,
+  phone,
+  email,
+  privacyEmail,
+  website,
+  jurisdiction,
+  ssnCondition,
+  ssnRegistration,
+  ssnRegistry,
+  ssnUrl,
+  ssnLogo,
+  ssnShowInFooter
+}`)
+
+/**
+ * Página legal por slug. Si el documento todavía no existe, la consulta devuelve
+ * `null` y `resolveLegalPage` cae al borrador estático de `lib/legal-content.ts`.
+ */
+export const LEGAL_PAGE_QUERY = defineQuery(`*[_type == "legalPage" && slug.current == $slug][0]{
+  title,
+  "slug": slug.current,
+  body,
+  lastUpdated,
+  seoTitle,
+  seoDescription,
+  reviewed
+}`)
+
+/**
+ * Solo las páginas legales aprobadas entran al sitemap: un texto sin revisar no
+ * se indexa, así que tampoco se anuncia.
+ */
+export const SITEMAP_LEGAL_QUERY = defineQuery(`*[_type == "legalPage" && reviewed == true && defined(slug.current)]{
+  "slug": slug.current,
+  "lastModified": coalesce(lastUpdated, _updatedAt, _createdAt)
 }`)
 

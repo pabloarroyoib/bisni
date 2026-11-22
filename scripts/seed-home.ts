@@ -168,13 +168,8 @@ async function main() {
       kicker: content.contact.kicker,
       title: content.contact.title,
       paragraph: content.contact.paragraph,
-      details: content.contact.details.map((detail, index) => ({
-        _key: `contact-detail-${index}`,
-        _type: 'contactDetail' as const,
-        icon: detail.icon,
-        text: detail.text,
-        ...(detail.href === undefined ? {} : { href: detail.href }),
-      })),
+      // Domicilio, email y teléfono ya no se guardan en la home: viven en
+      // `siteSettings` y el resolver los deduce de ahí.
       form: content.contact.form,
     },
     footer: {

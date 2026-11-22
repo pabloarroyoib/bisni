@@ -269,58 +269,6 @@ export const homePageType = defineType({
           validation: (rule) => rule.required().max(500),
         }),
         defineField({
-          name: 'details',
-          title: 'Datos de contacto',
-          type: 'array',
-          of: [
-            defineArrayMember({
-              type: 'object',
-              name: 'contactDetail',
-              title: 'Dato de contacto',
-              fields: [
-                defineField({
-                  name: 'icon',
-                  title: 'Ícono',
-                  type: 'string',
-                  options: {
-                    list: [
-                      {title: 'Ubicación', value: 'map'},
-                      {title: 'Correo', value: 'mail'},
-                      {title: 'Web', value: 'globe'},
-                      {title: 'Teléfono', value: 'phone'},
-                    ],
-                    layout: 'radio',
-                  },
-                  validation: (rule) => rule.required(),
-                }),
-                defineField({
-                  name: 'text',
-                  title: 'Texto',
-                  type: 'text',
-                  rows: 2,
-                  description: 'Podés usar un salto de línea.',
-                  validation: (rule) => rule.required().max(200),
-                }),
-                defineField({
-                  name: 'href',
-                  title: 'Enlace',
-                  type: 'string',
-                  description:
-                    'Opcional: mailto:, #ancla o URL. Si el ícono es Correo, el sitio agrega el enlace de Gmail.',
-                  validation: (rule) => rule.max(300),
-                }),
-              ],
-              preview: {
-                select: {
-                  title: 'text',
-                  subtitle: 'icon',
-                },
-              },
-            }),
-          ],
-          validation: (rule) => rule.min(1).max(4),
-        }),
-        defineField({
           name: 'form',
           title: 'Formulario de contacto',
           type: 'object',
@@ -392,6 +340,15 @@ export const homePageType = defineType({
               title: 'Nota de privacidad',
               type: 'string',
               validation: (rule) => rule.required().max(160),
+            }),
+            defineField({
+              name: 'privacyLinkLabel',
+              title: 'Texto del enlace a la política de privacidad',
+              type: 'string',
+              description:
+                'El enlace siempre apunta a /legal/privacidad. Si queda vacío, el sitio usa «Política de privacidad».',
+              initialValue: 'Política de privacidad',
+              validation: (rule) => rule.max(60),
             }),
           ],
         }),
