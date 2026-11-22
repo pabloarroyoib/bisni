@@ -10,20 +10,20 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 # Contexto del proyecto (memoria del agente)
 
-_Actualizado: 2026-10-23_
+_Actualizado: 2026-11-12_
 
 ## Resumen
 
 **GROU Asesores** es el sitio corporativo B2B de una consultora de gestión de riesgos, ciberseguridad y cumplimiento ISO 31000, en español, con un blog y la home gestionados desde un Sanity Studio embebido (la home es el singleton `homePage`, con fallback a los textos por defecto). El proyecto fue scaffolded con v0.app (`generator: 'v0.app'` en los metadatos).
 
-- Rama actual: `main`. Commits de la sesión (2026-11-11/12): `d4a9489` (Reveal sin JS), `bb27454` (modelo editable de Sanity), `56b0aa4` (home/UI/consentimiento) y el commit de documentación.
-- Páginas legales pendientes (Argentina): plan en `odd/tasks/legal-pages.md`; faltan datos reales, matrícula/logo SSN, textos legales y el link del consentimiento.
+- Rama actual: `main`, sincronizada con `origin/main`. El feature de páginas legales entró en 5 commits (`af85152` modelo de contenido, `3a149e0` datos del sitio y footer, `741580f` páginas legales, `4b646c5` home y rebrand, `31ee393` newsletter sin checkbox); antes, `d4a9489` (Reveal sin JS), `bb27454` (modelo editable de Sanity), `56b0aa4` (home/UI/consentimiento) y `898f319` (docs y plan legal).
+- Páginas legales implementadas en `/legal/[slug]` (Aviso legal y Privacidad) con `legalPage` + `siteSettings`, footer Legal de 2 links y links de privacidad en los formularios. La página de cookies se retiró por decisión del cliente (el sitio público no usa cookies propias); la mención del iframe de Zoho quedó en Privacidad. **Pendientes del cliente:** datos reales (razón social, CUIT, domicilio, teléfono, email, dominio, matrícula, condición y logo SSN), aprobación de los textos (`reviewed`) y revisión de las reglas de uso del logo. Detalle en `odd/tasks/legal-pages.md`.
 - `AGENTS.md` lo reescribe parcialmente `next dev` (bloque superior); no eliminar ese bloque.
 
 ## Stack principal
 
 - **Next.js 16.4.2** (App Router) + **React 19.3.1** + **TypeScript 5.7.3** (`strict` y el build valida tipos).
-- **ESLint 9** (flat config) + **Vitest 3** (100 tests) + GitHub Actions (`.github/workflows/ci.yml`).
+- **ESLint 9** (flat config) + **Vitest 3** (131 tests) + GitHub Actions (`.github/workflows/ci.yml`).
 - **GGA 2.10** (Gentleman Guardian Angel) + **OpenCode CLI** (`opencode`): hook de `pre-commit` que revisa los TS/JS en staging contra `AGENTS.md` con el agente de solo lectura `gga-reviewer`.
 - **Sanity 6.20.0** + **next-sanity 13.3.4**: CMS headless, Studio montado en `/studio`, plugin Vision y estructura de contenido personalizada.
 - **Tailwind CSS v4** vía `@tailwindcss/postcss` (sin `tailwind.config`), con `tw-animate-css` y `shadcn/tailwind.css`.
@@ -68,6 +68,11 @@ lib/
   blog.ts                     Tipos SanityPost/BlogPost, mapPosts(), fecha es-ES, lectura, acentos
   home-content.ts             Tipos del contenido de la home, resolveHomeContent() y fallback campo por campo
   content-defaults.ts         Textos actuales de la home: defaults del sitio y del seed
+  legal-routes.ts             Slugs, labels y links legales (seguro para componentes cliente)
+  legal.ts                    Resolución de legalPage, tokens de datos y fecha es-AR
+  legal-content.ts            Borradores v1 de Aviso legal y Privacidad
+  site-settings.ts            Tipos, defaults y resolución de los datos del sitio
+  site-settings-server.ts     getSiteSettings() cacheado; solo servidor
   contact.ts                  Validación del formulario (pura, testeable)
   rate-limit.ts               Rate limit en memoria (5/min por IP)
   site.ts                     URL canónica y metadatos base
@@ -93,6 +98,8 @@ eslint.config.mjs             Flat config (core-web-vitals + typescript)
 vitest.config.ts              Tests (alias @ + env de Sanity de prueba)
 scripts/next.mjs              Wrapper de Next que normaliza el casing del cwd en Windows
 scripts/seed-home.ts          Seed idempotente del singleton homePage (sube/reusa los assets de Nosotros)
+scripts/seed-legal.ts         Seed de siteSettings y de las legalPage; no pisa contenido existente
+scripts/remove-cookies-page.ts  Elimina la legalPage de cookies (sitio y Studio; idempotente)
 .github/workflows/ci.yml      Lint + typecheck + tests + build
 .env.example                  Variables de entorno documentadas
 .env.local                    NEXT_PUBLIC_SANITY_PROJECT_ID, NEXT_PUBLIC_SANITY_DATASET, SANITY_API_READ_TOKEN (no versionado)
@@ -111,11 +118,15 @@ opencode.jsonc                Agente `gga-reviewer` de solo lectura para el hook
 - La home muestra solo los 4 últimos artículos; el listado completo con búsqueda y filtros vive en `/blog` (`components/blog-list.tsx`, compartido con `blog-card.tsx`).
 - En `/blog` el artículo más reciente va como destacado (`components/blog-hero.tsx`) y el resto en una grilla de 3 columnas con una tarjeta ancha (`post-card-wide`) cada 5. El destacado se oculta mientras hay un filtro o búsqueda activos.
 - Cada post expone dos URLs de imagen desde `mapPosts`: `imageUrl` (800×500, tarjetas) y `heroImageUrl` (1600×900, destacado). El recorte usa el hotspot del Studio, así que el mismo punto de interés vale para las dos proporciones.
+- `siteSettings` (singleton `_id: siteSettings`) es la única fuente de razón social, CUIT, domicilio, contacto, jurisdicción y matrícula/logo SSN. La home deriva de ahí los datos de contacto (`homePage.contact.details` se retiró) y las páginas legales resuelven tokens `{{legalName}}`, `{{taxId}}`, `{{ssn}}`, etc. Un campo vacío se renderiza como `[PENDIENTE: …]`, nunca como un valor inventado.
+- `legalPage` se lee por slug en `/legal/[slug]`; si el documento no existe o un campo está vacío, usa los borradores de `lib/legal-content.ts`. `reviewed: false` (o `siteSettings` incompleto) deja la página en modo borrador: banner visible y `noindex`. El sitemap solo lista las páginas con `reviewed: true`.
 - El formulario hace `POST /api/contact`. Entrega en cascada: **SMTP de Zoho Mail** (`SMTP_USER`, `SMTP_PASS`, `CONTACT_TO`, `CONTACT_FROM`; el mail lo arma `lib/contact-email.ts`), después `CONTACT_WEBHOOK_URL`, y si no hay ninguno de los dos, en dev se registra en consola y en producción responde `503`.
 
 ## Modelo de contenido (Sanity)
 
-- **homePage**: singleton (`_id: homePage`) registrado con `defineSingleton` en `sanity.config.ts` y `S.listItem().singleton('homePage')` como primera entrada del Studio. Grupos por sección: nav, hero, stages, about, risks, blog, newsletter, contact, footer. Las tarjetas del hero, las etapas y los slides son siempre 3 (validación `min/max`); los títulos multilínea son `text` y `components/multiline-text.tsx` respeta los saltos; los íconos son selects cerrados (`diagnostico|diseno|seguimiento`, `map|mail|globe|phone`); el teléfono usa `phone` y `globe` queda para una web. El copy del formulario de contacto vive en `contact.form` (etiquetas, textos de ejemplo, botón y nota de privacidad); los mensajes de validación y de estado siguen en código. El newsletter exige el checkbox `privacy` («Leí y acepto la política de privacidad.»); el link a la página legal queda pendiente hasta crearla. El Studio edita el draft y la página lee el publicado (con fallback a `lib/content-defaults.ts`); después de un cambio de schema hay que recargar `/studio` para que un documento abierto tome los campos nuevos. La perspectiva **Published** es de solo lectura: para editar hay que estar en **Drafts**, si no el Studio intenta parchear el documento publicado y falla con “Attempted to patch a read-only document”. Los ítems de navegación llevan `variant` (`link`/`button`); el CTA «Suscribirse» se renderiza como `.button.button-dark.button-navy` con el navy `#0d3858`, igual que el submit de la newsletter. Ese campo de `linkItem` solo se usa en `nav.items`. Las redes se editan en `nav.socials` (`socialItem`: red cerrada + URL) y se muestran en el navbar como siluetas monocromas y en el footer con el color claro del pie, junto al mail fijo; una lista vacía las oculta y el campo ausente cae a los 4 defaults. A ≤900px el menú colapsa y las redes quedan visibles en la barra. El footer tiene Explora con los 6 links del navbar en 2 columnas de 3 + Legal (3); un grupo con más de 3 links se abre en 2 columnas. La sección Empresa se eliminó; `footer.socials` se retiró (las redes salen de `nav.socials`) y el footer bottom no usa Reveal para no quedar oculto al final del scroll. Los objetos reutilizables viven en `sanity/schemaTypes/objects/` (`heroCard`, `stage`, `aboutSlide`, `riskTerm`, `riskSection`/`riskGroup`, `linkItem`, `socialItem`).
+- **homePage**: singleton (`_id: homePage`) registrado con `defineSingleton` en `sanity.config.ts` y `S.listItem().singleton('homePage')` como primera entrada del Studio. Grupos por sección: nav, hero, stages, about, risks, blog, newsletter, contact, footer. Las tarjetas del hero, las etapas y los slides son siempre 3 (validación `min/max`); los títulos multilínea son `text` y `components/multiline-text.tsx` respeta los saltos; los íconos de las etapas son un select cerrado (`diagnostico|diseno|seguimiento`). Los datos de contacto (domicilio, email y teléfono) ya no se editan en la home: salen de `siteSettings`. El copy del formulario de contacto vive en `contact.form` (etiquetas, textos de ejemplo, botón, nota y texto del enlace a privacidad); los mensajes de validación y de estado siguen en código. La newsletter no usa checkbox: muestra la leyenda «Al suscribirte, aceptás nuestra política de privacidad.» con link a `/legal/privacidad`, y la aceptación se entiende por el envío del formulario; `validateNewsletterInput` ya no valida consentimiento. La nota del formulario de contacto enlaza la misma página. El Studio edita el draft y la página lee el publicado (con fallback a `lib/content-defaults.ts`); después de un cambio de schema hay que recargar `/studio` para que un documento abierto tome los campos nuevos. La perspectiva **Published** es de solo lectura: para editar hay que estar en **Drafts**, si no el Studio intenta parchear el documento publicado y falla con “Attempted to patch a read-only document”. Ese error también aparece al usar **Remove field** sobre un campo huérfano en Published: hay que quitarlo en Drafts y publicar, o correr `scripts/patch-home-legal.ts` (que parchea el publicado por API). No mezclar: publicar el draft antes de correr el script, o descartar el draft. Los ítems de navegación llevan `variant` (`link`/`button`); el CTA «Suscribirse» se renderiza como `.button.button-dark.button-navy` con el navy `#0d3858`, igual que el submit de la newsletter. Ese campo de `linkItem` solo se usa en `nav.items`. Las redes se editan en `nav.socials` (`socialItem`: red cerrada + URL) y se muestran en el navbar como siluetas monocromas y en el footer con el color claro del pie, junto al mail fijo; una lista vacía las oculta y el campo ausente cae a los 4 defaults. A ≤900px el menú colapsa y las redes quedan visibles en la barra. El footer tiene Explora con los 6 links del navbar en 2 columnas de 3 (grupo editable que ocupa 2 del grid de 3) + Legal estructural con Aviso legal y Privacidad; un grupo con más de 3 links se abre en 2 columnas. La sección Empresa se eliminó; `footer.socials` se retiró (las redes salen de `nav.socials`) y el footer bottom no usa Reveal para no quedar oculto al final del scroll. Los objetos reutilizables viven en `sanity/schemaTypes/objects/` (`heroCard`, `stage`, `aboutSlide`, `riskTerm`, `riskSection`/`riskGroup`, `linkItem`, `socialItem`).
+- **siteSettings**: singleton (`_id: siteSettings`) con razón social, CUIT, domicilio legal y de atención al público, teléfono, email, email de privacidad, web, jurisdicción, condición y matrícula SSN, registro, `ssnUrl`, `ssnLogo` (imagen con alt) y `ssnShowInFooter`. El logo del footer solo aparece si el cliente activa ese flag (reglas de uso); la línea con la matrícula se muestra siempre que esté cargada. Los campos requeridos los completa el cliente: no se siembran datos inventados.
+- **legalPage**: `title`, `slug` (solo `aviso-legal` o `privacidad`), `body` Portable Text sin imágenes ni video, `lastUpdated`, `reviewed` y SEO. Los textos usan tokens `{{…}}` para los datos de `siteSettings`. `scripts/seed-legal.ts` crea los documentos con `reviewed: false` y no pisa contenido existente. La página de cookies se retiró: `scripts/remove-cookies-page.ts` borra `legalPage-cookies` y su draft si existían.
 - **post**: `title`, `slug`, `excerpt` (máx. 280), `author` (referencia), `mainImage` (con `alt`), `categories[]` (referencias), `publishedAt`, `body`.
 - **author**: `name`, `slug`, `image`, `bio` (Portable Text).
 - **category**: `title`, `slug`, `description`.
@@ -146,7 +157,12 @@ opencode.jsonc                Agente `gga-reviewer` de solo lectura para el hook
 - **`package-lock.json` con npm 10**: este equipo tiene npm 11, que poda del lock las variantes por plataforma de `@typescript/typescript-*`. El CI usa Node 22 (npm 10) y `npm ci` falla con `Missing: @typescript/typescript-<plataforma> from lock file`. Al agregar dependencias, regenerar con `npx npm@10 install --package-lock-only --include=optional` antes de commitear el lock.
 
 - El diseño vive casi todo en `app/globals.css` con clases globales y reglas en una sola línea; Tailwind está configurado pero se usa poco.
-- Contenido comercial (servicios, dirección, email, teléfono, footer) está hardcodeado en `home-page.tsx`.
+- Contenido comercial de servicios está hardcodeado en `home-page.tsx`; domicilio, email y teléfono ya salen de `siteSettings`.
+- **Datos legales pendientes:** el sitio se entrega con los campos de `siteSettings` vacíos y los textos legales como borrador (`reviewed: false`, banner visible y `noindex`). No activar `reviewed` ni cargar valores de ejemplo sin la aprobación del abogado/compliance del cliente. La matrícula no aparece en el footer hasta cargar `siteSettings.ssnRegistration`.
+- **Campos nuevos del schema:** un campo `required` agregado a un documento ya publicado lo deja inválido en el Studio y bloquea publicar. Los campos nuevos deben ser opcionales o tener fallback en el resolver (como `contact.form.privacyLinkLabel`). Al quitar un campo, el documento existente muestra “Unknown field found”: se limpia con “Remove field” o con un patch acotado. `scripts/patch-home-legal.ts` quita `homePage.contact.details` (mockups) y completa el label de privacidad solo si falta; es idempotente.
+- **Sin página de cookies:** el sitio público no tiene cookies propias ni storage, así que el cliente decidió no publicar una política de cookies. La mención del iframe de Zoho (cookies de terceros) vive en la Política de privacidad. Si se agrega GA/Meta/Ads, implementar un CMP con bloqueo previo y actualizar esa sección de Privacidad antes de activarlo.
+- **Links legales estructurales:** el grupo Legal del footer no se edita desde Sanity (`LEGAL_ROUTES`); así una página legal no puede quedar despublicada ni apuntar a otra sección. Explora sigue siendo editable y ocupa 2 columnas.
+- **Dominio pendiente:** el canónico sigue siendo `https://bisni.es` (env `NEXT_PUBLIC_SITE_URL`). Afecta canonical, sitemap, Open Graph y el `siteHost` que va en el mail de contacto. Cambiarlo cuando el cliente confirme el dominio real.
 - La cantidad de etapas y slides está fijada en 3 por validación: el carrusel de Nosotros está diseñado para tres marcos.
 - La home lee nav y footer del singleton; las páginas de blog y el 404 siguen usando los defaults. Fase 2 pendiente: compartir ese chrome y validaciones finas. Fase 3: `presentationTool`/`@sanity/visual-editing`.
 - El rate limit del formulario es en memoria: no sirve con varias instancias (mover a Redis/KV si escala).
@@ -167,6 +183,9 @@ npm run typecheck # tsc --noEmit
 npm test          # Vitest
 gga run           # revisión de IA de los archivos en staging (hook de pre-commit)
 npx sanity exec scripts/seed-home.ts --with-user-token  # siembra el singleton homePage (idempotente)
+npx sanity exec scripts/seed-legal.ts --with-user-token  # crea siteSettings vacío y las legalPage en borrador (no pisa)
+npx sanity exec scripts/remove-cookies-page.ts --with-user-token  # elimina la legalPage de cookies y su draft (idempotente)
+npx sanity exec scripts/patch-home-legal.ts --with-user-token  # limpia contact.details y completa el label de privacidad (no pisa)
 gga config        # configuración efectiva de GGA
 gga cache status  # estado de la caché (LOCALAPPDATA\gga\cache en Windows)
 npx sanity ...    # CLI usando sanity.cli.ts
