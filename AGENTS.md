@@ -22,8 +22,8 @@ _Actualizado: 2026-11-12_
 
 ## Stack principal
 
-- **Next.js 16.4.2** (App Router) + **React 19.3.1** + **TypeScript 5.7.3** (`strict` y el build valida tipos).
-- **ESLint 9** (flat config) + **Vitest 3** (131 tests) + GitHub Actions (`.github/workflows/ci.yml`).
+- **Next.js 16.4.6** (App Router) + **React 19.3.1** + **TypeScript 5.7.3** (`strict` y el build valida tipos).
+- **ESLint 9** (flat config) + **Vitest 3** (131 tests) + GitHub Actions (`.github/workflows/ci.yml`, con `actions/checkout@v7` y `actions/setup-node@v7`, que corren sobre el runtime node24).
 - **GGA 2.10** (Gentleman Guardian Angel) + **OpenCode CLI** (`opencode`): hook de `pre-commit` que revisa los TS/JS en staging contra `AGENTS.md` con el agente de solo lectura `gga-reviewer`.
 - **Sanity 6.20.0** + **next-sanity 13.3.4**: CMS headless, Studio montado en `/studio`, plugin Vision y estructura de contenido personalizada.
 - **Tailwind CSS v4** vía `@tailwindcss/postcss` (sin `tailwind.config`), con `tw-animate-css` y `shadcn/tailwind.css`.
@@ -155,6 +155,7 @@ opencode.jsonc                Agente `gga-reviewer` de solo lectura para el hook
 ## Observaciones y deuda técnica
 
 - **`package-lock.json` con npm 10**: este equipo tiene npm 11, que poda del lock las variantes por plataforma de `@typescript/typescript-*`. El CI usa Node 22 (npm 10) y `npm ci` falla con `Missing: @typescript/typescript-<plataforma> from lock file`. Al agregar dependencias, regenerar con `npx npm@10 install --package-lock-only --include=optional` antes de commitear el lock.
+- **Aviso de seguridad de Next:** si la versión de Next está afectada por un advisory conocido, `next build` corta con `SecurityFatalError: Your version of Next.js is affected by a known security vulnerability`. No es un fallo del código: hay que actualizar Next (`npm view next dist-tags` marca la versión segura en `latest`) y volver a correr el build, no desactivar el chequeo. El 2026-11-22 se subió de 16.4.2 a 16.4.6 con `npx npm@10 install next@16.4.6` para conservar las variantes del lock; React quedó en 19.3.1.
 
 - El diseño vive casi todo en `app/globals.css` con clases globales y reglas en una sola línea; Tailwind está configurado pero se usa poco.
 - Contenido comercial de servicios está hardcodeado en `home-page.tsx`; domicilio, email y teléfono ya salen de `siteSettings`.
