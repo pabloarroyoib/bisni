@@ -116,15 +116,28 @@ function isSafeHref(href: unknown): href is string {
   return parsed !== null && SAFE_PROTOCOLS.has(parsed.protocol)
 }
 
+const blockComponents: PortableTextComponents['block'] = {
+  h1: ({ children }) => <h2>{children}</h2>,
+  h2: ({ children }) => <h3>{children}</h3>,
+  h3: ({ children }) => <h4>{children}</h4>,
+  h4: ({ children }) => <h5>{children}</h5>,
+  normal: ({ children }) => <p>{children}</p>,
+  blockquote: ({ children }) => <blockquote>{children}</blockquote>,
+}
+
+/**
+ * En una página legal el `h1` es el título de la página, así que los bloques
+ * `h2`/`h3` del cuerpo se renderizan en su nivel real. Si se aplicara el
+ * corrimiento del artículo (h2 → h3), la página saltearía un nivel.
+ */
+const pageBlockComponents: PortableTextComponents['block'] = {
+  ...blockComponents,
+  h2: ({ children }) => <h2>{children}</h2>,
+  h3: ({ children }) => <h3>{children}</h3>,
+}
+
 const components: PortableTextComponents = {
-  block: {
-    h1: ({ children }) => <h2>{children}</h2>,
-    h2: ({ children }) => <h3>{children}</h3>,
-    h3: ({ children }) => <h4>{children}</h4>,
-    h4: ({ children }) => <h5>{children}</h5>,
-    normal: ({ children }) => <p>{children}</p>,
-    blockquote: ({ children }) => <blockquote>{children}</blockquote>,
-  },
+  block: blockComponents,
   types: {
     image: ({ value }) => {
       if (!value?.asset) return null
@@ -183,11 +196,21 @@ const components: PortableTextComponents = {
   },
 }
 
-export function PostBody({ value }: { value: unknown }) {
+export function PostBody({
+  value,
+  variant = 'article',
+}: {
+  value: unknown
+  /** `page` respeta los niveles de encabezado de una página que ya tiene su h1. */
+  variant?: 'article' | 'page'
+}) {
   if (!Array.isArray(value) || value.length === 0) return null
   return (
     <div className="article-body">
-      <PortableText value={value} components={components} />
+      <PortableText
+        value={value}
+        components={variant === 'page' ? {...components, block: pageBlockComponents} : components}
+      />
     </div>
   )
 }
