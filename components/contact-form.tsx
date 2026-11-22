@@ -1,15 +1,24 @@
 'use client'
 
 import { useState, type FormEvent } from 'react'
+import Link from 'next/link'
 import { ArrowUpRight, Check } from 'lucide-react'
 import type { ContactErrors } from '@/lib/contact'
+import { CONTACT_EMAIL } from '@/lib/email'
 import type { ContactFormContent } from '@/lib/home-content'
+import { PRIVACY_HREF } from '@/lib/legal-routes'
 
 type Status = 'idle' | 'sending' | 'success' | 'error'
 
 const GENERIC_ERROR = 'No hemos podido enviar tu consulta. Inténtalo de nuevo en unos minutos.'
 
-export function ContactForm({ copy }: { copy: ContactFormContent }) {
+export function ContactForm({
+  copy,
+  contactEmail = CONTACT_EMAIL,
+}: {
+  copy: ContactFormContent
+  contactEmail?: string
+}) {
   const [status, setStatus] = useState<Status>('idle')
   const [message, setMessage] = useState('')
   const [errors, setErrors] = useState<ContactErrors>({})
@@ -69,7 +78,9 @@ export function ContactForm({ copy }: { copy: ContactFormContent }) {
 
       if (response.status === 503) {
         setStatus('error')
-        setMessage('El formulario no está disponible ahora mismo. Escríbenos a hola@bisni.es.')
+        setMessage(
+          `El formulario no está disponible ahora mismo. Escríbenos a ${contactEmail}.`,
+        )
         return
       }
 
@@ -130,7 +141,11 @@ export function ContactForm({ copy }: { copy: ContactFormContent }) {
         </p>
       )}
 
-      <p className="privacy-note"><Check aria-hidden="true" /> {copy.privacyNote}</p>
+      <p className="privacy-note">
+        <Check aria-hidden="true" />
+        <span>{copy.privacyNote}</span>
+        <Link href={PRIVACY_HREF}>{copy.privacyLinkLabel}</Link>
+      </p>
     </form>
   )
 }

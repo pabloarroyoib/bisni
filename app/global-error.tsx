@@ -1,5 +1,7 @@
 'use client'
 
+import { CONTACT_EMAIL } from '@/lib/email'
+
 export default function GlobalError({
   error,
   reset,
@@ -30,8 +32,8 @@ export default function GlobalError({
           </h1>
           <p style={{ color: '#56696b', lineHeight: 1.6, fontSize: 16 }}>
             Vuelve a intentarlo. Si el problema continúa, escríbenos a{' '}
-            <a href="mailto:hola@bisni.es" style={{ color: '#0d3858' }}>
-              hola@bisni.es
+            <a href={`mailto:${CONTACT_EMAIL}`} style={{ color: '#0d3858' }}>
+              {CONTACT_EMAIL}
             </a>
             .
           </p>

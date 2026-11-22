@@ -172,7 +172,10 @@ export function HomePage({ content, posts, background, contactBackground, footer
           </div>
         </Reveal>
         <Reveal className="contact-form-reveal">
-          <ContactForm copy={content.contact.form} />
+          <ContactForm
+            copy={content.contact.form}
+            contactEmail={content.contact.details.find((detail) => detail.icon === 'mail')?.text}
+          />
         </Reveal>
       </section>
 

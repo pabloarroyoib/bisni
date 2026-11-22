@@ -3,6 +3,7 @@ import nodemailer from 'nodemailer'
 import { validateContactInput, type ContactPayload } from '@/lib/contact'
 import { buildContactMail } from '@/lib/contact-email'
 import { rateLimit } from '@/lib/rate-limit'
+import { siteHost } from '@/lib/site'
 
 export const runtime = 'nodejs'
 
@@ -197,7 +198,7 @@ export async function POST(request: Request) {
 
   const result = await deliver({
     ...validation.data,
-    source: 'bisni.es/contacto',
+    source: `${siteHost}/contacto`,
     submittedAt: new Date().toISOString(),
     ip,
   })

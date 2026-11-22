@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
 import { BlogCard } from '@/components/blog-card'
 import { mapPost, mapPosts, pickRelatedPosts, type SanityPost } from '@/lib/blog'
+import { getSiteSettings } from '@/lib/site-settings-server'
 import { POSTS_QUERY, POST_QUERY } from '@/sanity/lib/queries'
 import { sanityFetch } from '@/sanity/lib/live'
 import type { Metadata } from 'next'
@@ -34,7 +35,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
   return {
     title: post.title ?? 'Artículo',
-    description: post.excerpt || 'Artículo de bisni sobre gestión de riesgos',
+    description: post.excerpt || 'Artículo de GROU Asesores sobre gestión de riesgos',
     alternates: {
       canonical: `/blog/${post.slug ?? slug}`,
     },
@@ -58,7 +59,10 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   }
 
   // Relacionados: primero los de la misma categoría, completando con los más recientes.
-  const postsResult = await sanityFetch({ query: POSTS_QUERY })
+  const [postsResult, settings] = await Promise.all([
+    sanityFetch({ query: POSTS_QUERY }),
+    getSiteSettings(),
+  ])
   const relatedPosts = pickRelatedPosts(
     mapPosts(postsResult.data as SanityPost[] | null),
     mappedPost._id,
@@ -138,7 +142,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         </section>
       ) : null}
 
-      <SiteFooter />
+      <SiteFooter settings={settings} />
     </main>
   )
 }

@@ -1,5 +1,5 @@
-import { CONTACT_EMAIL, mailtoHref } from './email'
 import { riskSections } from './risk-insurance'
+import { buildContactDetails, defaultSiteSettings } from './site-settings'
 import type { HomeContent } from './home-content'
 
 /**
@@ -115,11 +115,9 @@ export const defaultHomeContent: HomeContent = {
     kicker: 'Hablemos',
     title: 'El próximo movimiento\nempieza aquí.',
     paragraph: 'Cuéntanos qué te preocupa. Te ayudaremos a ponerle nombre, contexto y un plan.',
-    details: [
-      { icon: 'map', text: 'Calle Serrano 55\n28006 Madrid' },
-      { icon: 'mail', text: CONTACT_EMAIL, href: mailtoHref() },
-      { icon: 'phone', text: '+34 910 123 456' },
-    ],
+    // Domicilio, email y teléfono salen de `siteSettings`: no se duplican acá
+    // para que contacto, footer y páginas legales no puedan divergir.
+    details: buildContactDetails(defaultSiteSettings),
     form: {
       nameLabel: 'Tu nombre',
       namePlaceholder: 'Nombre y apellidos',
@@ -132,6 +130,7 @@ export const defaultHomeContent: HomeContent = {
       submitLabel: 'Enviar consulta',
       sendingLabel: 'Enviando…',
       privacyNote: 'Respetamos tu privacidad. Nunca compartiremos tus datos.',
+      privacyLinkLabel: 'Política de privacidad',
     },
   },
   footer: {
@@ -148,15 +147,9 @@ export const defaultHomeContent: HomeContent = {
           { label: 'Suscribirse', href: '/#newsletter' },
         ],
       },
-      {
-        title: 'Legal',
-        links: [
-          { label: 'Aviso legal', href: '/#contacto' },
-          { label: 'Privacidad', href: '/#contacto' },
-          { label: 'Cookies', href: '/#contacto' },
-        ],
-      },
     ],
+    // El grupo Legal no es editable: lo renderiza el footer desde
+    // `LEGAL_ROUTES` para que los tres links no puedan quedar despublicados.
     legal: '© 2026 GROU Asesores. Protegiendo tu futuro corporativo.',
   },
 }

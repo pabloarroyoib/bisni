@@ -10,9 +10,11 @@
  * quien no tiene cuenta de Google o no está logueado en el navegador.
  */
 // TODO(rebrand): el correo sigue siendo el de bisni.es porque es la casilla real
-// y la que recibe las consultas. Al pasar a GROU Asesores, cambiar dirección y asunto.
+// y la que recibe las consultas. Al pasar a GROU Asesores, cambiar dirección.
+// El asunto ya no depende del dominio: mientras el dominio definitivo no esté
+// definido, usar el nombre de la marca evita arrastrar el mockup a los mails.
 export const CONTACT_EMAIL = 'hola@bisni.es'
-export const CONTACT_SUBJECT = 'Consulta desde bisni.es'
+export const CONTACT_SUBJECT = 'Consulta desde GROU Asesores'
 
 /** `mailto:` con asunto opcional, ya codificado. */
 export function mailtoHref(to: string = CONTACT_EMAIL, subject: string = CONTACT_SUBJECT): string {

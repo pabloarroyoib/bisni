@@ -3,6 +3,9 @@
 /** URL canónica del sitio, sin barra final. */
 export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://bisni.es').replace(/\/+$/, '')
 
+/** Host canónico, sin protocolo ni path. Se usa en textos de origen de los mails. */
+export const siteHost = siteUrl.replace(/^https?:\/\//i, '').replace(/\/.*$/, '')
+
 export const siteName = 'GROU Asesores'
 
 export const siteDescription =

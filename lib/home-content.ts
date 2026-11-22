@@ -2,6 +2,7 @@ import type { SanityImageSource } from '@sanity/image-url'
 import { urlFor } from '@/sanity/lib/image'
 import { defaultHomeContent } from './content-defaults'
 import type { RiskContent, RiskSection, RiskSub, RiskTerm } from './risk-insurance'
+import { buildContactDetails, defaultSiteSettings, type SiteSettings } from './site-settings'
 
 /** Enlace interno o externo editable desde el Studio. */
 export type LinkItem = { label: string; href: string }
@@ -93,6 +94,8 @@ export type ContactFormContent = {
   submitLabel: string
   sendingLabel: string
   privacyNote: string
+  /** Texto del enlace que lleva a la política de privacidad. */
+  privacyLinkLabel: string
 }
 
 export type ContactContent = {
@@ -169,7 +172,6 @@ export type SanityHomePage = {
     kicker?: string | null
     title?: string | null
     paragraph?: string | null
-    details?: ({ icon?: string | null; text?: string | null; href?: string | null } | null)[] | null
     form?: SanityContactForm | null
   } | null
   footer?: {
@@ -413,17 +415,6 @@ function mergeRiskSection(raw: unknown, fallback?: RiskSection): RiskSection {
   return section
 }
 
-function mergeContactDetail(raw: unknown, fallback?: ContactDetail): ContactDetail {
-  const value = asRecord(raw)
-  const detail: ContactDetail = {
-    icon: pickOne(value.icon, CONTACT_ICONS, fallback?.icon ?? 'map'),
-    text: text(value.text, fallback?.text ?? ''),
-  }
-  const href = optionalText(value.href, fallback?.href)
-  if (href) detail.href = href
-  return detail
-}
-
 function mergeContactForm(raw: unknown, fallback: ContactFormContent): ContactFormContent {
   const value = asRecord(raw)
   return {
@@ -438,6 +429,7 @@ function mergeContactForm(raw: unknown, fallback: ContactFormContent): ContactFo
     submitLabel: text(value.submitLabel, fallback.submitLabel),
     sendingLabel: text(value.sendingLabel, fallback.sendingLabel),
     privacyNote: text(value.privacyNote, fallback.privacyNote),
+    privacyLinkLabel: text(value.privacyLinkLabel, fallback.privacyLinkLabel),
   }
 }
 
@@ -449,8 +441,15 @@ function mergeContactForm(raw: unknown, fallback: ContactFormContent): ContactFo
  * Convierte el documento publicado en el contenido que consumen los
  * componentes. Nunca devuelve una sección vacía: cada campo ausente cae al
  * default y los arrays que definen el diseño conservan su cantidad.
+ *
+ * Los datos de contacto no salen de este documento: se deducen de
+ * `siteSettings` para que la home, el footer y las páginas legales muestren
+ * siempre lo mismo.
  */
-export function resolveHomeContent(raw: SanityHomePage | null | undefined): HomeContent {
+export function resolveHomeContent(
+  raw: SanityHomePage | null | undefined,
+  settings: SiteSettings = defaultSiteSettings,
+): HomeContent {
   const doc = asRecord(raw)
   const defaults = defaultHomeContent
 
@@ -505,18 +504,25 @@ export function resolveHomeContent(raw: SanityHomePage | null | undefined): Home
       kicker: text(contact.kicker, defaults.contact.kicker),
       title: text(contact.title, defaults.contact.title),
       paragraph: text(contact.paragraph, defaults.contact.paragraph),
-      details: mergeList(contact.details, defaults.contact.details, mergeContactDetail),
+      details: buildContactDetails(settings),
       form: mergeContactForm(contact.form, defaults.contact.form),
     },
     footer: {
       tagline: text(footer.tagline, defaults.footer.tagline),
-      linkGroups: mergeList(footer.linkGroups, defaults.footer.linkGroups, (rawGroup, fallbackGroup) => {
-        const group = asRecord(rawGroup)
-        return {
-          title: text(group.title, fallbackGroup?.title ?? ''),
-          links: mergeList(group.links, fallbackGroup?.links ?? [], (item) => mergeLinkItem(item)),
-        }
-      }),
+      // Compatibilidad: los documentos viejos todavía tienen el grupo "Legal"
+      // con links a `/#contacto`. El footer lo renderiza desde `LEGAL_ROUTES`,
+      // así que se descarta para no duplicarlo con hrefs desactualizados.
+      linkGroups: (() => {
+        const groups = mergeList(footer.linkGroups, defaults.footer.linkGroups, (rawGroup, fallbackGroup) => {
+          const group = asRecord(rawGroup)
+          return {
+            title: text(group.title, fallbackGroup?.title ?? ''),
+            links: mergeList(group.links, fallbackGroup?.links ?? [], (item) => mergeLinkItem(item)),
+          }
+        }).filter((group) => group.title.trim().toLowerCase() !== 'legal')
+
+        return groups.length > 0 ? groups : defaults.footer.linkGroups
+      })(),
       legal: text(footer.legal, defaults.footer.legal),
     },
   }

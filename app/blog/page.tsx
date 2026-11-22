@@ -4,6 +4,7 @@ import { Reveal } from '@/components/reveal'
 import { SiteFooter } from '@/components/site-footer'
 import { SiteHeader } from '@/components/site-header'
 import { mapPosts, toCategoryNames, type SanityCategory, type SanityPost } from '@/lib/blog'
+import { getSiteSettings } from '@/lib/site-settings-server'
 import { siteUrl } from '@/lib/site'
 import { CATEGORIES_QUERY, POSTS_QUERY } from '@/sanity/lib/queries'
 import { sanityFetch } from '@/sanity/lib/live'
@@ -11,14 +12,15 @@ import { sanityFetch } from '@/sanity/lib/live'
 export const metadata: Metadata = {
   title: 'Blog',
   description:
-    'Artículos sobre gestión de riesgos, ciberseguridad y cumplimiento ISO 31000, por el equipo de bisni.',
+    'Artículos sobre gestión de riesgos, ciberseguridad y cumplimiento ISO 31000, por el equipo de GROU Asesores.',
   alternates: { canonical: `${siteUrl}/blog` },
 }
 
 export default async function BlogIndexPage() {
-  const [postsResult, categoriesResult] = await Promise.all([
+  const [postsResult, categoriesResult, settings] = await Promise.all([
     sanityFetch({ query: POSTS_QUERY }),
     sanityFetch({ query: CATEGORIES_QUERY }),
+    getSiteSettings(),
   ])
 
   const posts = mapPosts(postsResult.data as SanityPost[] | null)
@@ -41,7 +43,7 @@ export default async function BlogIndexPage() {
         <BlogList posts={posts} categories={categories} />
       </section>
 
-      <SiteFooter />
+      <SiteFooter settings={settings} />
     </main>
   )
 }

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { defaultHomeContent } from '@/lib/content-defaults'
 import { resolveHomeContent, type SanityHomePage } from '@/lib/home-content'
+import { defaultSiteSettings } from '@/lib/site-settings'
 
 describe('resolveHomeContent', () => {
   it('devuelve los defaults cuando el documento no existe', () => {
@@ -195,11 +196,52 @@ describe('resolveHomeContent', () => {
   it('ignora íconos fuera de la lista cerrada', () => {
     const content = resolveHomeContent({
       stages: { stages: [{ icon: 'otro' }] },
-      contact: { details: [{ icon: 'otro' }] },
     })
 
     expect(content.stages.stages[0].icon).toBe(defaultHomeContent.stages.stages[0].icon)
-    expect(content.contact.details[0].icon).toBe(defaultHomeContent.contact.details[0].icon)
+  })
+
+  it('deriva los datos de contacto de siteSettings e ignora los del documento', () => {
+    // El documento viejo todavía guarda los datos mockup; el resolver ya no los lee.
+    const stale = {
+      contact: { details: [{ icon: 'map', text: 'Calle vieja 123' }] },
+    } as unknown as SanityHomePage
+
+    expect(resolveHomeContent(stale).contact.details).toEqual(defaultHomeContent.contact.details)
+
+    const details = resolveHomeContent(null, {
+      ...defaultSiteSettings,
+      officeAddress: 'Av. Corrientes 1234',
+      phone: '+54 11 5555 5555',
+    }).contact.details
+
+    expect(details.map((detail) => detail.icon)).toEqual(['map', 'mail', 'phone'])
+    expect(details[0].text).toBe('Av. Corrientes 1234')
+    expect(details[1].href).toMatch(/^mailto:/)
+    expect(details[2].text).toBe('+54 11 5555 5555')
+  })
+
+  it('descarta el grupo Legal viejo del footer y conserva los demás', () => {
+    const content = resolveHomeContent({
+      footer: {
+        linkGroups: [
+          { title: 'Explora', links: [{ label: 'Inicio', href: '/#inicio' }] },
+          { title: 'legal', links: [{ label: 'Aviso legal', href: '/#contacto' }] },
+        ],
+      },
+    })
+
+    expect(content.footer.linkGroups.map((group) => group.title)).toEqual(['Explora'])
+  })
+
+  it('vuelve a los grupos default si el footer solo tenía el grupo Legal', () => {
+    const content = resolveHomeContent({
+      footer: {
+        linkGroups: [{ title: 'Legal', links: [{ label: 'Cookies', href: '/#contacto' }] }],
+      },
+    })
+
+    expect(content.footer.linkGroups).toEqual(defaultHomeContent.footer.linkGroups)
   })
 
   it('resuelve el copy del formulario de contacto y completa los campos vacíos', () => {
