@@ -2,13 +2,16 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { SiteFooter } from '@/components/site-footer'
 import { SiteHeader } from '@/components/site-header'
+import { getSiteSettings } from '@/lib/site-settings-server'
 
 export const metadata: Metadata = {
   title: 'Página no encontrada',
   robots: { index: false, follow: false },
 }
 
-export default function NotFound() {
+export default async function NotFound() {
+  const settings = await getSiteSettings()
+
   return (
     <main className="site-shell">
       <SiteHeader />
@@ -33,7 +36,7 @@ export default function NotFound() {
         </div>
       </article>
 
-      <SiteFooter />
+      <SiteFooter settings={settings} />
     </main>
   )
 }

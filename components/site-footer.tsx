@@ -5,17 +5,23 @@ import { MultilineText } from '@/components/multiline-text'
 import { Reveal } from '@/components/reveal'
 import { SOCIAL_ICONS, SOCIAL_LABELS } from '@/components/social-icons'
 import { defaultHomeContent } from '@/lib/content-defaults'
-import { CONTACT_EMAIL, mailtoHref } from '@/lib/email'
+import { mailtoHref } from '@/lib/email'
 import type { FooterContent, SocialLink } from '@/lib/home-content'
+import { LEGAL_ROUTES, legalHref } from '@/lib/legal-routes'
+import { defaultSiteSettings, ssnRegistrationLabel, type SiteSettings } from '@/lib/site-settings'
 
 /** Pie compartido por todas las páginas. Estático: Server Component. */
 export function SiteFooter({
   content = defaultHomeContent.footer,
   socials = defaultHomeContent.navSocials,
+  settings = defaultSiteSettings,
 }: {
   content?: FooterContent
   socials?: SocialLink[]
+  settings?: SiteSettings
 }) {
+  const registration = ssnRegistrationLabel(settings)
+
   return (
     <footer className="footer">
       <Reveal className="footer-main">
@@ -28,6 +34,29 @@ export function SiteFooter({
           <p>
             <MultilineText text={content.tagline} />
           </p>
+          {/* La matrícula es un dato regulatorio: se muestra siempre que esté
+              cargada. El logo solo si el cliente confirmó que las reglas de uso
+              lo permiten (`ssnShowInFooter`). */}
+          {registration && (
+            <p className="footer-ssn">
+              <span>{registration}</span>
+              {settings.ssnShowInFooter && settings.ssnLogo && (
+                <a
+                  href={settings.ssnUrl || 'https://www.ssn.gob.ar'}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Image
+                    src={settings.ssnLogo.url}
+                    alt={settings.ssnLogo.alt}
+                    width={140}
+                    height={48}
+                    className="footer-ssn-logo"
+                  />
+                </a>
+              )}
+            </p>
+          )}
         </div>
 
         <nav className="footer-links" aria-label="Pie de página">
@@ -49,6 +78,19 @@ export function SiteFooter({
               </div>
             )
           })}
+
+          {/* Los links legales no son editables: una página legal no puede
+              quedar despublicada ni apuntar a otra sección. */}
+          <div className="footer-group">
+            <strong>Legal</strong>
+            <div className="footer-group-links">
+              {LEGAL_ROUTES.map((route) => (
+                <Link key={route.slug} href={legalHref(route.slug)}>
+                  {route.label}
+                </Link>
+              ))}
+            </div>
+          </div>
         </nav>
       </Reveal>
 
@@ -70,7 +112,7 @@ export function SiteFooter({
               </a>
             )
           })}
-          <a href={mailtoHref()} aria-label={`Enviar un correo a ${CONTACT_EMAIL}`}>
+          <a href={mailtoHref(settings.email)} aria-label={`Enviar un correo a ${settings.email}`}>
             <Mail aria-hidden="true" />
           </a>
         </span>
