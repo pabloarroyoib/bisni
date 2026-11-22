@@ -1,4 +1,4 @@
-export type NewsletterField = 'email' | 'name' | 'privacy'
+export type NewsletterField = 'email' | 'name'
 
 export type NewsletterPayload = {
   email: string
@@ -53,10 +53,6 @@ export function validateNewsletterInput(input: unknown): NewsletterValidation {
     errors.name = 'Indica tu nombre.'
   } else if (name.length > NEWSLETTER_LIMITS.name.max) {
     errors.name = 'El nombre es demasiado largo.'
-  }
-
-  if (asString(body.privacy) !== 'accepted') {
-    errors.privacy = 'Acepta la política de privacidad para suscribirte.'
   }
 
   if (Object.keys(errors).length > 0) {

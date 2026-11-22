@@ -4,12 +4,11 @@ import { validateNewsletterInput } from '@/lib/newsletter'
 const validInput = {
   email: 'Marta@Acme.com',
   name: 'Marta Ruiz',
-  privacy: 'accepted',
 }
 
 describe('validateNewsletterInput', () => {
   it('acepta un envío válido y normaliza el email y el nombre', () => {
-    const result = validateNewsletterInput({ email: '  Marta@Acme.com  ', name: '  Marta Ruiz  ', privacy: 'accepted' })
+    const result = validateNewsletterInput({ email: '  Marta@Acme.com  ', name: '  Marta Ruiz  ' })
 
     expect(result).toEqual({
       ok: true,
@@ -23,15 +22,6 @@ describe('validateNewsletterInput', () => {
     expect(result).toEqual({
       ok: true,
       data: { email: 'marta@acme.com', name: 'MARTA Ruiz' },
-    })
-  })
-
-  it('exige aceptar la política de privacidad', () => {
-    const result = validateNewsletterInput({ ...validInput, privacy: '' })
-
-    expect(result).toEqual({
-      ok: false,
-      errors: { privacy: 'Acepta la política de privacidad para suscribirte.' },
     })
   })
 

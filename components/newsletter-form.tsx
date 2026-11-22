@@ -1,7 +1,9 @@
 'use client'
 
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react'
+import Link from 'next/link'
 import { ArrowUpRight, Check } from 'lucide-react'
+import { PRIVACY_HREF } from '@/lib/legal-routes'
 import { validateNewsletterInput, type NewsletterErrors } from '@/lib/newsletter'
 
 /**
@@ -53,8 +55,6 @@ export function NewsletterForm() {
   const fieldId = useId()
   const nameErrorId = `${fieldId}-name-error`
   const emailErrorId = `${fieldId}-email-error`
-  const privacyId = `${fieldId}-privacy`
-  const privacyErrorId = `${fieldId}-privacy-error`
   const timeoutRef = useRef<number | null>(null)
   // Un envío está en vuelo mientras el iframe no haya cargado. Es un ref y no
   // el estado para que el handler del `load` no dependa de un render previo:
@@ -102,7 +102,6 @@ export function NewsletterForm() {
     const result = validateNewsletterInput({
       email: data.get('CONTACT_EMAIL'),
       name: data.get('FIRSTNAME'),
-      privacy: data.get('privacy'),
       website: data.get('website'),
     })
 
@@ -187,23 +186,12 @@ export function NewsletterForm() {
           </span>
         )}
 
-        <div className="newsletter-privacy">
-          <input
-            id={privacyId}
-            name="privacy"
-            type="checkbox"
-            value="accepted"
-            required
-            aria-invalid={errors.privacy ? true : undefined}
-            aria-describedby={errors.privacy ? privacyErrorId : undefined}
-          />
-          <label htmlFor={privacyId}>Leí y acepto la política de privacidad.</label>
-        </div>
-        {errors.privacy && (
-          <span className="field-error" id={privacyErrorId} role="alert">
-            {errors.privacy}
-          </span>
-        )}
+        {/* La aceptación se informa acá y se presta al enviar el formulario:
+            no hay checkbox. El link lleva a la política de privacidad. */}
+        <p className="newsletter-privacy">
+          Al suscribirte, aceptás nuestra{' '}
+          <Link href={PRIVACY_HREF}>política de privacidad</Link>.
+        </p>
 
         {/* Campos ocultos que Zoho lee literalmente: si cambia el formulario en
             Zoho, hay que volver a copiarlos aquí sin reordenarlos. */}
