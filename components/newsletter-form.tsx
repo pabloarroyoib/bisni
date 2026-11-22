@@ -199,13 +199,13 @@ export function NewsletterForm() {
         <input type="hidden" name="formType" value="QuickForm" />
         <input type="hidden" name="mode" value="OptinCreateView" />
         <input type="hidden" name="zcvers" value="3.0" />
-        <input type="hidden" name="zx" value="138584313" />
-        <input type="hidden" name="zcld" value="118102399cc2c10a3" />
-        <input type="hidden" name="zctd" value="118102399cc2c0f71" />
+        <input type="hidden" name="zx" value="1388516a9" />
+        <input type="hidden" name="zcld" value="117ff87b689d8e479" />
+        <input type="hidden" name="zctd" value="" />
         <input
           type="hidden"
           name="zc_formIx"
-          value="3z9b1fff08a90bef4c9de3f385cb7008d67f7183161ccc906e137b16fec03bb9b5"
+          value="3z30b17d94766351cee3a7bec571372aa1cf97b90466c76e7466d461db4e15f9c2"
         />
         <input type="hidden" name="zc_trackCode" value="ZCFORMVIEW" />
         <input type="hidden" name="oldListIds" value="" />
@@ -215,6 +215,10 @@ export function NewsletterForm() {
             snippet. */}
         <input type="hidden" name="scriptless" value="yes" />
         <input type="hidden" name="emailReportId" value="" />
+        {/* `zc_spmSubmit` (ZCSPMSUBMIT) no va: el snippet de Zoho lo borra con
+            su propio JavaScript antes de enviar, así que solo lo manda un bot
+            que postea el formulario tal cual. El envío nativo ya está validado
+            sin ese campo. */}
         {/* `LASTNAME` va vacío a propósito: el merge tag `$[FNAME|Suscriptor]$`
             lee First Name, que es el campo visible `FIRSTNAME`. Zoho acepta
             `LASTNAME` vacío y algunas listas esperan el campo, así que no se
