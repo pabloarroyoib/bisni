@@ -64,6 +64,20 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 .nav-links a:hover { color:var(--ink); }
 .nav-links .nav-cta { width:auto; margin:0; padding:10px 16px; align-self:center; }
 .nav-links a.nav-cta, .nav-links a.nav-cta:hover { color:#fff; }
+/* Desplegable «Sectores»: una entrada más de la fila, antes del CTA. */
+.nav-sectors { position:relative; display:flex; align-items:center; }
+.nav-sectors-toggle { display:flex; align-items:center; gap:6px; border:0; background:transparent; padding:0; font:inherit; color:inherit; cursor:pointer; }
+.nav-sectors-toggle:hover { color:var(--ink); }
+.nav-sectors-toggle svg { width:14px; height:14px; transition:transform .18s ease; }
+.nav-sectors-toggle svg.is-open { transform:rotate(180deg); }
+.nav-sectors-panel { display:none; }
+.nav-sectors-panel.is-open { display:block; position:absolute; top:calc(100% + 14px); left:-16px; z-index:30; min-width:260px; max-width:320px; padding:10px; background:#fff; border:1px solid var(--color-line); border-radius:14px; box-shadow:0 24px 50px -32px rgba(16,28,34,.55); }
+.nav-sectors-panel ul { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px; }
+.nav-sectors-panel a { display:block; padding:9px 12px; border-radius:9px; color:var(--ink); font-weight:600; }
+.nav-sectors-panel a:hover { background:var(--color-paper); }
+/* Puente invisible sobre el hueco de 14px: sin esto, mover el mouse del botón al
+   panel sale del contenedor y el desplegable se cierra antes de poder elegir. */
+.nav-sectors-panel.is-open::before { content:''; position:absolute; left:0; right:0; top:-14px; height:14px; }
 .navbar-actions { display:flex; align-items:center; gap:16px; margin-left:16px; }
 .nav-socials { display:flex; align-items:center; gap:8px; padding-left:12px; border-left:1px solid var(--color-line); }
 .nav-socials a { display:flex; color:var(--color-ink); transition:opacity .2s; }
@@ -123,7 +137,7 @@ h1,h2,h3,p { margin:0; } h1,h2 { font-weight:600; letter-spacing:-.02em; } h1 { 
 .article-header { width:min(800px,100% - 12vw);margin:0 auto;padding:80px 0 40px;overflow-wrap:anywhere; }.article-back { display:inline-flex;align-items:center;gap:8px;font-size:var(--fs-small);font-weight:700;color:var(--muted);margin-bottom:30px;transition:color .2s; }.article-back:hover { color:var(--ink); }.article-meta { display:flex;align-items:center;gap:16px;margin-bottom:24px;font-size:var(--fs-micro);flex-wrap:wrap; }.article-category { color:var(--color-signal-text);text-transform:uppercase;letter-spacing:.1em;font-weight:700; }.article-date,.article-read { color:var(--muted); }.article-header h1 { font-size:clamp(36px,5vw,56px);line-height:1.05;margin-bottom:20px; }.article-header .article-lead { color:var(--muted);line-height:1.6;font-size:var(--fs-lead);margin-bottom:24px;max-width:700px; }.article-author { display:flex;align-items:center;gap:12px;margin-top:20px; }.author-avatar { width:48px;height:48px;border-radius:50%;object-fit:cover; }.author-name { font-size:var(--fs-small);color:var(--muted); }.article-hero-image { width:min(800px,100% - 12vw);margin:0 auto 50px; }.article-hero-image img { width:100%;height:auto;display:block; }.article-content { width:min(800px,100% - 12vw);margin:0 auto;padding-bottom:80px; }/* `overflow-wrap:anywhere` parte cadenas larguísimas sin espacios (URLs, hashes,
    texto pegado) en vez de desbordar la columna. */
 .article-body { color:var(--ink);line-height:1.75;font-size:var(--fs-lead);overflow-wrap:anywhere; }.article-body p, .article-body li { color:var(--muted);line-height:1.8; }.article-body p { margin-top:17px; }.article-body h2 { font-size:28px;margin:40px 0 20px;letter-spacing:-.02em; }.article-body h3 { font-size:22px;margin:32px 0 16px;letter-spacing:-.02em; }.article-body h4 { font-size:18px;margin:28px 0 14px;letter-spacing:-.02em; }.article-body h5 { font-size:16px;margin:24px 0 12px;letter-spacing:-.01em;text-transform:uppercase;color:var(--muted); }.article-body p { margin-bottom:20px; }.article-body blockquote { border-left:3px solid var(--teal);padding-left:20px;margin:30px 0;color:var(--muted);font-style:italic; }.article-body ul,.article-body ol { margin:20px 0;padding-left:25px; }.article-body li { margin-bottom:10px; }.article-body img { width:100%;height:auto;margin:30px 0; }.article-body a { color:var(--color-signal-text);text-decoration:underline; }.video-container { position:relative;padding-bottom:56.25%;height:0;overflow:hidden;margin:30px 0;background:#000;border-radius:4px; }.video-container iframe,.video-container video { position:absolute;top:0;left:0;width:100%;height:100%;border:0; }
-@media (max-width:900px) { .nav-links { display:none;position:absolute;top:76px;left:0;right:0;background:#fff;padding:20px 5vw;flex-direction:column;gap:18px;border-bottom:1px solid var(--line);margin:0; }.nav-links.is-open { display:flex; }.mobile-menu { display:block;color:var(--color-ink); }.mobile-menu svg { width:22px; }.navbar-actions { margin-left:auto; }.nav-socials { padding-left:0;border-left:0; }.nav-links a.nav-cta { align-self:flex-start; }.hero { padding-top:64px; }.hero-inner { grid-template-columns:1fr; gap:40px; } .section { padding:var(--section-y) 6vw; }.post-grid { grid-template-columns:repeat(2,1fr); }.contact { gap:7vw; }.footer-links { gap:35px; } /* A 12px las etiquetas del eje X no caben en horizontal bajo las 5 columnas
+@media (max-width:900px) { .nav-links { display:none;position:absolute;top:76px;left:0;right:0;background:#fff;padding:20px 5vw;flex-direction:column;gap:18px;border-bottom:1px solid var(--line);margin:0; }.nav-links.is-open { display:flex; }.nav-sectors { flex-direction:column; align-items:flex-start; gap:12px; }.nav-sectors-toggle { color:var(--ink); }.nav-sectors-panel.is-open { position:static; min-width:0; max-width:none; padding:0; border:0; border-radius:0; box-shadow:none; }.mobile-menu { display:block;color:var(--color-ink); }.mobile-menu svg { width:22px; }.navbar-actions { margin-left:auto; }.nav-socials { padding-left:0;border-left:0; }.nav-links a.nav-cta { align-self:flex-start; }.hero { padding-top:64px; }.hero-inner { grid-template-columns:1fr; gap:40px; } .section { padding:var(--section-y) 6vw; }.post-grid { grid-template-columns:repeat(2,1fr); }.contact { gap:7vw; }.footer-links { gap:35px; } /* A 12px las etiquetas del eje X no caben en horizontal bajo las 5 columnas
      (236px de texto en 188-215px: a 768 y 390 se desalineaban y desbordaban).
      En vertical caben sin partir palabras ni tocar el tamaño. */
  }
@@ -450,7 +464,7 @@ h1,h2,h3,p { margin:0; } h1,h2 { font-weight:600; letter-spacing:-.02em; } h1 { 
 
 /* Páginas legales: reusan la columna de lectura del artículo. El aviso de
    borrador es visible hasta que el cliente carga los datos y aprueba el texto. */
-.legal-draft { margin:24px 0 8px;padding:14px 16px;border:1px solid var(--color-line);border-left:3px solid var(--color-signal);background:var(--color-paper);color:var(--muted);font-size:var(--fs-small);line-height:1.6; }
+.draft-note { margin:24px 0 8px;padding:14px 16px;border:1px solid var(--color-line);border-left:3px solid var(--color-signal);background:var(--color-paper);color:var(--muted);font-size:var(--fs-small);line-height:1.6; }
 .legal-ssn { width:min(800px,100% - 12vw);margin:0 auto 40px;display:flex;flex-direction:column;align-items:flex-start;gap:10px; }
 .legal-ssn-logo { display:block;width:auto;height:auto;max-height:72px;object-fit:contain; }
 .legal-ssn-line { margin:0;color:var(--muted);font-size:var(--fs-small); }

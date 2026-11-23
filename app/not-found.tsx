@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { SiteFooter } from '@/components/site-footer'
 import { SiteHeader } from '@/components/site-header'
+import { getSectors } from '@/lib/sectors-server'
 import { getSiteSettings } from '@/lib/site-settings-server'
 
 export const metadata: Metadata = {
@@ -10,11 +11,11 @@ export const metadata: Metadata = {
 }
 
 export default async function NotFound() {
-  const settings = await getSiteSettings()
+  const [settings, sectors] = await Promise.all([getSiteSettings(), getSectors()])
 
   return (
     <main className="site-shell">
-      <SiteHeader />
+      <SiteHeader sectors={sectors} />
 
       <span id="contenido" tabIndex={-1} />
 

@@ -6,8 +6,10 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Menu, X } from 'lucide-react'
 import { SOCIAL_ICONS, SOCIAL_LABELS } from '@/components/social-icons'
+import { NavSectors } from '@/components/nav-sectors'
 import { defaultHomeContent } from '@/lib/content-defaults'
 import type { NavItem, SocialLink } from '@/lib/home-content'
+import type { SectorLink } from '@/lib/sectors'
 
 /**
  * Cabecera compartida por todas las páginas. Es Client Component porque el menú
@@ -17,9 +19,12 @@ import type { NavItem, SocialLink } from '@/lib/home-content'
 export function SiteHeader({
   items = defaultHomeContent.nav,
   socials = defaultHomeContent.navSocials,
+  sectors = [],
 }: {
   items?: NavItem[]
   socials?: SocialLink[]
+  /** Sectores publicados para el desplegable; vacío = sin desplegable. */
+  sectors?: SectorLink[]
 }) {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
@@ -29,6 +34,24 @@ export function SiteHeader({
   // Las rutas reales (como /blog) se dejan tal cual.
   const href = (target: string) =>
     !target.startsWith('#') ? target : onHome ? target : `/${target}`
+
+  // «Sectores» se cuela antes del CTA para que el botón de suscripción siga
+  // cerrando la fila; si no hay CTA, va al final.
+  const ctaIndex = items.findIndex((item) => item.variant === 'button')
+  const beforeCta = ctaIndex === -1 ? items : items.slice(0, ctaIndex)
+  const fromCta = ctaIndex === -1 ? [] : items.slice(ctaIndex)
+
+  const renderItem = ({ label, href: target, variant }: NavItem, index: number) => (
+    <Link
+      key={`${index}-${target}`}
+      href={href(target)}
+      className={variant === 'button' ? 'button button-dark button-navy nav-cta' : undefined}
+      aria-current={pathname === target ? 'page' : undefined}
+      onClick={() => setOpen(false)}
+    >
+      {label}
+    </Link>
+  )
 
   return (
     <header className="navbar">
@@ -44,17 +67,10 @@ export function SiteHeader({
       </Link>
 
       <nav className={`nav-links ${open ? 'is-open' : ''}`} id="menu-principal" aria-label="Principal">
-        {items.map(({ label, href: target, variant }, index) => (
-          <Link
-            key={`${index}-${target}`}
-            href={href(target)}
-            className={variant === 'button' ? 'button button-dark button-navy nav-cta' : undefined}
-            aria-current={pathname === target ? 'page' : undefined}
-            onClick={() => setOpen(false)}
-          >
-            {label}
-          </Link>
-        ))}
+        {beforeCta.map(renderItem)}
+        {/* La key por ruta remonta el panel: el header persiste entre páginas y así arranca cerrado. */}
+        <NavSectors key={pathname} sectors={sectors} onNavigate={() => setOpen(false)} />
+        {fromCta.map(renderItem)}
       </nav>
 
       <div className="navbar-actions">

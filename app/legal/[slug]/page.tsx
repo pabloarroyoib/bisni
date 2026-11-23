@@ -15,6 +15,7 @@ import {
   type SanityLegalPage,
 } from '@/lib/legal'
 import { LEGAL_ROUTES, isLegalSlug, legalHref, type LegalSlug } from '@/lib/legal-routes'
+import { getSectors } from '@/lib/sectors-server'
 import { mapSiteSettings, ssnRegistrationLabel, type SanitySiteSettings } from '@/lib/site-settings'
 import { LEGAL_PAGE_QUERY, SITE_SETTINGS_QUERY } from '@/sanity/lib/queries'
 import { sanityFetch } from '@/sanity/lib/live'
@@ -65,12 +66,13 @@ export async function generateMetadata({
 export default async function LegalPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
 
-  // Las tres rutas legales son fijas: cualquier otro slug es un 404.
+  // Las dos rutas legales son fijas: cualquier otro slug es un 404.
   if (!isLegalSlug(slug)) {
     notFound()
   }
 
   const { page, settings } = await getLegalPage(slug)
+  const sectors = await getSectors()
   const draft = isLegalDraft(page, settings)
   const lastUpdated = formatLegalDate(page.lastUpdated)
   const ssnLine = [ssnRegistrationLabel(settings), settings.ssnCondition].filter(Boolean).join(' · ')
@@ -78,7 +80,7 @@ export default async function LegalPage({ params }: { params: Promise<{ slug: st
 
   return (
     <main className="site-shell">
-      <SiteHeader />
+      <SiteHeader sectors={sectors} />
 
       <span id="contenido" tabIndex={-1} />
 
@@ -87,7 +89,7 @@ export default async function LegalPage({ params }: { params: Promise<{ slug: st
           <h1>{page.title}</h1>
           {lastUpdated && <p className="article-lead">Última actualización: {lastUpdated}</p>}
           {draft && (
-            <p className="legal-draft" role="note">
+            <p className="draft-note" role="note">
               Borrador pendiente de revisión legal. Los datos marcados como pendientes todavía no
               fueron confirmados.
             </p>

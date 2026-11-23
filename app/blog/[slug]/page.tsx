@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
 import { BlogCard } from '@/components/blog-card'
 import { mapPost, mapPosts, pickRelatedPosts, type SanityPost } from '@/lib/blog'
+import { getSectors } from '@/lib/sectors-server'
 import { getSiteSettings } from '@/lib/site-settings-server'
 import { POSTS_QUERY, POST_QUERY } from '@/sanity/lib/queries'
 import { sanityFetch } from '@/sanity/lib/live'
@@ -59,9 +60,10 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   }
 
   // Relacionados: primero los de la misma categoría, completando con los más recientes.
-  const [postsResult, settings] = await Promise.all([
+  const [postsResult, settings, sectors] = await Promise.all([
     sanityFetch({ query: POSTS_QUERY }),
     getSiteSettings(),
+    getSectors(),
   ])
   const relatedPosts = pickRelatedPosts(
     mapPosts(postsResult.data as SanityPost[] | null),
@@ -71,7 +73,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
   return (
     <main className="site-shell">
-      <SiteHeader />
+      <SiteHeader sectors={sectors} />
 
       <span id="contenido" tabIndex={-1} />
 

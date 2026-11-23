@@ -14,6 +14,7 @@ import { SiteHeader } from '@/components/site-header'
 import { gmailComposeUrl } from '@/lib/email'
 import type { BlogPost } from '@/lib/blog'
 import type { ContactIcon, HomeContent } from '@/lib/home-content'
+import type { SectorLink } from '@/lib/sectors'
 import type { ReactNode } from 'react'
 
 /** Ícono de cada dato de contacto: el select del Studio es cerrado. */
@@ -36,14 +37,16 @@ type HomePageProps = {
   contactBackground: ReactNode
   /** Pie compartido, ya renderizado en el servidor. */
   footer: ReactNode
+  /** Sectores para el desplegable del navbar, ya resueltos en el servidor. */
+  sectors?: SectorLink[]
 }
 
-export function HomePage({ content, posts, background, contactBackground, footer }: HomePageProps) {
+export function HomePage({ content, posts, background, contactBackground, footer, sectors }: HomePageProps) {
   const teaserPosts = posts.slice(0, HOME_BLOG_LIMIT)
 
   return (
     <main className="site-shell">
-      <SiteHeader items={content.nav} socials={content.navSocials} />
+      <SiteHeader items={content.nav} socials={content.navSocials} sectors={sectors} />
 
       {background}
       <span id="contenido" tabIndex={-1} />

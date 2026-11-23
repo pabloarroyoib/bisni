@@ -4,6 +4,7 @@ import { Reveal } from '@/components/reveal'
 import { SiteFooter } from '@/components/site-footer'
 import { SiteHeader } from '@/components/site-header'
 import { mapPosts, toCategoryNames, type SanityCategory, type SanityPost } from '@/lib/blog'
+import { getSectors } from '@/lib/sectors-server'
 import { getSiteSettings } from '@/lib/site-settings-server'
 import { siteUrl } from '@/lib/site'
 import { CATEGORIES_QUERY, POSTS_QUERY } from '@/sanity/lib/queries'
@@ -17,10 +18,11 @@ export const metadata: Metadata = {
 }
 
 export default async function BlogIndexPage() {
-  const [postsResult, categoriesResult, settings] = await Promise.all([
+  const [postsResult, categoriesResult, settings, sectors] = await Promise.all([
     sanityFetch({ query: POSTS_QUERY }),
     sanityFetch({ query: CATEGORIES_QUERY }),
     getSiteSettings(),
+    getSectors(),
   ])
 
   const posts = mapPosts(postsResult.data as SanityPost[] | null)
@@ -28,7 +30,7 @@ export default async function BlogIndexPage() {
 
   return (
     <main className="site-shell">
-      <SiteHeader />
+      <SiteHeader sectors={sectors} />
 
       <section className="blog blog-index section">
         <Reveal className="section-heading">
