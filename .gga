@@ -70,7 +70,7 @@
 #     opencode:openrouter/recursive/flint-v1.0:free         verificado
 #     opencode:openrouter/xingchen-agi/xing4.0-29b-a4b:free verificado
 #     opencode:openrouter/nvidia/nemotron-3.5-super-vl:free
-PROVIDER="opencode:google/gemini-3.5-flash"
+PROVIDER="opencode:openrouter/deepseek/deepseek-v4.1-flash#max"
 
 # File patterns to include in review (comma-separated)
 # Default: * (all files)
@@ -102,6 +102,8 @@ TIMEOUT="300"
 
 # OpenCode provider: optional reasoning effort / variant
 # Examples: minimal, low, medium, high, max
+# OJO: esta versión de opencode no acepta `--variant`; el esfuerzo se pide con
+# `#max` al final del modelo en PROVIDER (formato provider/modelo#variant).
 # OPENCODE_VARIANT="high"
 
 # OpenCode provider: optional agent profile
