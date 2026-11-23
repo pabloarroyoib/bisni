@@ -12,7 +12,7 @@
   --color-surface: #ffffff;
   --color-paper: #f3f6f6;
   --color-signal: #0d3858;
-  --color-signal-text: #0d3858;
+  --color-signal-text: #1a6ea8;
   --color-signal-soft: #d8eef0;
   --color-line: #dce4e3;
   --color-muted: #56696b;
@@ -83,7 +83,7 @@ h1,h2,h3,p { margin:0; } h1,h2 { font-weight:600; letter-spacing:-.02em; } h1 { 
 .button-primary { background:var(--teal); color:#fff; }
 .button-ghost { border-color:#9bbabc; color:var(--ink); background:transparent; }
 .button-dark { background:var(--ink); color:white; width:100%; }
-.button-navy { background:var(--color-signal-text); color:#fff; }
+.button-navy { background:var(--color-signal); color:#fff; }
 
 .section-kicker { color:var(--muted); text-transform:uppercase; letter-spacing:.16em; font-size:var(--fs-micro); font-weight:700; }
 
@@ -263,7 +263,7 @@ h1,h2,h3,p { margin:0; } h1,h2 { font-weight:600; letter-spacing:-.02em; } h1 { 
 .services-timeline-head .section-intro { width:300px; font-size:var(--fs-small); line-height:1.6; }
 .services-timeline-label { margin-top:14px; font-size:var(--fs-micro); font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--color-signal-text); }
 .services-timeline-progress { position:relative; height:2px; margin:0 5.5vw 26px; border-radius:2px; background:var(--color-line); }
-.services-timeline-progress-fill { position:absolute; inset:0; display:block; border-radius:2px; background:var(--color-signal); transform-origin:left center; transition:transform .5s ease; }
+.services-timeline-progress-fill { position:absolute; inset:0; display:block; border-radius:2px; background:var(--color-signal-text); transform-origin:left center; transition:transform .5s ease; }
 /* Punto de 12px con área clicable de 24px: el círculo se dibuja en el pseudo. */
 .services-timeline-dot { position:absolute; top:50%; width:24px; height:24px; margin:-12px 0 0 -12px; display:grid; place-items:center; padding:0; border:0; border-radius:50%; background:transparent; }
 .services-timeline-dot::before { content:''; width:12px; height:12px; border:1px solid var(--color-line); border-radius:50%; background:#fff; transition:border-color .25s ease, background .25s ease; }
@@ -321,7 +321,8 @@ h1,h2,h3,p { margin:0; } h1,h2 { font-weight:600; letter-spacing:-.02em; } h1 { 
    `!important`; el bloque final repone el fundido y deja afuera solo el zoom.
    `position` y `z-index` propios: los marcos tienen z-index alto y, sin un contexto
    de apilamiento acá, se pintaban por encima de las secciones vecinas. */
-.about { position:relative; z-index:1; display:grid; grid-template-columns:40fr 60fr; align-items:center; gap:clamp(40px,6vw,90px); padding:var(--section-y) 5.5vw; }
+.about { position:relative; z-index:1; display:grid; grid-template-columns:40fr 60fr; align-items:center; row-gap:0; column-gap:clamp(40px,6vw,90px); padding:var(--section-y) 5.5vw; }
+.about-kicker-reveal { grid-column:1 / -1; margin-bottom:30px; }
 .about-visual { position:relative; justify-self:center; width:100%; max-width:460px; }
 .about-stage { position:relative; width:100%; max-width:360px; margin-inline:auto; aspect-ratio:4/5; }
 .about-frame { position:absolute; inset:0; margin:0; transform:translate(var(--frame-x, 0%), var(--frame-y, 0%)) scale(var(--frame-s, 1)); transform-origin:center; will-change:transform; }
@@ -360,7 +361,7 @@ h1,h2,h3,p { margin:0; } h1,h2 { font-weight:600; letter-spacing:-.02em; } h1 { 
 .about-cta-reveal { margin-top:32px; }
 .about-cta { margin-top:0; }
 @media (max-width:900px) {
-  .about { grid-template-columns:1fr; gap:52px; padding:var(--section-y) 6vw; }
+  .about { grid-template-columns:1fr; gap:52px; padding:var(--section-y) 6vw; } .about-kicker-reveal { margin-bottom:0; }
   .about-visual { max-width:340px; justify-self:center; }
   .about-stage { max-width:300px; }
   /* Menos corrimiento lateral: en una columna los marcos no tienen margen para salirse. */
