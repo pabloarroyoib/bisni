@@ -321,7 +321,7 @@ h1,h2,h3,p { margin:0; } h1,h2 { font-weight:600; letter-spacing:-.02em; } h1 { 
    `!important`; el bloque final repone el fundido y deja afuera solo el zoom.
    `position` y `z-index` propios: los marcos tienen z-index alto y, sin un contexto
    de apilamiento acá, se pintaban por encima de las secciones vecinas. */
-.about { position:relative; z-index:1; display:grid; grid-template-columns:40fr 60fr; align-items:center; row-gap:0; column-gap:clamp(40px,6vw,90px); padding:var(--section-y) 5.5vw; }
+.about { position:relative; z-index:1; display:grid; grid-template-columns:40fr 60fr; align-items:start; row-gap:0; column-gap:clamp(40px,6vw,90px); padding:var(--section-y) 5.5vw; }
 .about-kicker-reveal { grid-column:1 / -1; margin-bottom:30px; }
 .about-visual { position:relative; justify-self:center; width:100%; max-width:460px; }
 .about-stage { position:relative; width:100%; max-width:360px; margin-inline:auto; aspect-ratio:4/5; }
