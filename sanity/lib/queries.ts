@@ -140,3 +140,31 @@ export const SITEMAP_LEGAL_QUERY = defineQuery(`*[_type == "legalPage" && review
   "lastModified": coalesce(lastUpdated, _updatedAt, _createdAt)
 }`)
 
+/**
+ * Sectores para el desplegable del navbar. Se ordenan por `order` y los que no
+ * la tienen caen al final, alfabéticos. Los borradores también aparecen: el
+ * aviso de borrador vive en la página, y así el cliente puede revisar su sector
+ * antes de aprobarlo.
+ */
+export const SECTORS_QUERY = defineQuery(`*[_type == "sector" && defined(slug.current)] | order(coalesce(order, 999) asc, title asc) {
+  title,
+  "slug": slug.current,
+  summary
+}`)
+
+/** Sector por slug. `null` cuando no existe: la página resuelve con el default o 404. */
+export const SECTOR_QUERY = defineQuery(`*[_type == "sector" && slug.current == $slug][0]{
+  title,
+  "slug": slug.current,
+  summary,
+  body,
+  reviewed,
+  seoTitle,
+  seoDescription
+}`)
+
+/** Igual que las legales: un sector sin aprobar no se anuncia en el sitemap. */
+export const SITEMAP_SECTORS_QUERY = defineQuery(`*[_type == "sector" && reviewed == true && defined(slug.current)]{
+  "slug": slug.current,
+  "lastModified": coalesce(_updatedAt, _createdAt)
+}`)

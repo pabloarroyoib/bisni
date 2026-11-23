@@ -6,6 +6,7 @@ import {postType} from './postType'
 import {authorType} from './authorType'
 import {homePageType} from './homePageType'
 import {legalPageType} from './legalPageType'
+import {sectorType} from './sectorType'
 import {siteSettingsType} from './siteSettingsType'
 import {aboutSlide} from './objects/aboutSlide'
 import {heroCard} from './objects/heroCard'
@@ -34,5 +35,6 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     homePageType,
     siteSettingsType,
     legalPageType,
+    sectorType,
   ],
 }
