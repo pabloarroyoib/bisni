@@ -39,6 +39,13 @@ export function AboutSection({ content }: { content: AboutContent }) {
 
   return (
     <section className="about" id="nosotros" aria-labelledby="nosotros-titulo">
+      {/* El kicker abre la sección desde el borde izquierdo, como en Servicios,
+          Blog y Contacto; si quedara dentro de `.about-content` arrancaría a la
+          altura de la segunda columna. */}
+      <Reveal className="about-kicker-reveal">
+        <p className="section-kicker">{content.kicker}</p>
+      </Reveal>
+
       <div
         className="about-visual"
         role="group"
@@ -127,9 +134,6 @@ export function AboutSection({ content }: { content: AboutContent }) {
       </div>
 
       <div className="about-content">
-        <Reveal>
-          <p className="section-kicker">{content.kicker}</p>
-        </Reveal>
         <Reveal>
           <h2 id="nosotros-titulo">
             <MultilineText text={content.title} />
