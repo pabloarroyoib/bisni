@@ -247,7 +247,7 @@ h1,h2,h3,p { margin:0; } h1,h2 { font-weight:600; letter-spacing:-.02em; } h1 { 
 .hero-card h3 { font-size:19px;font-weight:600;line-height:1.25;letter-spacing:-.02em;margin-bottom:10px; }
 .hero-card p { color:var(--color-muted);font-size:var(--fs-small);line-height:1.65; }
 .hero-card-2 { margin-top:48px; }
-.hero-card-3 { grid-column:1 / -1;margin-top:-24px; }
+.hero-card-3 { grid-column:1 / -1;margin-top:-14px; }
 @media (max-width:1050px) { .hero-inner { grid-template-columns:1fr;gap:40px; } .hero-text { position:static; } }
 @media (max-width:650px) { .hero { padding:56px 6vw var(--section-y); } .hero-cards { grid-template-columns:1fr;gap:18px; } .hero-card-2,.hero-card-3 { margin-top:0; } .hero-card { padding:24px; } }
 
