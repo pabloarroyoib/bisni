@@ -23,7 +23,12 @@ export function AboutSection({ content }: { content: AboutContent }) {
   const { slides } = content
   const total = slides.length
   const [current, setCurrent] = useState(0)
-  const [paused, setPaused] = useState(false)
+  // Dos fuentes de pausa independientes: el mouse (`hover`) y el foco de teclado.
+  // Con un solo booleano, un `blur` mientras el mouse seguía encima reanudaba por
+  // error, y un `mouseleave` con foco adentro arrancaba de más.
+  const [hovering, setHovering] = useState(false)
+  const [focusWithin, setFocusWithin] = useState(false)
+  const paused = hovering || focusWithin
 
   // setTimeout dependiente de `current`: al elegir un punto, el temporizador se
   // reinicia solo porque el efecto se vuelve a montar.
@@ -50,10 +55,17 @@ export function AboutSection({ content }: { content: AboutContent }) {
         className="about-visual"
         role="group"
         aria-label="Imágenes de Nosotros"
-        onMouseEnter={() => setPaused(true)}
-        onMouseLeave={() => setPaused(false)}
-        onFocusCapture={() => setPaused(true)}
-        onBlurCapture={() => setPaused(false)}
+        onMouseEnter={() => setHovering(true)}
+        onMouseLeave={() => setHovering(false)}
+        onFocusCapture={(event) => {
+          // Solo pausa el foco de teclado: el que deja un clic del mouse no
+          // debe congelar el carrusel, que era el caso en que quedaba trabado
+          // hasta hacer clic en otra parte de la página.
+          if (event.target instanceof HTMLElement && event.target.matches(':focus-visible')) {
+            setFocusWithin(true)
+          }
+        }}
+        onBlurCapture={() => setFocusWithin(false)}
       >
         <div className="about-stage">
           {FRAMES.map((frame, frameIndex) => {
@@ -95,7 +107,7 @@ export function AboutSection({ content }: { content: AboutContent }) {
                           alt={isFront && index === target ? slide.alt : ''}
                           fill
                           sizes="(max-width: 900px) 72vw, 30vw"
-                          priority={isFront && index === 0}
+                          preload={isFront && index === 0}
                           className="about-image"
                           style={slide.isLogo ? { objectFit: 'contain', padding: `${slide.pad ?? 14}%` } : undefined}
                         />

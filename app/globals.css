@@ -341,7 +341,7 @@ h1,h2,h3,p { margin:0; } h1,h2 { font-weight:600; letter-spacing:-.02em; } h1 { 
 .about-layer-logo { background:var(--color-surface); }
 .about-frame:not(:first-child) .about-layer-logo { background:var(--color-signal-soft); }
 .about-image { object-fit:cover; }
-.about-captions { position:absolute; left:0; right:0; top:calc(100% + 18px); height:64px; }
+.about-captions { position:absolute; left:0; right:0; top:calc(100% + 18px); height:64px; pointer-events:none; }
 /* El que sale se apaga en .35s; el que entra espera .4s y sube, así nunca se
    superponen dos textos en pantalla. */
 .about-caption { position:absolute; inset:0; opacity:0; transform:translateY(8px); transition:opacity .35s ease, transform .35s ease; }
