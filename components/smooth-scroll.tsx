@@ -1,9 +1,9 @@
 'use client'
 
 import type { LenisOptions } from 'lenis'
-import { ReactLenis } from 'lenis/react'
+import { ReactLenis, type LenisRef } from 'lenis/react'
 import { usePathname } from 'next/navigation'
-import { useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 
 /* Opciones verificadas contra el README y los tipos de lenis 1.3.27.
    `lerp: .25` se eligió midiendo: .12 repartía una muesca de 100px en 34 frames
@@ -19,6 +19,9 @@ const LENIS_OPTIONS = {
 } satisfies LenisOptions
 
 const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)'
+
+/** Salto actual del navbar sticky: el mismo `scroll-margin-top` del CSS. */
+const ANCHOR_OFFSET = 96
 
 /**
  * Scroll suave global con Lenis.
@@ -43,6 +46,8 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
   const pathname = usePathname()
   const isStudio = pathname === '/studio' || pathname.startsWith('/studio/')
   const [reduceMotion, setReduceMotion] = useState<boolean | null>(null)
+  const lenisRef = useRef<LenisRef>(null)
+  const active = reduceMotion === false && !isStudio
 
   useEffect(() => {
     const query = window.matchMedia(REDUCED_MOTION_QUERY)
@@ -52,10 +57,50 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
     return () => query.removeEventListener('change', sync)
   }, [])
 
+  // Los anclajes (`#servicios`, `/#contacto`) los resuelve Next con un salto
+  // nativo a `scrollIntoView`, y Lenis después reanima desde donde cree que
+  // está: se ve un salto, un rebote y recién ahí el deslizamiento. Acá se
+  // intercepta el clic en fase de captura —antes que el handler de `<Link>`— y
+  // el desplazamiento lo hace Lenis, sin salto previo.
+  useEffect(() => {
+    if (!active) return
+
+    const onClick = (event: MouseEvent) => {
+      if (event.defaultPrevented || event.button !== 0) return
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+
+      const target = event.target
+      if (!(target instanceof Element)) return
+
+      const link = target.closest('a[href*="#"]')
+      const href = link?.getAttribute('href')
+      if (!href) return
+
+      const hashIndex = href.indexOf('#')
+      const path = href.slice(0, hashIndex)
+      // Solo anclas de esta misma página: `#x`, o `/#x` cuando ya estamos en la home.
+      if (path !== '' && !(path === '/' && window.location.pathname === '/')) return
+
+      const id = decodeURIComponent(href.slice(hashIndex + 1))
+      const element = id ? document.getElementById(id) : null
+      if (!element) return
+
+      const lenis = lenisRef.current?.lenis
+      if (!lenis) return
+
+      event.preventDefault()
+      lenis.scrollTo(element, { offset: -ANCHOR_OFFSET })
+      history.replaceState(null, '', `#${id}`)
+    }
+
+    document.addEventListener('click', onClick, true)
+    return () => document.removeEventListener('click', onClick, true)
+  }, [active])
+
   return (
     <>
       {children}
-      {reduceMotion === false && !isStudio ? <ReactLenis root options={LENIS_OPTIONS} /> : null}
+      {active ? <ReactLenis root ref={lenisRef} options={LENIS_OPTIONS} /> : null}
     </>
   )
 }
