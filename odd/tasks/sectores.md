@@ -1,0 +1,30 @@
+# Sectores — páginas por industria
+
+Feature de `bisni`, rama `main`. Entrada nueva en el navbar («Sectores», desplegable) y una página por sector en `/sectores/[slug]`, fuera de la home y alcanzables solo desde el desplegable.
+
+## Specs
+
+- **S1 — Navbar.** «una nueva sección en el navbar que se va a llamar "Sectores" y va a ser un desplegable».
+- **S2 — Contenido del desplegable.** «en ese desplegable estén las categorias sobre las que se enfocan los seguros».
+- **S3 — Rutas.** «Ninguna de esas secciones van a estar en el home, van a ser páginas aparte a las que solo se puede acceder mediante el boton del desplegable». No hay índice `/sectores`: cada sector es su propia página y nada más las enlaza.
+- **S4 — Contenido editable.** «Por ahora el cliente solo tiene redactado el copy del sector "Inmobiliaria". Por ahora pon texto de ejemplo, pero debe ser completamente editable en el studio». El documento del sector vive en Sanity (título, slug, resumen, cuerpo Portable Text, SEO, orden, `reviewed`); el texto de ejemplo es un default del código con aviso visible de borrador, nunca contenido indexable.
+- **S5 — Escalabilidad.** «En el futuro se van a agregar mas sectores a ese desplegable, asi que si es neecsario, piensa en ello al momento de implementarlo». La lista del desplegable se arma con los documentos publicados y ordenados por `order`; agregar un sector es crear un documento, no tocar código.
+- **S6 — Verificación.** lint, typecheck, tests y build, más navegador: el desplegable abre con teclado y mouse, cierra con Escape y con clic afuera, cada sector responde 200, un slug inexistente 404, y ninguna ruta de sector aparece en el home ni en el sitemap mientras no esté `reviewed`.
+
+## Tasks
+
+| ID | Spec | Ruta | Tarea | Estado | Commit |
+| --- | --- | --- | --- | --- | --- |
+| T1 | S4, S5 | inline | Schema `sector` (título, slug, resumen, cuerpo, orden, `reviewed`, SEO), índice y estructura del Studio | Hecha | `ecbb56d` |
+| T2 | S4, S5 | inline | `lib/sectors.ts` (tipos, mapeo, slug seguro, orden, href), default de ejemplo de Inmobiliaria, `getSectors()` cacheado y tests | Hecha | `2f807bc` |
+| T3 | S3, S4 | inline | `/sectores/[slug]`: metadata, `noindex` en borrador, `notFound()`, sitemap solo con `reviewed` | Hecha | `a943243` |
+| T4 | S1, S2, S5 | inline | Desplegable «Sectores» en `SiteHeader` (desktop y móvil, `aria-expanded`, Escape, clic afuera, cierre al navegar) + estilos | Hecha | staged |
+| T5 | S1, S3 | inline | Las cinco páginas que renderizan el header pasan los sectores publicados | Hecha | staged |
+| T6 | S4 | inline | `scripts/seed-sectors.ts` idempotente con el sector Inmobiliaria | Hecha | sin commitear |
+| T7 | S6 | inline | `README.md` y `AGENTS.md` + verificación completa | Hecha | sin commitear |
+
+## Log
+
+- **L1** (pedido verbatim): «Luego quiero que implementemos una nueva sección en el navbar que se va a llamar "Sectores" y va a ser un desplegable. La idea es que en ese desplegable estén las categorias sobre las que se enfocan los seguros. Ninguna de esas secciones van a estar en el home, van a ser páginas aparte a las que solo se puede acceder mediante el boton del desplegable. Por ahora el cliente solo tiene redactado el copy del sector "Inmobiliaria". Por ahora pon texto de ejemplo, pero debe ser completamente editable en el studio. En el futuro se van a agregar mas sectores a ese desplegable, asi que si es neecsario, piensa en ello al momento de implementarlo». Llegó después de pedir «implementa los 2 cambios propuestos» del carrusel de Nosotros.
+- **L2** (implementación y verificación): T1-T5 quedaron en tres commits (`ecbb56d` schema y queries, `2f807bc` resolución y tests, `a943243` página y sitemap); el desplegable, el seed y la documentación están en el árbol, sin commitear, porque el hook de GGA dejó de poder correr: con `deepseek-v4.1-flash#max` OpenRouter responde «This request requires more credits… You requested up to 256000 tokens, but can only afford 39527» y los modelos de Google contestan «high demand» (spike transitorio). El sitio se verificó igual contra el build de producción: `/` 200 con el desplegable antes del CTA; `/sectores` 404; `/sectores/inmobiliaria` 200 con aviso de borrador y `noindex`; `/sectores/otro` 404; sitemap sin rutas de sector; la home tiene un solo enlace a `/sectores/…` (el del navbar); el panel abre con clic y con Enter, cierra con Escape y con clic afuera; en 390 px se despliega en línea dentro del menú. 143/143 tests, lint 0, typecheck 0, build exit 0.
+- **L3** (ajustes verbatim): «elimina el span del desplegable de inmobiliaria» y «puedes hacer que el desplegable se despliegue poniendo el click encima?». El panel queda solo con el nombre de cada sector: se fue el `<span>` con el resumen y su regla CSS, y `SectorLink` dejó de llevar `summary` (la página lo sigue usando desde `Sector`); `SECTORS_QUERY` ya no lo pide. El desplegable abre con el mouse encima (`mouseenter`) y cierra al salir, solo si el puntero es fino (`hover: hover`), para que en táctil un toque no abra y cierre a la vez; el clic sigue abriendo y Escape/clic afuera siguen cerrando. El hueco de 14px entre botón y panel tiene un puente (`::before`) porque si no el mouse salía del contenedor al bajar y el panel se cerraba. Verificado en navegador: hover abre (`aria-expanded=true`, `display=block`), `elementFromPoint` en el hueco devuelve el panel, salir cierra.

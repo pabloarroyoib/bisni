@@ -139,6 +139,8 @@ app/
   page.tsx                 Home (sanityFetch + mapeo de posts)
   blog/page.tsx            Índice del blog con búsqueda y filtros
   blog/[slug]/page.tsx     Detalle del artículo
+  sectores/[slug]/page.tsx  Página por industria (solo desde el desplegable del navbar)
+  legal/[slug]/page.tsx    Aviso legal y Privacidad
   studio/[[...tool]]/      Sanity Studio embebido
   api/contact/route.ts     Endpoint del formulario
   sitemap.ts / robots.ts   SEO
@@ -160,6 +162,7 @@ sanity/                    Esquemas, queries, cliente y Live
 
 ## Contenido (Sanity)
 
+- **sector**: título, slug, resumen, cuerpo (Portable Text), orden en el desplegable, «Contenido aprobado» y SEO. Cada documento es una página en `/sectores/[slug]`, enlazada solo desde el desplegable «Sectores» del navbar: no aparece en la home y no entra al sitemap mientras no esté aprobada. Sumar una industria es crear el documento, sin tocar código.
 - **post**: título, slug, extracto, autor, imagen principal, categorías, fecha y cuerpo (Portable Text con imágenes y vídeo de YouTube/Vimeo/MP4).
 
 ### Imágenes del blog
