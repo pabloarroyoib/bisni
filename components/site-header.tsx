@@ -39,7 +39,7 @@ export function SiteHeader({
           width={508}
           height={292}
           className="brand-logo"
-          priority
+          preload
         />
       </Link>
 

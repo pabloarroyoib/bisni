@@ -113,7 +113,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               width={800}
               height={500}
               sizes="(max-width: 900px) 100vw, 800px"
-              priority
+              preload
             />
           </Reveal>
         )}

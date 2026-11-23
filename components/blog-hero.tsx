@@ -5,7 +5,7 @@ import type { BlogPost } from '@/lib/blog'
 
 /**
  * Artículo destacado: el más reciente, con imagen grande (1600×900) y jerarquía
- * propia. Es la imagen más grande de la página, por eso va con `priority`.
+ * propia. Es la imagen más grande de la página, por eso va con `preload`.
  */
 export function BlogHero({ post }: { post: BlogPost }) {
   return (
@@ -17,7 +17,7 @@ export function BlogHero({ post }: { post: BlogPost }) {
             src={post.heroImageUrl}
             alt={post.imageAlt}
             fill
-            priority
+            preload
             sizes="(max-width: 900px) 100vw, 620px"
           />
         ) : null}
