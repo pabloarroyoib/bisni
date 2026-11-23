@@ -9,10 +9,11 @@
 export type SectorLink = {
   title: string
   slug: string
-  summary: string
 }
 
 export type Sector = SectorLink & {
+  /** Resumen corto: se muestra como entrada de la página. */
+  summary: string
   /** Portable Text del cuerpo, tal como lo devuelve Sanity. */
   body: unknown
   reviewed: boolean
@@ -58,7 +59,7 @@ export function toSectorLink(raw: SanitySector | null | undefined): SectorLink |
 
   if (!title || !slug || !isSectorSlug(slug)) return undefined
 
-  return { title, slug, summary: clean(raw?.summary) ?? '' }
+  return { title, slug }
 }
 
 /**
@@ -88,11 +89,12 @@ export function resolveSector(
   if (link) {
     return {
       ...link,
+      summary: clean(raw?.summary) ?? '',
       body: raw?.body ?? [],
       reviewed: raw?.reviewed === true,
       // Sin SEO propio, el título y el resumen hacen de metadata.
       seoTitle: clean(raw?.seoTitle) ?? link.title,
-      seoDescription: clean(raw?.seoDescription) ?? link.summary,
+      seoDescription: clean(raw?.seoDescription) ?? clean(raw?.summary) ?? '',
     }
   }
 

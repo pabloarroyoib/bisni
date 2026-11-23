@@ -16,7 +16,7 @@ import { mapSectors, type SanitySector, type SectorLink } from './sectors'
  * bundle del navegador.
  */
 export const getSectors = cache(async (): Promise<SectorLink[]> => {
-  const fallback = exampleSectors.map(({ title, slug, summary }) => ({ title, slug, summary }))
+  const fallback = exampleSectors.map(({ title, slug }) => ({ title, slug }))
 
   try {
     const { data } = await sanityFetch({ query: SECTORS_QUERY })

@@ -148,8 +148,7 @@ export const SITEMAP_LEGAL_QUERY = defineQuery(`*[_type == "legalPage" && review
  */
 export const SECTORS_QUERY = defineQuery(`*[_type == "sector" && defined(slug.current)] | order(coalesce(order, 999) asc, title asc) {
   title,
-  "slug": slug.current,
-  summary
+  "slug": slug.current
 }`)
 
 /** Sector por slug. `null` cuando no existe: la página resuelve con el default o 404. */

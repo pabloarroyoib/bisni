@@ -30,11 +30,10 @@ describe('sectorHref', () => {
 })
 
 describe('toSectorLink', () => {
-  it('normaliza espacios y usa string vacío sin resumen', () => {
+  it('normaliza espacios en título y slug', () => {
     expect(toSectorLink({ title: '  Inmobiliaria ', slug: ' inmobiliaria ', summary: null })).toEqual({
       title: 'Inmobiliaria',
       slug: 'inmobiliaria',
-      summary: '',
     })
   })
 
