@@ -17,7 +17,7 @@ const FRAMES = [
   { x: '24%', y: '-12%', scale: 0.76, blur: 5, opacity: 0.8, zIndex: 1 },
 ]
 
-const ROTATION_MS = 4000
+const ROTATION_MS = 1800
 
 export function AboutSection({ content }: { content: AboutContent }) {
   const { slides } = content
