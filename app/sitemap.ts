@@ -1,8 +1,9 @@
 import type { MetadataRoute } from 'next'
 import { isLegalSlug } from '@/lib/legal-routes'
+import { isSectorSlug } from '@/lib/sectors'
 import { siteUrl } from '@/lib/site'
 import { client } from '@/sanity/lib/client'
-import { SITEMAP_LEGAL_QUERY, SITEMAP_QUERY } from '@/sanity/lib/queries'
+import { SITEMAP_LEGAL_QUERY, SITEMAP_QUERY, SITEMAP_SECTORS_QUERY } from '@/sanity/lib/queries'
 
 type SitemapPost = {
   slug: string
@@ -35,9 +36,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ]
 
   try {
-    const [posts, legalPages] = await Promise.all([
+    const [posts, legalPages, sectors] = await Promise.all([
       client.fetch(SITEMAP_QUERY) as Promise<SitemapPost[] | null>,
       client.fetch(SITEMAP_LEGAL_QUERY) as Promise<SitemapPost[] | null>,
+      client.fetch(SITEMAP_SECTORS_QUERY) as Promise<SitemapPost[] | null>,
     ])
 
     return [
@@ -49,6 +51,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           lastModified: post.lastModified ? new Date(post.lastModified) : undefined,
           changeFrequency: 'yearly' as const,
           priority: 0.6,
+        })),
+      // Cada sector aprobado es una página más; un borrador no se anuncia ni con
+      // un slug válido.
+      ...(sectors ?? [])
+        .filter((sector) => Boolean(sector.slug) && isSectorSlug(sector.slug))
+        .map((sector) => ({
+          url: `${siteUrl}/sectores/${sector.slug}`,
+          lastModified: sitemapDate(sector.lastModified),
+          changeFrequency: 'yearly' as const,
+          priority: 0.5,
         })),
       // Solo se anuncian las páginas legales aprobadas y con un slug conocido;
       // una ruta legal no puede inventarse desde el CMS.
