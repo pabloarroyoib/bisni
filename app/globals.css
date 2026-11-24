@@ -471,13 +471,13 @@ h1,h2,h3,p { margin:0; } h1,h2 { font-weight:600; letter-spacing:-.02em; } h1 { 
    borrador es visible hasta que el cliente carga los datos y aprueba el texto. */
 .draft-note { margin:24px 0 8px;padding:14px 16px;border:1px solid var(--color-line);border-left:3px solid var(--color-signal);background:var(--color-paper);color:var(--muted);font-size:var(--fs-small);line-height:1.6; }
 .legal-ssn { width:min(800px,100% - 12vw);margin:0 auto 40px;display:flex;flex-direction:column;align-items:flex-start;gap:10px; }
-.legal-ssn-logo { display:block;width:auto;height:auto;max-height:72px;object-fit:contain; }
+.legal-ssn-logo { display:block;width:auto;height:auto;max-height:72px;object-fit:contain;background:#1e2748;padding:8px 12px;border-radius:6px; }
 .legal-ssn-line { margin:0;color:var(--muted);font-size:var(--fs-small); }
 .legal-links { width:min(800px,100% - 12vw);margin:0 auto;padding-bottom:80px;display:flex;flex-wrap:wrap;gap:18px;font-size:var(--fs-small); }
 .legal-links a { color:var(--color-signal-text);text-decoration:underline;text-underline-offset:3px; }
 /* Matrícula en el footer. El logo va sobre una placa clara para que se lea
    igual sobre el fondo oscuro, sea cual sea el archivo que suba el cliente. */
 .footer-main>div:first-child .footer-ssn { display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-top:14px;font-size:var(--fs-small);color:var(--color-on-dark-muted); }
-.footer-ssn-logo { width:auto;height:auto;max-height:64px;object-fit:contain;background:#fff;padding:4px 6px;border-radius:4px; }
+.footer-ssn-logo { width:auto;height:auto;max-height:48px;max-width:250px;object-fit:contain; }
 .privacy-note a { color:inherit;text-decoration:underline;text-underline-offset:2px; }
 .privacy-note a:hover { color:#fff; }
