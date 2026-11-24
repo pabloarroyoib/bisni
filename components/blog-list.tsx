@@ -10,6 +10,12 @@ import type { BlogPost } from '@/lib/blog'
 type BlogListProps = {
   posts: BlogPost[]
   categories: string[]
+  /** Textos editables desde la portada del blog en el Studio. */
+  copy: {
+    searchPlaceholder: string
+    emptyNoPosts: string
+    emptyNoResults: string
+  }
 }
 
 /** Cada cuántas tarjetas entra una ancha (ocupa dos columnas). */
@@ -21,7 +27,7 @@ const WIDE_EVERY = 5
  * El destacado se muestra solo sin filtros activos: si alguien busca o filtra,
  * los resultados aparecen todos en la grilla, sin jerarquía artificial.
  */
-export function BlogList({ posts, categories }: BlogListProps) {
+export function BlogList({ posts, categories, copy }: BlogListProps) {
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState('Todos')
 
@@ -30,7 +36,7 @@ export function BlogList({ posts, categories }: BlogListProps) {
       posts.filter(
         (post) =>
           (category === 'Todos' || post.categories.includes(category)) &&
-          `${post.title} ${post.excerpt}`.toLowerCase().includes(query.toLowerCase()),
+          `${post.title} ${post.excerpt}`.toLowerCase().includes(query.trim().toLowerCase()),
       ),
     [category, posts, query],
   )
@@ -47,7 +53,7 @@ export function BlogList({ posts, categories }: BlogListProps) {
           <span className="sr-only">Buscar artículos</span>
           <input
             type="search"
-            placeholder="Buscar artículos..."
+            placeholder={copy.searchPlaceholder}
             value={query}
             onChange={(event) => setQuery(event.target.value)}
           />
@@ -87,9 +93,7 @@ export function BlogList({ posts, categories }: BlogListProps) {
       {filteredPosts.length === 0 ? (
         <Reveal>
           <p className="blog-empty">
-            {posts.length === 0
-              ? 'Aún no hay artículos publicados. Cuando publiques un artículo en el Studio, aparecerá aquí.'
-              : 'No hay artículos que coincidan con tu búsqueda.'}
+            {posts.length === 0 ? copy.emptyNoPosts : copy.emptyNoResults}
           </p>
         </Reveal>
       ) : (

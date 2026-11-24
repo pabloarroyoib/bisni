@@ -4,6 +4,7 @@ import {blockContentType} from './blockContentType'
 import {categoryType} from './categoryType'
 import {postType} from './postType'
 import {authorType} from './authorType'
+import {blogPageType} from './blogPageType'
 import {homePageType} from './homePageType'
 import {legalPageType} from './legalPageType'
 import {sectorType} from './sectorType'
@@ -22,6 +23,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
     blockContentType,
     categoryType,
+    blogPageType,
     postType,
     authorType,
     linkItem,

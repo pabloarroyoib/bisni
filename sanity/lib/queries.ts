@@ -140,6 +140,20 @@ export const SITEMAP_LEGAL_QUERY = defineQuery(`*[_type == "legalPage" && define
 }`)
 
 /**
+ * Portada del blog: singleton con el título, la bajada y los textos de la lista.
+ */
+export const BLOG_PAGE_QUERY = defineQuery(`*[_id == "blogPage"][0]{
+  title,
+  titleEmphasis,
+  intro,
+  searchPlaceholder,
+  emptyNoPosts,
+  emptyNoResults,
+  seoTitle,
+  seoDescription
+}`)
+
+/**
  * Sectores para el desplegable del navbar. Se ordenan por `order` y los que no
  * la tienen caen al final, alfabéticos. Los borradores también aparecen: el
  * aviso de borrador vive en la página, y así el cliente puede revisar su sector
