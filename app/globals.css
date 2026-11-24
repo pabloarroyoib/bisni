@@ -13,6 +13,8 @@
   --color-paper: #f3f6f6;
   --color-signal: #0d3858;
   --color-signal-text: #1a6ea8;
+  /* Color de los botones rellenos (pedido del usuario): no se usa en textos. */
+  --color-button: #0b158c;
   --color-signal-soft: #d8eef0;
   --color-line: #dce4e3;
   --color-muted: #56696b;
@@ -94,10 +96,10 @@ h1,h2,h3,p { margin:0; } h1,h2 { font-weight:600; letter-spacing:-.02em; } h1 { 
 .hero-copy { max-width:720px; margin:24px 0 0; line-height:1.7; color:var(--muted); font-size:var(--fs-lead); }
 
 .button { padding:15px 20px; border:1px solid transparent; }
-.button-primary { background:var(--teal); color:#fff; }
+.button-primary { background:var(--color-button); color:#fff; }
 .button-ghost { border-color:#9bbabc; color:var(--ink); background:transparent; }
-.button-dark { background:var(--ink); color:white; width:100%; }
-.button-navy { background:var(--color-signal); color:#fff; }
+.button-dark { background:var(--color-button); color:white; width:100%; }
+.button-navy { background:var(--color-button); color:#fff; }
 
 .section-kicker { color:var(--muted); text-transform:uppercase; letter-spacing:.16em; font-size:var(--fs-micro); font-weight:700; }
 
