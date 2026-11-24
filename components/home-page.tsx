@@ -143,6 +143,8 @@ export function HomePage({ content, posts, background, contactBackground, footer
             <MultilineText text={content.contact.title} />
           </h2>
           <p>{content.contact.paragraph}</p>
+        </Reveal>
+        <Reveal className="contact-details-reveal">
           <div className="contact-details">
             {content.contact.details.map((detail, index) => {
               const Icon = CONTACT_ICONS[detail.icon]
@@ -174,6 +176,7 @@ export function HomePage({ content, posts, background, contactBackground, footer
             })}
           </div>
         </Reveal>
+
         <Reveal className="contact-form-reveal">
           <ContactForm
             copy={content.contact.form}

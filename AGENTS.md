@@ -149,6 +149,7 @@ opencode.jsonc                Agente `gga-reviewer` de solo lectura para el hook
   - El SVG lleva `inset:-10%` de sobremedida para que la deriva no descubra los bordes.
   - **Piso de perceptibilidad**: `#0e7f8c` al 7,5% sobre blanco da ~1,06:1 de contraste — invisible. Necesita ~0,5 de opacidad para llegar a ~2:1.
   - Las secciones claras (`hero`, `services`, `blog`) no llevan fondo propio para que la textura las atraviese; `tools-section` conserva su ritmo con `rgba(243,246,246,.72)`.
+- **Sección de contacto**: en escritorio es una grilla de dos columnas —título y datos del sitio a la izquierda, formulario a la derecha— y en móvil (≤650px) el `order` del CSS la reordena a título → formulario → datos, para que el formulario no quede después de los datos. `.contact-details` es un item propio de la grilla (`.contact-details-reveal`), no vive dentro de `.contact-copy`.
 - **Columna de lectura** (`.article-header`, `.article-hero-image`, `.article-content`, `.article-footer`): `width: min(800px, 100% - 12vw)`. No volver a `max-width: 800px` + `padding: 0 9vw`: el padding se resta del ancho máximo y el texto queda en ~541px, desalineado con la imagen.
 - **Texto largo sin espacios**: `.article-body` y `.article-header` usan `overflow-wrap: anywhere` para que URLs o hashes no desborden la columna.
 - **Navbar sticky**: requiere que `.site-shell` use `overflow: clip` (no `hidden`), porque un ancestro con `overflow: hidden` crea un contenedor de scroll y rompe el `sticky`.
