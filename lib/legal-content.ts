@@ -191,7 +191,7 @@ const PRIVACIDAD_BODY: LegalBlock[] = [
   ),
   p(
     'pp-consentimiento-p2',
-    '[PENDIENTE: confirmar si el alta de la suscripción para recibir novedades sigue siendo directa (sin correo de confirmación) o si se activa doble opt-in. El texto debe describir el mecanismo real.]',
+    'El alta de la suscripción es directa: al enviar el formulario la suscripción queda activa, sin correo de confirmación previo. Cada envío incluye un enlace para darse de baja y para actualizar las preferencias.',
   ),
 
   h2('pp-proveedores', 'Proveedores y transferencias'),
@@ -207,11 +207,11 @@ const PRIVACIDAD_BODY: LegalBlock[] = [
   h2('pp-conservacion', 'Conservación'),
   p(
     'pp-conservacion-p1',
-    'Las consultas del formulario se conservan mientras dure la relación y hasta [PENDIENTE: plazo] después del último contacto.',
+    'Las consultas del formulario se conservan mientras dure la relación y hasta que la persona solicite su supresión.',
   ),
   p(
     'pp-conservacion-p2',
-    'Los datos de la suscripción para recibir novedades se conservan hasta la baja o hasta [PENDIENTE: plazo] de inactividad.',
+    'Los datos de la suscripción para recibir novedades se conservan hasta que la persona se da de baja mediante el enlace de cada envío o solicita su supresión.',
   ),
   p(
     'pp-conservacion-p3',
