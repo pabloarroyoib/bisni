@@ -81,6 +81,7 @@ async function sendBySmtp(config: SmtpConfig, payload: ContactSubmission): Promi
       name: payload.name,
       company: payload.company,
       email: payload.email,
+      ...(payload.phone ? {phone: payload.phone} : {}),
       message: payload.message,
     },
     {

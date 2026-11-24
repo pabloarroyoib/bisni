@@ -146,6 +146,7 @@ const validBody = {
   company: 'Acme SL',
   email: 'marta@acme.com',
   message: 'Necesitamos revisar nuestra matriz de riesgos.',
+  phone: '+54 387 555 1234',
 }
 
 function contactRequest(ip: string): Request {
@@ -259,6 +260,9 @@ describe('POST /api/contact', () => {
     const sent = mailer.sendMail.mock.calls[0]?.[0]
     expect(sent?.text).toContain('Nombre: Marta Ruiz')
     expect(sent?.html).toContain('mailto:marta@acme.com')
+    // El teléfono viaja en el mail: antes se perdía en el camino al transporte.
+    expect(sent?.text).toContain('Teléfono: +54 387 555 1234')
+    expect(sent?.html).toContain('Teléfono:')
   })
 
   it('usa secure:false cuando el puerto no es 465', async () => {
