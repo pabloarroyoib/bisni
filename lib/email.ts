@@ -9,11 +9,11 @@
  * No se usa Gmail como enlace principal a propósito: forzarlo dejaría afuera a
  * quien no tiene cuenta de Google o no está logueado en el navegador.
  */
-// TODO(rebrand): el correo sigue siendo el de bisni.es porque es la casilla real
-// y la que recibe las consultas. Al pasar a GROU Asesores, cambiar dirección.
-// El asunto ya no depende del dominio: mientras el dominio definitivo no esté
-// definido, usar el nombre de la marca evita arrastrar el mockup a los mails.
-export const CONTACT_EMAIL = 'hola@bisni.es'
+// `CONTACT_EMAIL` es solo el respaldo del código: la fuente de verdad es
+// `siteSettings.email`, que se edita desde el Studio y hoy apunta al buzón real
+// del cliente. Este valor lo usan la página de error y los formularios cuando no
+// reciben los datos del sitio, así que tiene que ser una casilla que exista.
+export const CONTACT_EMAIL = 'parroyo@grouasesores.com.ar'
 export const CONTACT_SUBJECT = 'Consulta desde GROU Asesores'
 
 /** `mailto:` con asunto opcional, ya codificado. */

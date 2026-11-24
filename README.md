@@ -92,14 +92,14 @@ Es la vía principal. Si están definidas `SMTP_USER`, `SMTP_PASS` y `CONTACT_TO
 | --- | --- | --- |
 | `SMTP_HOST` | `smtp.zoho.com` | Servidor SMTP de Zoho. |
 | `SMTP_PORT` | `465` | `465` usa SSL directo; `587` usa STARTTLS. |
-| `SMTP_USER` | — | Cuenta completa de Zoho Mail (por ejemplo `hola@bisni.es`). |
+| `SMTP_USER` | — | Cuenta completa de Zoho Mail (por ejemplo `parroyo@grouasesores.com.ar`). |
 | `SMTP_PASS` | — | Contraseña de aplicación de Zoho Mail. |
 | `CONTACT_FROM` | `SMTP_USER` | Remitente visible del email. |
 | `CONTACT_TO` | — | Buzón que recibe las consultas. |
 
 **Contraseña de aplicación, no la de la cuenta:** en Zoho Mail, `Configuración → Seguridad → Contraseñas de aplicación`. Requiere la verificación en dos pasos activada; Zoho muestra la contraseña una sola vez, así que cópiala directamente a `SMTP_PASS`. Revócala desde el mismo panel si se filtra.
 
-`CONTACT_FROM` debe ser del **mismo dominio** que `SMTP_USER` (por ejemplo `hola@bisni.es`): Zoho firma con el dominio de la cuenta y un remitente ajeno dispara los filtros de spam. El asunto identifica al remitente (`Nueva consulta de <nombre> (<empresa>)`, máximo 120 caracteres y sin CR/LF para evitar inyección de cabeceras) y el `Reply-To` apunta al email del formulario, así que responder desde el buzón contesta al visitante.
+`CONTACT_FROM` debe ser del **mismo dominio** que `SMTP_USER` (por ejemplo `parroyo@grouasesores.com.ar`): Zoho firma con el dominio de la cuenta y un remitente ajeno dispara los filtros de spam. El asunto identifica al remitente (`Nueva consulta de <nombre> (<empresa>)`, máximo 120 caracteres y sin CR/LF para evitar inyección de cabeceras) y el `Reply-To` apunta al email del formulario, así que responder desde el buzón contesta al visitante.
 
 El email se construye en `lib/contact-email.ts` (función pura, sin dependencias): versión en texto plano y HTML con todos los valores escapados y los saltos de línea del mensaje preservados.
 
@@ -110,7 +110,7 @@ Sin configuración SMTP, si existe `CONTACT_WEBHOOK_URL` el endpoint hace `POST`
 ### Sin ninguna vía configurada
 
 - En desarrollo: el envío se registra en la consola del servidor.
-- En producción: la API responde `503` y la UI muestra un fallback a `hola@bisni.es`.
+- En producción: la API responde `503` y la UI muestra un fallback al email de `siteSettings` (`parroyo@grouasesores.com.ar`).
 
 Un fallo de entrega (SMTP o webhook) responde `502`, así que el cliente sigue funcionando sin cambios. La vía SMTP usa el runtime de Node (`export const runtime = 'nodejs'`), porque `nodemailer` necesita sockets TCP.
 
