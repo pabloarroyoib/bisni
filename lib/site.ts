@@ -6,6 +6,9 @@ export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://bisni.es').
 /** Host canónico, sin protocolo ni path. Se usa en textos de origen de los mails. */
 export const siteHost = siteUrl.replace(/^https?:\/\//i, '').replace(/\/.*$/, '')
 
+/** Respaldo del enlace del logo de la SSN cuando `siteSettings.ssnUrl` está vacío. */
+export const SSN_SITE_URL = 'https://www.ssn.gob.ar'
+
 export const siteName = 'GROU Asesores'
 
 export const siteDescription =

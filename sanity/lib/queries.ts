@@ -127,15 +127,11 @@ export const LEGAL_PAGE_QUERY = defineQuery(`*[_type == "legalPage" && slug.curr
   body,
   lastUpdated,
   seoTitle,
-  seoDescription,
-  reviewed
+  seoDescription
 }`)
 
-/**
- * Solo las páginas legales aprobadas entran al sitemap: un texto sin revisar no
- * se indexa, así que tampoco se anuncia.
- */
-export const SITEMAP_LEGAL_QUERY = defineQuery(`*[_type == "legalPage" && reviewed == true && defined(slug.current)]{
+/** Las páginas legales entran al sitemap en cuanto el documento existe. */
+export const SITEMAP_LEGAL_QUERY = defineQuery(`*[_type == "legalPage" && defined(slug.current)]{
   "slug": slug.current,
   "lastModified": coalesce(lastUpdated, _updatedAt, _createdAt)
 }`)

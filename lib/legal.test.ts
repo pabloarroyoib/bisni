@@ -2,14 +2,12 @@ import { describe, expect, it } from 'vitest'
 import {
   formatLegalDate,
   interpolateLegalText,
-  isLegalDraft,
   legalPlainText,
   resolveLegalBlocks,
   resolveLegalPage,
-  type LegalPageContent,
 } from '@/lib/legal'
 import { LEGAL_DRAFTS } from '@/lib/legal-content'
-import { LEGAL_ROUTES, legalHref, type LegalSlug } from '@/lib/legal-routes'
+import { LEGAL_ROUTES, legalHref } from '@/lib/legal-routes'
 import { siteUrl } from '@/lib/site'
 import { defaultSiteSettings, type SiteSettings } from '@/lib/site-settings'
 
@@ -31,17 +29,6 @@ const completeSettings: SiteSettings = {
   ssnRegistry: 'Registro de Productores Asesores de Seguros',
 }
 
-/** Los mismos datos, pero sin matrícula ni condición ante la SSN. */
-const settingsWithoutSsn: SiteSettings = {
-  ...completeSettings,
-  ssnCondition: '',
-  ssnRegistration: '',
-}
-
-function legalPage(slug: LegalSlug, overrides: Partial<LegalPageContent> = {}): LegalPageContent {
-  return { ...resolveLegalPage(slug, null), ...overrides }
-}
-
 describe('resolveLegalPage', () => {
   it('cae al borrador estático cuando el documento todavía no existe', () => {
     const page = resolveLegalPage('privacidad', null)
@@ -53,7 +40,6 @@ describe('resolveLegalPage', () => {
     expect(page.seoTitle).toBe(draft.title)
     expect(page.lastUpdated).toBeNull()
     // Sin documento no hay aprobación: la página sigue siendo borrador.
-    expect(page.reviewed).toBe(false)
   })
 
   it('prefiere los campos del documento y usa el borrador solo en los vacíos', () => {
@@ -74,7 +60,6 @@ describe('resolveLegalPage', () => {
       lastUpdated: '2026-11-12',
       seoTitle: '   ',
       seoDescription: 'Descripción del documento.',
-      reviewed: true,
     })
 
     expect(page.title).toBe('Aviso legal (revisado)')
@@ -83,14 +68,7 @@ describe('resolveLegalPage', () => {
     expect(page.seoDescription).toBe('Descripción del documento.')
     // Un SEO vacío cae al título resuelto, no a un texto en blanco.
     expect(page.seoTitle).toBe('Aviso legal (revisado)')
-    expect(page.reviewed).toBe(true)
     expect(page.slug).toBe('aviso-legal')
-  })
-
-  it('considera revisada la página solo con reviewed === true', () => {
-    expect(resolveLegalPage('privacidad', {}).reviewed).toBe(false)
-    expect(resolveLegalPage('privacidad', { reviewed: false }).reviewed).toBe(false)
-    expect(resolveLegalPage('privacidad', { reviewed: true }).reviewed).toBe(true)
   })
 })
 
@@ -201,24 +179,6 @@ describe('formatLegalDate', () => {
   })
 })
 
-describe('isLegalDraft', () => {
-  it('es borrador mientras el texto no esté revisado', () => {
-    expect(isLegalDraft(legalPage('privacidad', { reviewed: false }), completeSettings)).toBe(true)
-  })
-
-  it('es borrador mientras falten datos del responsable', () => {
-    expect(isLegalDraft(legalPage('privacidad', { reviewed: true }), defaultSiteSettings)).toBe(true)
-  })
-
-  it('el aviso legal es borrador mientras falte la matrícula SSN', () => {
-    expect(isLegalDraft(legalPage('aviso-legal', { reviewed: true }), settingsWithoutSsn)).toBe(true)
-  })
-
-  it('deja de ser borrador cuando el texto está revisado y los datos están completos', () => {
-    expect(isLegalDraft(legalPage('aviso-legal', { reviewed: true }), completeSettings)).toBe(false)
-    expect(isLegalDraft(legalPage('privacidad', { reviewed: true }), settingsWithoutSsn)).toBe(false)
-  })
-})
 
 describe('legalPlainText', () => {
   it('encuentra una frase del aviso legal y otra de la política de privacidad', () => {

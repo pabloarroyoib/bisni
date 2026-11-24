@@ -8,6 +8,7 @@ import { defaultHomeContent } from '@/lib/content-defaults'
 import { mailtoHref } from '@/lib/email'
 import type { FooterContent, SocialLink } from '@/lib/home-content'
 import { LEGAL_ROUTES, legalHref } from '@/lib/legal-routes'
+import { SSN_SITE_URL } from '@/lib/site'
 import { defaultSiteSettings, ssnRegistrationLabel, type SiteSettings } from '@/lib/site-settings'
 
 /** Pie compartido por todas las páginas. Estático: Server Component. */
@@ -42,7 +43,7 @@ export function SiteFooter({
               <span>{registration}</span>
               {settings.ssnShowInFooter && settings.ssnLogo && (
                 <a
-                  href={settings.ssnUrl || 'https://www.ssn.gob.ar'}
+                  href={settings.ssnUrl || SSN_SITE_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                 >

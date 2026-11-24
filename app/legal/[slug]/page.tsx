@@ -9,13 +9,13 @@ import { SiteFooter } from '@/components/site-footer'
 import { SiteHeader } from '@/components/site-header'
 import {
   formatLegalDate,
-  isLegalDraft,
   resolveLegalBlocks,
   resolveLegalPage,
   type SanityLegalPage,
 } from '@/lib/legal'
 import { LEGAL_ROUTES, isLegalSlug, legalHref, type LegalSlug } from '@/lib/legal-routes'
 import { getSectors } from '@/lib/sectors-server'
+import { SSN_SITE_URL } from '@/lib/site'
 import { mapSiteSettings, ssnRegistrationLabel, type SanitySiteSettings } from '@/lib/site-settings'
 import { LEGAL_PAGE_QUERY, SITE_SETTINGS_QUERY } from '@/sanity/lib/queries'
 import { sanityFetch } from '@/sanity/lib/live'
@@ -44,8 +44,7 @@ export async function generateMetadata({
     return { title: 'Página no encontrada' }
   }
 
-  const { page, settings } = await getLegalPage(slug)
-  const draft = isLegalDraft(page, settings)
+  const { page } = await getLegalPage(slug)
 
   return {
     title: page.seoTitle,
@@ -53,8 +52,6 @@ export async function generateMetadata({
     alternates: {
       canonical: legalHref(slug),
     },
-    // Un texto sin revisar no se indexa, pero sus enlaces sí se siguen.
-    robots: { index: !draft, follow: true },
     openGraph: {
       type: 'website',
       title: page.seoTitle,
@@ -73,7 +70,6 @@ export default async function LegalPage({ params }: { params: Promise<{ slug: st
 
   const { page, settings } = await getLegalPage(slug)
   const sectors = await getSectors()
-  const draft = isLegalDraft(page, settings)
   const lastUpdated = formatLegalDate(page.lastUpdated)
   const ssnLine = [ssnRegistrationLabel(settings), settings.ssnCondition].filter(Boolean).join(' · ')
   const otherPages = LEGAL_ROUTES.filter((route) => route.slug !== page.slug)
@@ -88,12 +84,6 @@ export default async function LegalPage({ params }: { params: Promise<{ slug: st
         <Reveal className="article-header legal-header">
           <h1>{page.title}</h1>
           {lastUpdated && <p className="article-lead">Última actualización: {lastUpdated}</p>}
-          {draft && (
-            <p className="draft-note" role="note">
-              Borrador pendiente de revisión legal. Los datos marcados como pendientes todavía no
-              fueron confirmados.
-            </p>
-          )}
         </Reveal>
 
         {/* Procedencia de la matrícula: el logo de la SSN solo va en el aviso legal
@@ -101,7 +91,7 @@ export default async function LegalPage({ params }: { params: Promise<{ slug: st
         {page.slug === 'aviso-legal' && settings.ssnLogo && (
           <div className="legal-ssn">
             <a
-              href={settings.ssnUrl || 'https://www.ssn.gob.ar'}
+              href={settings.ssnUrl || SSN_SITE_URL}
               target="_blank"
               rel="noopener noreferrer"
             >

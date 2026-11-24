@@ -3,8 +3,6 @@ import type { LegalSlug } from './legal-routes'
 import { siteUrl } from './site'
 import {
   dataRightsEmail,
-  hasSsnData,
-  isSiteSettingsComplete,
   ssnRegistrationLabel,
   type SiteSettings,
 } from './site-settings'
@@ -14,9 +12,7 @@ import {
  *
  * El contenido vive en dos capas: el documento `legalPage` del Studio y, como
  * respaldo, los borradores de `lib/legal-content.ts`. La página nunca queda
- * vacía: si el documento no existe o un campo está vacío, se usa el borrador y
- * `reviewed` sigue siendo `false`, así que la página se marca como borrador y
- * no se indexa.
+ * vacía: si el documento no existe o un campo está vacío, se usa el borrador.
  *
  * Los datos del responsable no se escriben en el texto: se referencian con
  * `{{token}}` y se resuelven acá desde `siteSettings`. Un dato faltante se
@@ -30,7 +26,6 @@ export type LegalPageContent = {
   lastUpdated: string | null
   seoTitle: string
   seoDescription: string
-  reviewed: boolean
 }
 
 export type SanityLegalPage = {
@@ -40,7 +35,6 @@ export type SanityLegalPage = {
   lastUpdated?: string | null
   seoTitle?: string | null
   seoDescription?: string | null
-  reviewed?: boolean | null
 }
 
 /** Tokens disponibles en el texto legal. */
@@ -129,8 +123,6 @@ export function resolveLegalPage(
     // Sin título de buscadores se usa el de la página, nunca un texto vacío.
     seoTitle: text(raw?.seoTitle, title),
     seoDescription: text(raw?.seoDescription, draft.seoDescription),
-    // Solo un `true` explícito cuenta como revisado.
-    reviewed: raw?.reviewed === true,
   }
 }
 
@@ -186,17 +178,6 @@ export function formatLegalDate(value: string | null | undefined): string | null
   }
 
   return new Intl.DateTimeFormat('es-AR', { day: 'numeric', month: 'long', year: 'numeric' }).format(date)
-}
-
-/**
- * Una página sigue siendo borrador si el texto no está revisado, si faltan los
- * datos básicos del responsable o si es el aviso legal y todavía no hay
- * matrícula y condición ante la SSN.
- */
-export function isLegalDraft(page: LegalPageContent, settings: SiteSettings): boolean {
-  if (!page.reviewed) return true
-  if (!isSiteSettingsComplete(settings)) return true
-  return page.slug === 'aviso-legal' && !hasSsnData(settings)
 }
 
 /** Texto plano de un cuerpo legal; lo usan los tests para buscar frases. */
