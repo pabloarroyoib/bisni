@@ -5,7 +5,7 @@ import {getCliClient} from 'sanity/cli'
  * Reemplaza la foto de Pablo Arroyo en el carrusel de «Nosotros» por la versión
  * con el logo de GROU en la esquina superior derecha.
  *
- * Sube `public/nosotros-1-pablo-arroyo-logo-sin-placa.jpg` como asset (si no existe ya,
+ * Sube `public/nosotros-1-pablo-arroyo-logo-blanco.jpg` como asset (si no existe ya,
  * buscando por `originalFilename`) y cambia solo la referencia del slide del
  * retrato: no toca títulos, `alt`, hotspot ni el resto del documento.
  *
@@ -16,10 +16,14 @@ import {getCliClient} from 'sanity/cli'
 
 const client = getCliClient({apiVersion: '2026-10-20'})
 
-const SOURCE_PHOTO = 'public/nosotros-1-pablo-arroyo-logo-sin-placa.jpg'
-const NEW_FILENAME = 'nosotros-1-pablo-arroyo-logo-sin-placa.jpg'
+const SOURCE_PHOTO = 'public/nosotros-1-pablo-arroyo-logo-blanco.jpg'
+const NEW_FILENAME = 'nosotros-1-pablo-arroyo-logo-blanco.jpg'
 /** Fotos anteriores del mismo slide, en orden de reemplazo. */
-const OLD_FILENAMES = ['nosotros-1-pablo-arroyo-logo.jpg', 'nosotros-1-pablo-arroyo.jpg']
+const OLD_FILENAMES = [
+  'nosotros-1-pablo-arroyo-logo-sin-placa.jpg',
+  'nosotros-1-pablo-arroyo-logo.jpg',
+  'nosotros-1-pablo-arroyo.jpg',
+]
 
 type Slide = {
   _key: string
