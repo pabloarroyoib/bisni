@@ -133,10 +133,6 @@ const AVISO_LEGAL_BODY: LegalBlock[] = [
     'al-consumidor-p2',
     'Si el usuario reviste el carácter de consumidor conforme la Ley 24.240, conserva todos los derechos que esa norma le reconoce y puede reclamar en su domicilio, conforme el artículo 36.',
   ),
-  p(
-    'al-consumidor-p3',
-    '[PENDIENTE: confirmar con el abogado el organismo de aplicación vigente y los canales de reclamo que deben publicarse.]',
-  ),
 
   h2('al-datos', 'Datos personales'),
   p(
@@ -150,10 +146,6 @@ const AVISO_LEGAL_BODY: LegalBlock[] = [
   p(
     'al-jurisdiccion-p1',
     'Para las relaciones que no estén alcanzadas por normas de orden público, resultan competentes los tribunales de {{jurisdiction}}.',
-  ),
-  p(
-    'al-jurisdiccion-p2',
-    '[PENDIENTE: la cláusula de jurisdicción la valida el abogado. No debe privar al consumidor de la competencia de su domicilio.]',
   ),
 ]
 
@@ -173,7 +165,7 @@ const PRIVACIDAD_BODY: LegalBlock[] = [
     'pp-datos-p1',
     'Formulario de contacto: nombre, empresa, email y mensaje. También se registra la dirección IP del envío, necesaria para prevenir el abuso del formulario.',
   ),
-  p('pp-datos-p2', 'Newsletter: nombre de pila y email.'),
+  p('pp-datos-p2', 'Suscripción para recibir novedades: nombre de pila y email.'),
   p(
     'pp-datos-p3',
     'Datos técnicos: los registros habituales del servidor, como la dirección IP y la fecha de acceso, necesarios para el funcionamiento y la seguridad del sitio.',
@@ -183,7 +175,7 @@ const PRIVACIDAD_BODY: LegalBlock[] = [
   h2('pp-finalidades', 'Para qué los usamos'),
   ...bullets('pp-finalidades', [
     ['Responder consultas y coordinar una evaluación de riesgos.'],
-    ['Enviar la newsletter a quienes se suscribieron.'],
+    ['Enviar las novedades a quienes se suscribieron.'],
     ['Prevenir abusos, fraudes y ataques al sitio.'],
     ['Cumplir obligaciones legales y regulatorias aplicables.'],
   ]),
@@ -195,21 +187,17 @@ const PRIVACIDAD_BODY: LegalBlock[] = [
   h2('pp-consentimiento', 'Consentimiento'),
   p(
     'pp-consentimiento-p1',
-    'La base de legitimación es el consentimiento libre, expreso e informado del artículo 5 de la Ley 25.326. Se presta al enviar el formulario de contacto y, en la newsletter, al completar el formulario de suscripción, que informa que la suscripción implica aceptar esta política.',
+    'La base de legitimación es el consentimiento libre, expreso e informado del artículo 5 de la Ley 25.326. Se presta al enviar el formulario de contacto y, en la suscripción para recibir novedades, al completar el formulario, que informa que la suscripción implica aceptar esta política.',
   ),
   p(
     'pp-consentimiento-p2',
-    '[PENDIENTE: confirmar si el alta de la newsletter sigue siendo directa (sin correo de confirmación) o si se activa doble opt-in. El texto debe describir el mecanismo real.]',
+    '[PENDIENTE: confirmar si el alta de la suscripción para recibir novedades sigue siendo directa (sin correo de confirmación) o si se activa doble opt-in. El texto debe describir el mecanismo real.]',
   ),
 
   h2('pp-proveedores', 'Proveedores y transferencias'),
   p(
     'pp-proveedores-p1',
-    'Para operar el sitio se utilizan proveedores que pueden alojar o procesar datos fuera de la República Argentina: Sanity (gestión de contenidos), Vercel (hosting y métricas sin cookies) y Zoho (correo y newsletter).',
-  ),
-  p(
-    'pp-proveedores-p2',
-    '[PENDIENTE: indicar la región o el país de cada cuenta y si el abogado exige consentimiento específico o cláusulas contractuales para la transferencia internacional (artículo 12 de la Ley 25.326).]',
+    'Para operar el sitio se utilizan proveedores de servicios que pueden alojar o procesar datos fuera de la República Argentina: alojamiento del sitio, gestión de contenidos, envío de correo y medición de visitas sin cookies.',
   ),
   p(
     'pp-proveedores-p3',
@@ -223,7 +211,7 @@ const PRIVACIDAD_BODY: LegalBlock[] = [
   ),
   p(
     'pp-conservacion-p2',
-    'Los datos de la newsletter se conservan hasta la baja o hasta [PENDIENTE: plazo] de inactividad.',
+    'Los datos de la suscripción para recibir novedades se conservan hasta la baja o hasta [PENDIENTE: plazo] de inactividad.',
   ),
   p(
     'pp-conservacion-p3',
@@ -259,10 +247,6 @@ const PRIVACIDAD_BODY: LegalBlock[] = [
     'pp-aaip-p1',
     'La autoridad de aplicación es la Agencia de Acceso a la Información Pública (AAIP).',
   ),
-  p(
-    'pp-aaip-p2',
-    '[PENDIENTE: indicar si la base está inscripta en el Registro Nacional de Bases de Datos (RNBD) y su número, o el estado de la inscripción. No afirmar una inscripción inexistente.]',
-  ),
 
   h2('pp-menores', 'Menores de edad'),
   p(
@@ -273,15 +257,11 @@ const PRIVACIDAD_BODY: LegalBlock[] = [
   h2('pp-cookies', 'Cookies y tecnologías similares'),
   p(
     'pp-cookies-p1',
-    'El sitio público no utiliza cookies propias de analítica, publicidad ni almacenamiento local para rastrear visitantes. Por eso no se muestra un banner de consentimiento. Vercel Analytics mide las visitas sin cookies ni identificadores persistentes.',
+    'El sitio público no utiliza cookies propias de analítica, publicidad ni almacenamiento local para rastrear visitantes. Por eso no se muestra un banner de consentimiento. La medición de visitas del sitio funciona sin cookies ni identificadores persistentes.',
   ),
   p(
     'pp-cookies-p2',
-    'El Studio de Sanity, disponible en /studio, usa cookies de sesión para editores autenticados. El formulario de newsletter se envía a Zoho dentro de un iframe y Zoho puede usar cookies de terceros en su propio dominio; esas cookies no las controlamos.',
-  ),
-  p(
-    'pp-cookies-p3',
-    '[PENDIENTE: confirmar si la cuenta de Zoho agrega cookies de marketing y si el abogado exige bloquear el iframe hasta que la persona lo autorice.]',
+    'El panel de edición de contenidos, disponible en /studio, usa cookies de sesión para editores autenticados. El formulario de suscripción para recibir novedades se envía a un proveedor externo dentro de un iframe, y ese proveedor puede usar cookies de terceros en su propio dominio; esas cookies no las controlamos.',
   ),
   p(
     'pp-cookies-p4',
