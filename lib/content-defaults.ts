@@ -74,7 +74,7 @@ export const defaultHomeContent: HomeContent = {
     cta: { label: 'Hablemos', href: '#contacto' },
     slides: [
       {
-        src: '/nosotros-1-pablo-arroyo.jpg',
+        src: '/nosotros-1-pablo-arroyo-logo.jpg',
         alt: 'Pablo Arroyo, en la oficina de GROU Asesores',
         title: 'Pablo Arroyo',
         isLogo: false,
@@ -149,7 +149,7 @@ export const defaultHomeContent: HomeContent = {
       },
     ],
     // El grupo Legal no es editable: lo renderiza el footer desde
-    // `LEGAL_ROUTES` para que los tres links no puedan quedar despublicados.
+    // `LEGAL_ROUTES` para que los dos links legales no puedan quedar despublicados.
     legal: '© 2026 GROU Asesores. Protegiendo tu futuro corporativo.',
   },
 }
