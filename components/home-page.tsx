@@ -5,13 +5,14 @@ import { ArrowUpRight, Globe2, Mail, MapPin, Phone } from 'lucide-react'
 import { BlogCard } from '@/components/blog-card'
 import { ContactForm } from '@/components/contact-form'
 import { HorizontalStages } from '@/components/horizontal-stages'
+import { MailLink } from '@/components/mail-link'
 import { MultilineText } from '@/components/multiline-text'
 import { AboutSection } from '@/components/about-section'
 import { RiskAccordion } from '@/components/risk-accordion'
 import { NewsletterForm } from '@/components/newsletter-form'
 import { Reveal, Stagger, StaggerItem } from '@/components/reveal'
 import { SiteHeader } from '@/components/site-header'
-import { gmailComposeUrl } from '@/lib/email'
+import { CONTACT_SUBJECT } from '@/lib/email'
 import type { BlogPost } from '@/lib/blog'
 import type { ContactIcon, HomeContent } from '@/lib/home-content'
 import type { SectorLink } from '@/lib/sectors'
@@ -153,27 +154,19 @@ export function HomePage({ content, posts, background, contactBackground, footer
                 <div key={`${index}-${detail.text}`}>
                   <Icon aria-hidden="true" />
                   <span>
-                    {detail.href ? (
-                      <>
-                        <a
-                          href={detail.href}
-                          {...(detail.icon === 'map'
-                            ? {target: '_blank', rel: 'noopener noreferrer'}
-                            : {})}
-                        >
-                          {detail.text}
-                        </a>
-                        {detail.icon === 'mail' ? (
-                          <a
-                            className="mail-alt"
-                            href={gmailComposeUrl(detail.text)}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            o abrir en Gmail
-                          </a>
-                        ) : null}
-                      </>
+                    {detail.icon === 'mail' ? (
+                      <MailLink email={detail.text} subject={CONTACT_SUBJECT}>
+                        {detail.text}
+                      </MailLink>
+                    ) : detail.href ? (
+                      <a
+                        href={detail.href}
+                        {...(detail.icon === 'map'
+                          ? {target: '_blank', rel: 'noopener noreferrer'}
+                          : {})}
+                      >
+                        {detail.text}
+                      </a>
                     ) : (
                       <MultilineText text={detail.text} />
                     )}

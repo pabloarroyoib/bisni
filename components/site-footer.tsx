@@ -5,7 +5,8 @@ import { MultilineText } from '@/components/multiline-text'
 import { Reveal } from '@/components/reveal'
 import { SOCIAL_ICONS, SOCIAL_LABELS } from '@/components/social-icons'
 import { defaultHomeContent } from '@/lib/content-defaults'
-import { mailtoHref } from '@/lib/email'
+import { CONTACT_SUBJECT } from '@/lib/email'
+import { MailLink } from '@/components/mail-link'
 import type { FooterContent, SocialLink } from '@/lib/home-content'
 import { LEGAL_ROUTES, legalHref } from '@/lib/legal-routes'
 import { SSN_SITE_URL } from '@/lib/site'
@@ -113,9 +114,13 @@ export function SiteFooter({
               </a>
             )
           })}
-          <a href={mailtoHref(settings.email)} aria-label={`Enviar un correo a ${settings.email}`}>
+          <MailLink
+            email={settings.email}
+            subject={CONTACT_SUBJECT}
+            ariaLabel={`Enviar un correo a ${settings.email}`}
+          >
             <Mail aria-hidden="true" />
-          </a>
+          </MailLink>
         </span>
       </div>
     </footer>

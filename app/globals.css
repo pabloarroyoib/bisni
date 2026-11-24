@@ -128,8 +128,7 @@ h1,h2,h3,p { margin:0; } h1,h2 { font-weight:600; letter-spacing:-.02em; } h1 { 
 /* El email de la sección de contacto es un enlace: subrayado para que se lea como tal sobre el fondo oscuro. */
 .contact-details a { color:#fff;text-decoration:underline;text-underline-offset:3px;transition:color .15s; }
 .contact-details a:hover { color:var(--color-signal-light); }
-.contact-details .mail-alt { display:block;color:var(--color-on-dark-muted);font-size:var(--fs-small);text-decoration:none;margin-top:4px; }
-.contact-details .mail-alt:hover { color:var(--color-signal-light);text-decoration:underline; }.contact-form { align-self:center;display:flex;flex-direction:column;gap:20px; }.form-row { display:grid;grid-template-columns:1fr 1fr;gap:17px; }
+.contact-form { align-self:center;display:flex;flex-direction:column;gap:20px; }.form-row { display:grid;grid-template-columns:1fr 1fr;gap:17px; }
 /* Label arriba e input abajo. Sin esto el label queda `display:block` y el input,
    que es inline-block, se acomoda al lado del texto y se superpone con él
    (se veía en "Email corporativo" y en el textarea). */
