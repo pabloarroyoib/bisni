@@ -1,6 +1,7 @@
 'use client'
 
 import Image from 'next/image'
+import { PortableText, type PortableTextComponents } from '@portabletext/react'
 import { useEffect, useState, type CSSProperties } from 'react'
 import { MultilineText } from '@/components/multiline-text'
 import { Reveal } from '@/components/reveal'
@@ -18,6 +19,35 @@ const FRAMES = [
 ]
 
 const ROTATION_MS = 1800
+
+/**
+ * Render de la misión: párrafos con énfasis y enlaces. Es Portable Text mínimo,
+ * sin imágenes ni encabezados, para que el texto siga siendo una entrada de la
+ * sección y no un artículo.
+ */
+const missionComponents: PortableTextComponents = {
+  block: {
+    normal: ({children}) => <p>{children}</p>,
+  },
+  marks: {
+    strong: ({children}) => <strong>{children}</strong>,
+    em: ({children}) => <em>{children}</em>,
+    link: ({children, value}) => {
+      const href = typeof value?.href === 'string' ? value.href : ''
+      if (!href) return <>{children}</>
+      const external = /^https?:/i.test(href)
+
+      return (
+        <a
+          href={href}
+          {...(external ? {target: '_blank', rel: 'noopener noreferrer'} : {})}
+        >
+          {children}
+        </a>
+      )
+    },
+  },
+}
 
 export function AboutSection({ content }: { content: AboutContent }) {
   const { slides } = content
@@ -152,7 +182,9 @@ export function AboutSection({ content }: { content: AboutContent }) {
           </h2>
         </Reveal>
         <Reveal className="about-mission-copy-reveal">
-          <p className="about-mission-copy">{content.mission}</p>
+          <div className="about-mission-copy">
+            <PortableText value={content.mission} components={missionComponents} />
+          </div>
         </Reveal>
         <Reveal className="about-cta-reveal">
           <a className="button button-primary about-cta" href={content.cta.href}>

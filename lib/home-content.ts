@@ -3,6 +3,7 @@ import { urlFor } from '@/sanity/lib/image'
 import { defaultHomeContent } from './content-defaults'
 import type { RiskContent, RiskSection, RiskSub, RiskTerm } from './risk-insurance'
 import { buildContactDetails, defaultSiteSettings, type SiteSettings } from './site-settings'
+import { missionBlocks, type MissionBlocks } from './mission-content'
 
 /** Enlace interno o externo editable desde el Studio. */
 export type LinkItem = { label: string; href: string }
@@ -53,7 +54,8 @@ export type AboutSlide = {
 export type AboutContent = {
   kicker: string
   title: string
-  mission: string
+  /** Portable Text con enlaces, o los párrafos del default ya convertidos. */
+  mission: MissionBlocks
   cta: LinkItem
   slides: AboutSlide[]
 }
@@ -154,7 +156,7 @@ export type SanityHomePage = {
   about?: {
     kicker?: string | null
     title?: string | null
-    mission?: string | null
+    mission?: unknown
     cta?: Partial<LinkItem> | null
     slides?: (Partial<SanityAboutSlide> | null)[] | null
   } | null
@@ -485,7 +487,7 @@ export function resolveHomeContent(
     about: {
       kicker: text(about.kicker, defaults.about.kicker),
       title: text(about.title, defaults.about.title),
-      mission: text(about.mission, defaults.about.mission),
+      mission: missionBlocks(about.mission, defaults.about.mission),
       cta: mergeLinkItem(about.cta, defaults.about.cta),
       slides: mergePositions(about.slides, defaults.about.slides, mergeSlide),
     },

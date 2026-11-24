@@ -139,9 +139,10 @@ export const homePageType = defineType({
         defineField({
           name: 'mission',
           title: 'Misión',
-          type: 'text',
-          rows: 5,
-          validation: (rule) => rule.required().max(900),
+          type: 'missionContent',
+          description:
+            'Texto de la sección. Seleccioná una palabra o frase y usá «Enlace» para vincularla (por ejemplo el nombre de una compañía o de una red social a su URL).',
+          validation: (rule) => rule.required(),
         }),
         defineField({
           name: 'cta',

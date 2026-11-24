@@ -1,3 +1,4 @@
+import { plainMissionBlocks } from './mission-content'
 import { riskSections } from './risk-insurance'
 import { buildContactDetails, defaultSiteSettings } from './site-settings'
 import type { HomeContent } from './home-content'
@@ -69,8 +70,9 @@ export const defaultHomeContent: HomeContent = {
   about: {
     kicker: 'Nosotros',
     title: 'Riesgo claro.\nDecisiones sólidas.',
-    mission:
+    mission: plainMissionBlocks(
       'Entender cada riesgo y diseñar seguros empresariales que permitan a las compañías operar con confianza y resiliencia. Ser un aliado estratégico para la prevención y la protección del valor de las empresas.',
+    ),
     cta: { label: 'Hablemos', href: '#contacto' },
     slides: [
       {

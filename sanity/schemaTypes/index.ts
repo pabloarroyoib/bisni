@@ -11,6 +11,7 @@ import {siteSettingsType} from './siteSettingsType'
 import {aboutSlide} from './objects/aboutSlide'
 import {heroCard} from './objects/heroCard'
 import {legalBlockContentType} from './objects/legalBlockContent'
+import {missionContentType} from './objects/missionContent'
 import {linkItem} from './objects/linkItem'
 import {riskGroup, riskSection} from './objects/riskSection'
 import {riskTerm} from './objects/riskTerm'
@@ -32,6 +33,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     riskGroup,
     socialItem,
     legalBlockContentType,
+    missionContentType,
     homePageType,
     siteSettingsType,
     legalPageType,

@@ -375,7 +375,7 @@ h1,h2,h3,p { margin:0; } h1,h2 { font-weight:600; letter-spacing:-.02em; } h1 { 
 .about-content h2 { font-size:clamp(32px,4.4vw,58px); line-height:1.04; }
 .about-content p:not(.section-kicker):not(.about-label):not(.about-mission-copy) { max-width:34em; margin-top:22px; color:var(--color-muted); font-size:var(--fs-lead); line-height:1.7; }
 .about-mission-copy-reveal { margin-top:30px; }
-.about-content p.about-mission-copy { max-width:34em; margin:0; color:var(--color-muted); font-size:var(--fs-lead); line-height:1.7; }
+.about-content p.about-mission-copy { max-width:34em; margin:0; color:var(--color-muted); font-size:var(--fs-lead); line-height:1.7; }.about-mission-copy p + p { margin-top:12px; }.about-mission-copy a { color:inherit;text-decoration:underline;text-underline-offset:2px; }.about-mission-copy a:hover { color:var(--color-ink); }
 .about-cta-reveal { margin-top:32px; }
 .about-cta { margin-top:0; }
 @media (max-width:900px) {
