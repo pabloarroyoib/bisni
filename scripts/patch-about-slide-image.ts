@@ -5,7 +5,7 @@ import {getCliClient} from 'sanity/cli'
  * Reemplaza la foto de Pablo Arroyo en el carrusel de «Nosotros» por la versión
  * con el logo de GROU en la esquina superior derecha.
  *
- * Sube `public/nosotros-1-pablo-arroyo-logo.jpg` como asset (si no existe ya,
+ * Sube `public/nosotros-1-pablo-arroyo-logo-sin-placa.jpg` como asset (si no existe ya,
  * buscando por `originalFilename`) y cambia solo la referencia del slide del
  * retrato: no toca títulos, `alt`, hotspot ni el resto del documento.
  *
@@ -16,9 +16,10 @@ import {getCliClient} from 'sanity/cli'
 
 const client = getCliClient({apiVersion: '2026-10-20'})
 
-const SOURCE_PHOTO = 'public/nosotros-1-pablo-arroyo-logo.jpg'
-const NEW_FILENAME = 'nosotros-1-pablo-arroyo-logo.jpg'
-const OLD_FILENAME = 'nosotros-1-pablo-arroyo.jpg'
+const SOURCE_PHOTO = 'public/nosotros-1-pablo-arroyo-logo-sin-placa.jpg'
+const NEW_FILENAME = 'nosotros-1-pablo-arroyo-logo-sin-placa.jpg'
+/** Fotos anteriores del mismo slide, en orden de reemplazo. */
+const OLD_FILENAMES = ['nosotros-1-pablo-arroyo-logo.jpg', 'nosotros-1-pablo-arroyo.jpg']
 
 type Slide = {
   _key: string
@@ -55,7 +56,7 @@ async function main() {
     throw new Error('homePage.about.slides está vacío: no hay slide que reemplazar.')
   }
 
-  const index = slides.findIndex((slide) => slide.filename === OLD_FILENAME)
+  const index = slides.findIndex((slide) => OLD_FILENAMES.includes(slide.filename ?? ''))
 
   if (index === -1) {
     const already = slides.findIndex((slide) => slide.assetId === assetId)

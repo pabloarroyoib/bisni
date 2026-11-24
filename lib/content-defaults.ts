@@ -74,7 +74,7 @@ export const defaultHomeContent: HomeContent = {
     cta: { label: 'Hablemos', href: '#contacto' },
     slides: [
       {
-        src: '/nosotros-1-pablo-arroyo-logo.jpg',
+        src: '/nosotros-1-pablo-arroyo-logo-sin-placa.jpg',
         alt: 'Pablo Arroyo, en la oficina de GROU Asesores',
         title: 'Pablo Arroyo',
         isLogo: false,
