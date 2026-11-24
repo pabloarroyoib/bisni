@@ -116,6 +116,7 @@ opencode.jsonc                Agente `gga-reviewer` de solo lectura para el hook
 - `useCdn: true` en el cliente de Sanity.
 - `defineLive` solo recibe `serverToken` (`SANITY_API_READ_TOKEN`); no se expone ningún token al navegador.
 - El blog no usa `generateStaticParams`; el detalle se renderiza dinámicamente.
+- **Orden de la home**: hero → «Programa de seguros» () → «Riesgos y Seguros» () → «Nosotros» () → blog → newsletter → contacto. Riesgos va inmediatamente después de las etapas porque ambos forman «Servicios», y por eso  no tiene entrada propia en el navbar: el link «Servicios» apunta a  y el acordeón sigue debajo.
 - La home muestra solo los 4 últimos artículos; el listado completo con búsqueda y filtros vive en `/blog` (`components/blog-list.tsx`, compartido con `blog-card.tsx`).
 - En `/blog` el artículo más reciente va como destacado (`components/blog-hero.tsx`) y el resto en una grilla de 3 columnas con una tarjeta ancha (`post-card-wide`) cada 5. El destacado se oculta mientras hay un filtro o búsqueda activos.
 - Cada post expone dos URLs de imagen desde `mapPosts`: `imageUrl` (800×500, tarjetas) y `heroImageUrl` (1600×900, destacado). El recorte usa el hotspot del Studio, así que el mismo punto de interés vale para las dos proporciones.

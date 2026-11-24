@@ -76,9 +76,9 @@ export function HomePage({ content, posts, background, contactBackground, footer
 
       <HorizontalStages content={content.stages} />
 
-      <AboutSection content={content.about} />
-
       <RiskAccordion content={content.risks} />
+
+      <AboutSection content={content.about} />
 
       <section className="blog section" id="blog">
         <Reveal className="section-heading">
