@@ -14,7 +14,7 @@ const meta = {
   to: 'consultas@bisni.es',
   from: 'hola@bisni.es',
   submittedAt: '2026-10-23T10:15:00.000Z',
-  source: 'bisni.es/contacto',
+  source: 'www.grouasesores.com.ar/contacto',
 }
 
 describe('buildContactMail', () => {
@@ -218,7 +218,7 @@ describe('POST /api/contact', () => {
       company: 'Acme SL',
       email: 'marta@acme.com',
       message: 'Necesitamos revisar nuestra matriz de riesgos.',
-      source: 'bisni.es/contacto',
+      source: 'www.grouasesores.com.ar/contacto',
     })
   })
 

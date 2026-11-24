@@ -34,7 +34,7 @@ Todas están documentadas en `.env.example`.
 | `NEXT_PUBLIC_SANITY_DATASET` | Sí | Dataset (`production` por defecto) |
 | `NEXT_PUBLIC_SANITY_API_VERSION` | No | Versión de API (por defecto la de `sanity/env.ts`) |
 | `SANITY_API_READ_TOKEN` | Recomendada | Token de lectura solo de servidor. Necesario para borradores y Live |
-| `NEXT_PUBLIC_SITE_URL` | No | URL canónica (`https://bisni.es` por defecto) |
+| `NEXT_PUBLIC_SITE_URL` | No | URL canónica (`https://www.grouasesores.com.ar` por defecto) |
 | `SMTP_HOST` | No | Servidor SMTP de Zoho (`smtp.zoho.com` por defecto) |
 | `SMTP_PORT` | No | Puerto SMTP (`465` por defecto, SSL directo) |
 | `SMTP_USER` | No | Cuenta de Zoho Mail que envía. Con `SMTP_PASS` y `CONTACT_TO` activa el email |

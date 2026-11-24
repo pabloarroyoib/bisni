@@ -1,7 +1,7 @@
 // TODO(rebrand): GROU Asesores todavía no tiene dominio propio. Cuando lo tenga,
 // cambiar el fallback de `siteUrl` y `NEXT_PUBLIC_SITE_URL` en el hosting.
 /** URL canónica del sitio, sin barra final. */
-export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://bisni.es').replace(/\/+$/, '')
+export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.grouasesores.com.ar').replace(/\/+$/, '')
 
 /** Host canónico, sin protocolo ni path. Se usa en textos de origen de los mails. */
 export const siteHost = siteUrl.replace(/^https?:\/\//i, '').replace(/\/.*$/, '')
