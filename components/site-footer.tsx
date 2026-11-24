@@ -49,8 +49,8 @@ export function SiteFooter({
                   <Image
                     src={settings.ssnLogo.url}
                     alt={settings.ssnLogo.alt}
-                    width={140}
-                    height={48}
+                    width={192}
+                    height={64}
                     className="footer-ssn-logo"
                   />
                 </a>

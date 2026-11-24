@@ -478,6 +478,6 @@ h1,h2,h3,p { margin:0; } h1,h2 { font-weight:600; letter-spacing:-.02em; } h1 { 
 /* Matrícula en el footer. El logo va sobre una placa clara para que se lea
    igual sobre el fondo oscuro, sea cual sea el archivo que suba el cliente. */
 .footer-main>div:first-child .footer-ssn { display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-top:14px;font-size:var(--fs-small);color:var(--color-on-dark-muted); }
-.footer-ssn-logo { width:auto;height:auto;max-height:44px;object-fit:contain;background:#fff;padding:5px 8px;border-radius:4px; }
+.footer-ssn-logo { width:auto;height:auto;max-height:64px;object-fit:contain;background:#fff;padding:4px 6px;border-radius:4px; }
 .privacy-note a { color:inherit;text-decoration:underline;text-underline-offset:2px; }
 .privacy-note a:hover { color:#fff; }
