@@ -342,6 +342,21 @@ export const homePageType = defineType({
               validation: (rule) => rule.required().max(160),
             }),
             defineField({
+              name: 'phoneLabel',
+              title: 'Etiqueta del teléfono',
+              type: 'string',
+              description: 'Si queda vacía, el sitio usa «Teléfono (opcional)».',
+              initialValue: 'Teléfono (opcional)',
+              validation: (rule) => rule.max(60),
+            }),
+            defineField({
+              name: 'phonePlaceholder',
+              title: 'Texto de ejemplo del teléfono',
+              type: 'string',
+              initialValue: '+54 387 555 5555',
+              validation: (rule) => rule.max(60),
+            }),
+            defineField({
               name: 'privacyLinkLabel',
               title: 'Texto del enlace a la política de privacidad',
               type: 'string',

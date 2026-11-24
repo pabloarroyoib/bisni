@@ -28,6 +28,8 @@ export type SiteSettings = {
   /** Domicilio de atención al público, si difiere del legal. */
   officeAddress: string
   phone: string
+  /** A dónde lleva el clic en el domicilio; si está vacío se arma una búsqueda. */
+  mapsUrl: string
   email: string
   /** Canal para ejercer los derechos sobre datos personales. */
   privacyEmail: string
@@ -52,6 +54,7 @@ export type SanitySiteSettings = {
   address?: string | null
   officeAddress?: string | null
   phone?: string | null
+  mapsUrl?: string | null
   email?: string | null
   privacyEmail?: string | null
   website?: string | null
@@ -76,6 +79,7 @@ export const defaultSiteSettings: SiteSettings = {
   address: '',
   officeAddress: '',
   phone: '',
+  mapsUrl: '',
   email: CONTACT_EMAIL,
   privacyEmail: '',
   website: '',
@@ -115,6 +119,7 @@ export function mapSiteSettings(raw: SanitySiteSettings | null | undefined): Sit
     address: text(doc.address, defaults.address),
     officeAddress: text(doc.officeAddress, defaults.officeAddress),
     phone: text(doc.phone, defaults.phone),
+    mapsUrl: text(doc.mapsUrl, defaults.mapsUrl),
     email: text(doc.email, defaults.email),
     privacyEmail: text(doc.privacyEmail, defaults.privacyEmail),
     website: text(doc.website, defaults.website),
@@ -148,12 +153,32 @@ export function dataRightsEmail(settings: SiteSettings): string {
   return settings.privacyEmail || settings.email
 }
 
+/**
+ * Enlace al mapa cuando el Studio no carga uno: búsqueda de Google Maps por
+ * dirección. La URL del lugar concreta se prefiere siempre porque la elige el
+ * cliente desde "Datos del sitio".
+ */
+export function mapsSearchHref(address: string): string {
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`
+}
+
+/** Enlace `tel:` con los dígitos del teléfono; conserva el prefijo + si lo tiene. */
+export function phoneHref(phone: string): string {
+  const trimmed = phone.trim()
+  const digits = phone.replace(/[^\d]/g, '')
+  if (!digits) return ''
+  return `tel:${trimmed.startsWith('+') ? '+' : ''}${digits}`
+}
+
 /** Deduce los datos de contacto de la home; omite los que están vacíos. */
 export function buildContactDetails(settings: SiteSettings = defaultSiteSettings): ContactDetail[] {
   const details: ContactDetail[] = []
   const address = contactAddress(settings)
 
-  if (address) details.push({ icon: 'map', text: address })
+  if (address) {
+    // El domicilio abre el mapa: la URL elegida en el Studio o una búsqueda.
+    details.push({ icon: 'map', text: address, href: settings.mapsUrl || mapsSearchHref(address) })
+  }
   if (settings.email) {
     details.push({
       icon: 'mail',
@@ -161,7 +186,10 @@ export function buildContactDetails(settings: SiteSettings = defaultSiteSettings
       href: mailtoHref(settings.email, CONTACT_SUBJECT),
     })
   }
-  if (settings.phone) details.push({ icon: 'phone', text: settings.phone })
+  if (settings.phone) {
+    const href = phoneHref(settings.phone)
+    details.push({ icon: 'phone', text: settings.phone, ...(href ? { href } : {}) })
+  }
 
   return details
 }

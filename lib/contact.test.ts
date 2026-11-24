@@ -18,6 +18,7 @@ describe('validateContactInput', () => {
         name: 'Marta Ruiz',
         company: 'Acme SL',
         email: 'marta@acme.com',
+        phone: '',
         message: 'Necesitamos revisar nuestra matriz de riesgos.',
       },
     })
@@ -30,6 +31,24 @@ describe('validateContactInput', () => {
     if (result.ok) return
 
     expect(Object.keys(result.errors).sort()).toEqual(['company', 'email', 'message', 'name'])
+  })
+
+  it('acepta un teléfono válido y lo devuelve recortado', () => {
+    const result = validateContactInput({ ...validInput, phone: '  +54 387 555-1234  ' })
+
+    expect(result.ok).toBe(true)
+    if (!result.ok) return
+    expect(result.data.phone).toBe('+54 387 555-1234')
+  })
+
+  it('rechaza un teléfono con letras o demasiado corto', () => {
+    const conLetras = validateContactInput({ ...validInput, phone: 'llamame' })
+    expect(conLetras.ok).toBe(false)
+    if (!conLetras.ok) expect(conLetras.errors.phone).toBe('El teléfono no parece válido.')
+
+    const corto = validateContactInput({ ...validInput, phone: '123' })
+    expect(corto.ok).toBe(false)
+    if (!corto.ok) expect(corto.errors.phone).toBe('El teléfono no parece válido.')
   })
 
   it('rechaza emails inválidos', () => {

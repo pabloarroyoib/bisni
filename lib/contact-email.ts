@@ -8,6 +8,8 @@ export type ContactMailPayload = {
   name: string
   company: string
   email: string
+  /** Opcional: el visitante puede no dejarlo. */
+  phone?: string
   message: string
 }
 
@@ -57,6 +59,7 @@ function buildText(payload: ContactMailPayload, meta: ContactMailMeta): string {
     `Nombre: ${payload.name}`,
     `Empresa: ${payload.company}`,
     `Email: ${payload.email}`,
+    ...(payload.phone ? [`Teléfono: ${payload.phone}`] : []),
     'Mensaje:',
     payload.message,
     '',
@@ -80,6 +83,7 @@ function buildHtml(payload: ContactMailPayload, meta: ContactMailMeta): string {
       <p style="margin:0 0 6px;"><strong>Nombre:</strong> ${escapeHtml(payload.name)}</p>
       <p style="margin:0 0 6px;"><strong>Empresa:</strong> ${escapeHtml(payload.company)}</p>
       <p style="margin:0 0 6px;"><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
+      ${payload.phone ? `<p style="margin:0 0 6px;"><strong>Teléfono:</strong> ${escapeHtml(payload.phone)}</p>` : ''}
       <p style="margin:16px 0 6px;"><strong>Mensaje:</strong></p>
       <p style="margin:0;line-height:1.5;">${message}</p>
       <hr style="margin:20px 0;border:none;border-top:1px solid #dbe3e3;" />

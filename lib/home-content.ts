@@ -89,6 +89,8 @@ export type ContactFormContent = {
   companyPlaceholder: string
   emailLabel: string
   emailPlaceholder: string
+  phoneLabel: string
+  phonePlaceholder: string
   messageLabel: string
   messagePlaceholder: string
   submitLabel: string
@@ -424,6 +426,8 @@ function mergeContactForm(raw: unknown, fallback: ContactFormContent): ContactFo
     companyPlaceholder: text(value.companyPlaceholder, fallback.companyPlaceholder),
     emailLabel: text(value.emailLabel, fallback.emailLabel),
     emailPlaceholder: text(value.emailPlaceholder, fallback.emailPlaceholder),
+    phoneLabel: text(value.phoneLabel, fallback.phoneLabel),
+    phonePlaceholder: text(value.phonePlaceholder, fallback.phonePlaceholder),
     messageLabel: text(value.messageLabel, fallback.messageLabel),
     messagePlaceholder: text(value.messagePlaceholder, fallback.messagePlaceholder),
     submitLabel: text(value.submitLabel, fallback.submitLabel),

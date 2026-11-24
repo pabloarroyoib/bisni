@@ -155,7 +155,14 @@ export function HomePage({ content, posts, background, contactBackground, footer
                   <span>
                     {detail.href ? (
                       <>
-                        <a href={detail.href}>{detail.text}</a>
+                        <a
+                          href={detail.href}
+                          {...(detail.icon === 'map'
+                            ? {target: '_blank', rel: 'noopener noreferrer'}
+                            : {})}
+                        >
+                          {detail.text}
+                        </a>
                         {detail.icon === 'mail' ? (
                           <a
                             className="mail-alt"

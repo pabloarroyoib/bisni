@@ -125,6 +125,8 @@ export const defaultHomeContent: HomeContent = {
       companyPlaceholder: 'Nombre de empresa',
       emailLabel: 'Email',
       emailPlaceholder: 'tu@empresa.com',
+      phoneLabel: 'Teléfono (opcional)',
+      phonePlaceholder: '+54 387 555 5555',
       messageLabel: '¿En qué podemos ayudarte?',
       messagePlaceholder: 'Cuéntanos brevemente tu reto, consulta o comentario',
       submitLabel: 'Enviar consulta',

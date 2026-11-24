@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { CONTACT_EMAIL, CONTACT_SUBJECT, mailtoHref } from '@/lib/email'
 import {
   buildContactDetails,
+  contactAddress,
   dataRightsEmail,
   defaultSiteSettings,
   hasSsnData,
@@ -102,7 +103,12 @@ describe('siteSettings', () => {
 
   it('usa el domicilio legal cuando no hay uno de atención al público', () => {
     const details = buildContactDetails({ ...defaultSiteSettings, address: 'Domicilio legal 1' })
-    expect(details[0]).toEqual({ icon: 'map', text: 'Domicilio legal 1' })
+    // El domicilio también enlaza al mapa: search por dirección si no hay `mapsUrl`.
+    expect(details[0]).toEqual({
+      icon: 'map',
+      text: 'Domicilio legal 1',
+      href: 'https://www.google.com/maps/search/?api=1&query=Domicilio%20legal%201',
+    })
   })
 
   it('prefiere el email de privacidad para los derechos de datos', () => {
@@ -113,5 +119,25 @@ describe('siteSettings', () => {
   it('arma la línea de matrícula solo cuando hay número', () => {
     expect(ssnRegistrationLabel(defaultSiteSettings)).toBeNull()
     expect(ssnRegistrationLabel(completeSettings)).toBe('Matrícula SSN N° 12.345')
+  })
+})
+
+describe('enlaces de contacto', () => {
+  it('el domicilio enlaza al mapa configurado o a una búsqueda', () => {
+    const conMapa = buildContactDetails({ ...completeSettings, mapsUrl: 'https://maps.app.goo.gl/abc' })
+    expect(conMapa.find((detail) => detail.icon === 'map')?.href).toBe('https://maps.app.goo.gl/abc')
+
+    const sinMapa = buildContactDetails({ ...completeSettings, mapsUrl: '' })
+    expect(sinMapa.find((detail) => detail.icon === 'map')?.href).toBe(
+      `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(contactAddress(completeSettings))}`,
+    )
+  })
+
+  it('el teléfono enlaza a tel: conservando el prefijo +', () => {
+    const fijo = buildContactDetails({ ...completeSettings, phone: '387 555-1234' })
+    expect(fijo.find((detail) => detail.icon === 'phone')?.href).toBe('tel:3875551234')
+
+    const internacional = buildContactDetails({ ...completeSettings, phone: '+54 387 555-1234' })
+    expect(internacional.find((detail) => detail.icon === 'phone')?.href).toBe('tel:+543875551234')
   })
 })

@@ -79,6 +79,15 @@ export const siteSettingsType = defineType({
       validation: (rule) => rule.max(60),
     }),
     defineField({
+      name: 'mapsUrl',
+      title: 'Enlace del mapa',
+      type: 'url',
+      group: 'company',
+      description:
+        'Opcional. A dónde lleva el clic en el domicilio (Google Maps u otro mapa). Si queda vacío, el sitio arma una búsqueda en Google Maps con el domicilio.',
+      validation: (rule) => rule.uri({scheme: ['http', 'https']}),
+    }),
+    defineField({
       name: 'email',
       title: 'Email de contacto',
       type: 'string',

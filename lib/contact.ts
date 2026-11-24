@@ -1,9 +1,11 @@
-export type ContactField = 'name' | 'company' | 'email' | 'message'
+export type ContactField = 'name' | 'company' | 'email' | 'phone' | 'message'
 
 export type ContactPayload = {
   name: string
   company: string
   email: string
+  /** Opcional: sirve para devolver la llamada, no se exige. */
+  phone: string
   message: string
 }
 
@@ -17,10 +19,13 @@ export const CONTACT_LIMITS = {
   name: { min: 2, max: 120 },
   company: { min: 2, max: 120 },
   email: { max: 254 },
+  phone: { max: 40 },
   message: { min: 10, max: 5000 },
 } as const
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
+/** Teléfono: dígitos, con prefijo +, espacios, guiones, puntos y paréntesis. */
+const PHONE_PATTERN = /^[+\d][\d\s().-]{5,}$/
 
 function asString(value: unknown): string {
   return typeof value === 'string' ? value.trim() : ''
@@ -42,6 +47,7 @@ export function validateContactInput(input: unknown): ContactValidation {
   const name = asString(body.name)
   const company = asString(body.company)
   const email = asString(body.email).toLowerCase()
+  const phone = asString(body.phone)
   const message = asString(body.message)
 
   const errors: ContactErrors = {}
@@ -64,6 +70,11 @@ export function validateContactInput(input: unknown): ContactValidation {
     errors.email = 'El email no parece válido.'
   }
 
+  // El teléfono es opcional: solo se valida si la persona escribió algo.
+  if (phone.length > 0 && (phone.length > CONTACT_LIMITS.phone.max || !PHONE_PATTERN.test(phone))) {
+    errors.phone = 'El teléfono no parece válido.'
+  }
+
   if (message.length < CONTACT_LIMITS.message.min) {
     errors.message = 'Cuéntanos un poco más (mínimo 10 caracteres).'
   } else if (message.length > CONTACT_LIMITS.message.max) {
@@ -74,5 +85,5 @@ export function validateContactInput(input: unknown): ContactValidation {
     return { ok: false, errors }
   }
 
-  return { ok: true, data: { name, company, email, message } }
+  return { ok: true, data: { name, company, email, phone, message } }
 }

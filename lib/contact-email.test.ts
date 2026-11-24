@@ -18,6 +18,19 @@ const meta = {
 }
 
 describe('buildContactMail', () => {
+  it('incluye el teléfono cuando lo dejan y lo omite cuando no', () => {
+    const conTelefono = buildContactMail(
+      { ...payload, phone: '+54 387 555 1234' },
+      meta,
+    )
+    expect(conTelefono.text).toContain('Teléfono: +54 387 555 1234')
+    expect(conTelefono.html).toContain('Teléfono:')
+
+    const sinTelefono = buildContactMail({ ...payload, phone: '' }, meta)
+    expect(sinTelefono.text).not.toContain('Teléfono:')
+    expect(sinTelefono.html).not.toContain('Teléfono:')
+  })
+
   it('identifica al remitente en el asunto con nombre y empresa', () => {
     const mail = buildContactMail(payload, meta)
 

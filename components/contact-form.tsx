@@ -32,6 +32,7 @@ export function ContactForm({
       name: data.get('name'),
       company: data.get('company'),
       email: data.get('email'),
+      phone: data.get('phone'),
       message: data.get('message'),
       website: data.get('website'),
     }
@@ -108,11 +109,18 @@ export function ContactForm({
           {errors.company && <span className="field-error">{errors.company}</span>}
         </label>
       </div>
-      <label>
-        {copy.emailLabel}
-        <input name="email" required type="email" placeholder={copy.emailPlaceholder} autoComplete="email" />
-        {errors.email && <span className="field-error">{errors.email}</span>}
-      </label>
+      <div className="form-row">
+        <label>
+          {copy.emailLabel}
+          <input name="email" required type="email" placeholder={copy.emailPlaceholder} autoComplete="email" />
+          {errors.email && <span className="field-error">{errors.email}</span>}
+        </label>
+        <label>
+          {copy.phoneLabel}
+          <input name="phone" type="tel" placeholder={copy.phonePlaceholder} autoComplete="tel" />
+          {errors.phone && <span className="field-error">{errors.phone}</span>}
+        </label>
+      </div>
       <label>
         {copy.messageLabel}
         <textarea name="message" required placeholder={copy.messagePlaceholder} rows={4} />
