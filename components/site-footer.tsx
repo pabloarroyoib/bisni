@@ -117,9 +117,6 @@ export function SiteFooter({
             <Mail aria-hidden="true" />
           </a>
         </span>
-        <span>
-          Hecho con intención <span className="brand-dot">●</span>
-        </span>
       </div>
     </footer>
   )

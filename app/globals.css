@@ -60,7 +60,6 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 /* Logo en imagen: alto fijo y ancho automático para no deformar la proporción. */
 .brand-logo { display:block; width:auto; height:44px; }
 .footer-brand .brand-logo { height:50px; }
-.brand-dot { color:var(--teal); }
 .nav-links { display:flex; gap:32px; margin-left:auto; font-size:var(--fs-small); color:var(--muted); }
 .nav-links > a { display:flex; align-items:center; }
 .nav-links a:hover { color:var(--ink); }
@@ -175,7 +174,8 @@ h1,h2,h3,p { margin:0; } h1,h2 { font-weight:600; letter-spacing:-.02em; } h1 { 
 /* `width:auto` anula el 100% de `.button-dark`: en la fila el botón mide lo que
    su texto y en móvil se estira al pasar la fila a columna. */
 .newsletter-row .button { flex:none; width:auto; white-space:nowrap; }
-.newsletter-form input { border:0; border-bottom:1px solid var(--color-line); background:transparent; padding:9px 0; color:var(--color-ink); font-size:var(--fs-body); }
+/* Mismo foco que el formulario de contacto: sin anillo, el borde inferior cambia de color. */
+.newsletter-form input { border:0; border-bottom:1px solid var(--color-line); background:transparent; padding:9px 0; color:var(--color-ink); font-size:var(--fs-body); outline:0; }
 .newsletter-form input:focus { border-color:var(--color-signal); }
 .newsletter-form input::placeholder { color:var(--color-muted); }
 .newsletter-form .button:disabled, .newsletter-form .button[aria-disabled="true"] { opacity:.55; cursor:not-allowed; transform:none; }
