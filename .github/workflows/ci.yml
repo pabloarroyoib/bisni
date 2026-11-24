@@ -24,7 +24,7 @@ jobs:
       # se lee contenido publicado.
       NEXT_PUBLIC_SANITY_PROJECT_ID: '7hpe9nhh'
       NEXT_PUBLIC_SANITY_DATASET: 'production'
-      NEXT_PUBLIC_SITE_URL: 'https://bisni.es'
+      NEXT_PUBLIC_SITE_URL: 'https://www.grouasesores.com.ar'
     steps:
       - uses: actions/checkout@v7
 

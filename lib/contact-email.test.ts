@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { buildContactMail } from '@/lib/contact-email'
 import { resetRateLimit } from '@/lib/rate-limit'
 import { POST } from '@/app/api/contact/route'
+import { siteHost } from '@/lib/site'
 
 const payload = {
   name: 'Marta Ruiz',
@@ -218,7 +219,8 @@ describe('POST /api/contact', () => {
       company: 'Acme SL',
       email: 'marta@acme.com',
       message: 'Necesitamos revisar nuestra matriz de riesgos.',
-      source: 'www.grouasesores.com.ar/contacto',
+      // El origen sale de NEXT_PUBLIC_SITE_URL: el test sigue la configuración.
+      source: `${siteHost}/contacto`,
     })
   })
 
